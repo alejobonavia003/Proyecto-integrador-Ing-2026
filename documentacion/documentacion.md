@@ -1,0 +1,25 @@
+1. (Requirements) Describir su proyecto:
+	- Problema que se quiere resolver : 
+		- Se quiere sistematizar la administración académica de una institución mediante un software. El sistema permitirá gestionar de manera segura un sistema de roles donde se podrá tanto organizar el personal docente, como también la gestión de los alumnos y además permitirá a los administradores visualizar y modificar toda la información. (==CONSULTAR==)
+	- Usuarios del sistema:
+		- Los administradores , alumnos y profesores.
+	- Funcionalidades principales: 
+		- registro de los usuarios del sistema y la gestión de cada rol
+		- gestión de materias y sus correlatividades 
+		- gestión de planes de estudio
+		- administración académica 
+		- seguimiento  de desempeño 
+		- gestión de tareas y planificación 
+		- reportes y análisis 
+	- Restricciones técnicas :
+		- Plataformas y entornos de ejecución: El sistema debe ser compatible con cualquier navegadores web.
+		- Infraestructura y Hardware:
+		- El sistema debe poder ejecutarse en un hardware : el servidor deberá correr 24 7 en un servidor 
+		- Lenguaje de programación y frameworks:
+		- Vamos a utilizar Java para nuestro lenguaje, Mustache como motor de plantillas, maven como herramienta de gestión y automatización de compilación. También el uso de mySql para la base de datos y como orm usamos jdbc pero estamos  analisando usar spring y springBot 
+	- tamaño del equipo: 5 personas
+	- Tecnologías elegidas: la notebook personal de cada uno
+	- plazo estimado : no definido todavía 
+	- cambios de alcance ocurridos: adición de nuevas funcionalidades, cambios en el cronograma, reducción de recursos
+		- problema encontrados : se irán registrando durante el desarrollo 
+	- Forma de organización del equipo: metodología Kanban, git, gestión mediante issues  
