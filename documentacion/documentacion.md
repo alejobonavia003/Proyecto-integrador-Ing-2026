@@ -22,4 +22,5 @@
 	- plazo estimado : no definido todavía 
 	- cambios de alcance ocurridos: adición de nuevas funcionalidades, cambios en el cronograma, reducción de recursos
 		- problema encontrados : se irán registrando durante el desarrollo 
-	- Forma de organización del equipo: metodología Kanban, git, gestión mediante issues  
+	- Forma de organización del equipo: metodología Kanban, git, gestión mediante issues.
+	Dentro de nuestro grupo tenemos un project manager encargado de la organizacion de tareas y direccion de proyecto, dos integrantes para el frontEnd y dos para el backEnd.
