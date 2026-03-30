@@ -18,26 +18,29 @@
 		- Lenguaje de programación y frameworks:
 		- Vamos a utilizar Java para nuestro lenguaje, Mustache como motor de plantillas, maven como herramienta de gestión y automatización de compilación. También el uso de mySql para la base de datos y como orm usamos jdbc pero estamos  analisando usar spring y springBot 
 	- tamaño del equipo: 5 personas
+	- Tecnologías elegidas: la notebook personal de cada uno
 	- plazo estimado : no definido todavía 
 	- cambios de alcance ocurridos: adición de nuevas funcionalidades, cambios en el cronograma, reducción de recursos
 		- problema encontrados : se irán registrando durante el desarrollo 
 	- Forma de organización del equipo: metodología Kanban, git, gestión mediante issues  
 
 
-2. (Auditoría) Análisis de riesgos con IA
-		a)  Riesgos  del proyecto:  
-			- **Incumplimiento de plazos por falta de Roadmap:** Al no tener un plazo estimado definido todavía , el equipo corre el riesgo de no priorizar correctamente las tareas en el backlog de GitHub.
-			- **Curva de aprendizaje tecnológica:** La transición de **JDBC** a **Spring/Spring Boot** representa un riesgo alto, ya que el equipo debe aprender el framework mientras desarrolla, lo que suele causar desviaciones en las estimaciones
-			- **Dependencia de recursos individuales:** El desarrollo depende de las notebooks personales de cada uno. Si un integrante sufre un desperfecto técnico o pierde su equipo, la capacidad operativa del grupo se reduce un **20%** inmediatamente.
-			-  **Inestabilidad del alcance (Scope Creep):** Ya se han registrado cambios de alcance y adición de funcionalidades. Seguir sumando requerimientos sin cerrar los actuales puede llevar al colapso del proyecto.
-			Riesgos del producto :
-				**Falla en la integridad de las correlatividades:** Un error en la lógica de validación automática permitiría que alumnos se inscriban en materias sin cumplir los requisitos, invalidando el propósito académico del sistema.
-				**Vulnerabilidad en la seguridad de datos:** Al gestionar información sensible como notas y datos personales, cualquier brecha de seguridad podría exponer la privacidad de los estudiantes y docentes.
-				**Problemas de usabilidad:** Si la interfaz no es lo suficientemente "amigable" , el personal administrativo de la oficina de alumnos podría cometer errores en la carga de datos.
-			Riesgos Empresariales o de la organización:
-				**Falta de mantenimiento post-entrega:** Al ser un proyecto de cátedra, existe el riesgo de que el software quede "huérfano" una vez finalizado el año 2026, sin soporte para actualizaciones legales o técnicas.
-				**Escalabilidad limitada:** Si el sistema no es escalable , podría dejar de funcionar correctamente cuando la universidad aumente su oferta académica o cantidad de alumnos.
-		
+2.# 📊 Matriz de Riesgos del Proyecto
+
+| Tipo de Riesgo | Descripción                                                                                   | Probabilidad | Impacto | Identificado por |
+| -------------- | --------------------------------------------------------------------------------------------- | ------------ | ------- | ---------------- |
+| Planificación  | Incumplimiento de plazos por falta de roadmap definido, afectando la priorización del backlog | Alta         | Alto    | -                |
+| Técnico        | Curva de aprendizaje en Spring/Spring Boot durante el desarrollo                              | Alta         | Alto    | -                |
+| Humano         | Dependencia de notebooks personales; pérdida de un equipo reduce la capacidad operativa       | Media        | Alto    | -                |
+| Planificación  | Inestabilidad del alcance (scope creep) por incorporación continua de funcionalidades         | Alta         | Crítico | -                |
+| Técnico        | Fallas en la lógica de correlatividades que invaliden inscripciones                           | Media        | Crítico | -                |
+| Técnico        | Vulnerabilidades en la seguridad de datos sensibles (notas, datos personales)                 | Media        | Crítico | -                |
+| Organizacional | Problemas de usabilidad que generen errores operativos en usuarios administrativos            | Media        | Medio   | -                |
+| Organizacional | Falta de mantenimiento post-entrega del sistema                                               | Alta         | Alto    | -                |
+| Técnico        | Escalabilidad limitada ante crecimiento de usuarios o carreras                                | Media        | Alto    | -                |
+| Humano         | Falta de disponibilidad de un integrante clave del equipo                                     | Baja         | Crítico | -                |
+| Organizacional | Desalineación en prioridades de tareas dentro del equipo                                      | Media        | Medio   | -                |
+| Planificación  | Desviación en estimación de historias complejas                                               | Alta         | Alto    | -                |
 	b) Riesgos del producto:
 		- interfaz poco intuitiva
 		- caídas del sistema
@@ -54,4 +57,18 @@
 		
 				
 
-		
+2)  
+	   # 📊 Matriz de Riesgos (Clasificación General)
+
+| Tipo de Riesgo | Descripción                                                       | Probabilidad | Impacto | Identificado por |
+| -------------- | ----------------------------------------------------------------- | ------------ | ------- | ---------------- |
+| Técnico        | Interfaz poco intuitiva que dificulte el uso del sistema          | Media        | Medio   | -                |
+| Técnico        | Caídas del sistema por problemas de estabilidad o infraestructura | Media        | Alto    | -                |
+| Técnico        | Errores en el cálculo o carga de notas                            | Media        | Crítico | -                |
+| Organizacional | Falta de comunicación dentro del equipo                           | Alta         | Alto    | -                |
+| Organizacional | Mala asignación de tareas                                         | Media        | Alto    | -                |
+| Organizacional | Falta de coordinación entre integrantes                           | Media        | Medio   | -                |
+| Organizacional | Falta de seguimiento del proyecto                                 | Alta         | Alto    | -                |
+| Planificación  | Requerimientos poco claros o ambiguos                             | Alta         | Crítico | -                |
+| Planificación  | Incumplimiento de plazos establecidos                             | Alta         | Alto    | -                |
+| Planificación  | Cambios constantes en los requerimientos                          | Alta         | Crítico | -                |
