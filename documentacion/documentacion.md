@@ -18,7 +18,6 @@
 		- Lenguaje de programación y frameworks:
 		- Vamos a utilizar Java para nuestro lenguaje, Mustache como motor de plantillas, maven como herramienta de gestión y automatización de compilación. También el uso de mySql para la base de datos y como orm usamos jdbc pero estamos  analisando usar spring y springBot 
 	- tamaño del equipo: 5 personas
-	- Tecnologías elegidas: la notebook personal de cada uno
 	- plazo estimado : no definido todavía 
 	- cambios de alcance ocurridos: adición de nuevas funcionalidades, cambios en el cronograma, reducción de recursos
 		- problema encontrados : se irán registrando durante el desarrollo 
