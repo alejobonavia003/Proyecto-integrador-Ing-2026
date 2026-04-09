@@ -49,7 +49,6 @@ Cubre los procesos formales del ciclo académico de cada alumno.
 - **Inscripción a cursadas**: registro de alumnos en comisiones de materias, validando correlatividades.
 - **Inscripción a exámenes finales**: habilitación de turnos de examen y registro de inscriptos.
 - **Registro de calificaciones**: carga de notas de parciales, finales y condición (regular, libre, aprobado).
-- **Gestión de asistencia**: registro de presencia por clase y cálculo del porcentaje de asistencia.
 - **Historial académico del alumno**: acceso al legajo con todas las materias cursadas, notas y estado.
 
 ### 2.5. Seguimiento de desempeño

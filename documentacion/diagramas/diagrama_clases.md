@@ -106,159 +106,335 @@ classDiagram
 ```mermaid
 classDiagram
 
+  
+
 %% ======================
+
 %% USUARIOS Y ROLES
+
 %% ======================
+
 class Usuario {
-  +id: int
-  +nombre: String
-  +dni: String
-  +email: String
-  +password: String
-  +login()
-  +logout()
+
+  +id: int
+
+  +nombre: String
+
+  +dni: String
+
+  +email: String
+
+  +password: String
+
+  +login()
+
+  +logout()
+
 }
 
-class Rol {
-  +id: int
-  +nombre: String
-  +permisos: String[]
-}
+  
 
 class Administrador
+
 class Docente
+
 class Alumno {
-  +legajo: String
+
+  +legajo: String
+
 }
 
-Usuario --> Rol
+  
+
 Administrador --|> Usuario
+
 Docente --|> Usuario
+
 Alumno --|> Usuario
 
+  
+
 %% ======================
+
 %% MATERIAS Y CORRELATIVAS
+
 %% ======================
+
 class Materia {
-  +id: int
-  +nombre: String
-  +codigo: String
-  +cargaHoraria: int
-  +modalidad: String
+
+  +id: int
+
+  +nombre: String
+
+  +codigo: String
+
+  +cargaHoraria: int
+
+  +modalidad: String
+
 }
+
+  
 
 Materia --> "0..*" Materia : correlativas
 
+  
+  
+  
+
 %% ======================
+
 %% PLAN DE ESTUDIO
+
 %% ======================
+
 class PlanEstudio {
-  +id: int
-  +nombre: String
-  +version: String
+
+  +id: int
+
+  +nombre: String
+
+  +version: String
+
 }
+
+  
+
+class Carrera {
+
+  +codigoCarrera: int
+
+  +duracion: time
+
+  +nombre: String
+
+}
+
+  
+  
+
+Alumno -->"1..*" Carrera : cursa
+
+  
+  
 
 class PlanMateria {
-  +anio: int
-  +cuatrimestre: int
+
+  +anio: int
+
+  +cuatrimestre: int
+
 }
+
+  
 
 PlanEstudio --> "1..*" PlanMateria
+
+Carrera "1" *-- "1" PlanEstudio : vigente
+
+Carrera "1" *-- "1..*" PlanEstudio
+
 PlanMateria --> Materia
-Alumno --> PlanEstudio
+
+  
+  
 
 class Equivalencia {
-  +id: int
+
+  +id: int
+
 }
+
+  
 
 Equivalencia --> Materia : origen
+
 Equivalencia --> Materia : destino
 
+  
+
 %% ======================
+
 %% ADMINISTRACIÓN ACADÉMICA
+
 %% ======================
+
 class Comision {
-  +id: int
-  +nombre: String
+
+  +id: int
+
+  +nombre: String
+
 }
 
-Comision --> Materia
+  
+
+Materia --> Comision
+
 Docente --> "1..*" Comision
 
-class InscripcionCursada {
-  +fecha: Date
+Docente  "1" --> "1..*" Materia : responsable
+
+Docente  "1..*" --> "1..*" Materia : docenteComun
+
+  
+
+class Periodo {
+
+    +anio : int
+
+    +periodo : Tperiodo
+
+    +cargo : cargo
+
+    +participacion : Tparticipacion
+
 }
+
+  
+
+Docente --> Periodo
+
+Materia --> Periodo
+
+  
+
+class InscripcionCursada {
+
+  +fecha: Date
+
+}
+
+  
 
 Alumno --> "0..*" InscripcionCursada
+
 InscripcionCursada --> Comision
 
+  
+
 class ExamenFinal {
-  +fecha: Date
+
+  +fecha: Date
+
 }
+
+  
 
 class InscripcionExamen {
-  +fecha: Date
+
+  +fecha: Date
+
 }
+
+  
 
 Alumno --> "0..*" InscripcionExamen
+
 InscripcionExamen --> ExamenFinal
+
 ExamenFinal --> Materia
 
+  
+
 class Calificacion {
-  +nota: float
-  +tipo: String
-  +condicion: String
+
+  +nota: float
+
+  +tipo: String
+
+  +condicion: String
+
 }
+
+  
 
 Alumno --> "0..*" Calificacion
+
 Calificacion --> Materia
 
-class Asistencia {
-  +fecha: Date
-  +presente: boolean
-}
-
-Alumno --> "0..*" Asistencia
-Asistencia --> Comision
+  
+  
 
 %% ======================
+
 %% TAREAS
+
 %% ======================
+
 class Tarea {
-  +id: int
-  +descripcion: String
-  +fechaEntrega: Date
+
+  +id: int
+
+  +descripcion: String
+
+  +fechaEntrega: Date
+
 }
+
+  
 
 class Entrega {
-  +archivo: String
-  +fecha: Date
-  +nota: float
-  +comentario: String
+
+  +archivo: String
+
+  +fecha: Date
+
+  +nota: float
+
+  +comentario: String
+
 }
+
+  
 
 Docente --> "0..*" Tarea
+
 Tarea --> Materia
+
 Alumno --> "0..*" Entrega
+
 Entrega --> Tarea
 
+  
+
 %% ======================
+
 %% NOTIFICACIONES
+
 %% ======================
+
 class Notificacion {
-  +mensaje: String
-  +fecha: Date
+
+  +mensaje: String
+
+  +fecha: Date
+
 }
+
+  
 
 Usuario --> "0..*" Notificacion
 
+Notificacion --> "1..*" Usuario
+
+  
+
 %% ======================
+
 %% REPORTES
+
 %% ======================
+
 class Reporte {
-  +tipo: String
-  +generar()
+
+  +tipo: String
+
+  +generar()
+
 }
+
+  
 
 Administrador --> "0..*" Reporte
 ```
