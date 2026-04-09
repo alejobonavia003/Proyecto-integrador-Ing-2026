@@ -1,3 +1,4 @@
+
 ```mermaid
 classDiagram
     class Persona {
@@ -100,7 +101,7 @@ classDiagram
     Plan_Estudio "1" -- "1..*" Materia
     Carrera "1" -- "1..*" Estudiante
 ```
-## Propuesta
+
 #### Diagrama de clases 
 
 ```mermaid
@@ -218,23 +219,11 @@ Alumno -->"1..*" Carrera : cursa
   
   
 
-class PlanMateria {
-
-  +anio: int
-
-  +cuatrimestre: int
-
-}
-
-  
-
-PlanEstudio --> "1..*" PlanMateria
-
 Carrera "1" *-- "1" PlanEstudio : vigente
 
 Carrera "1" *-- "1..*" PlanEstudio
 
-PlanMateria --> Materia
+PlanEstudio "1" --> "1..*" Materia : tiene
 
   
   
@@ -316,6 +305,8 @@ InscripcionCursada --> Comision
 class ExamenFinal {
 
   +fecha: Date
+
+  +nota: float
 
 }
 
@@ -437,6 +428,8 @@ class Reporte {
   
 
 Administrador --> "0..*" Reporte
+
+Administrador --> Carrera
 ```
 
 #### Diagrama Entidad relacion 
@@ -629,95 +622,195 @@ USUARIO ||--o{ NOTIFICACION : recibe
 ``` mermaid
 flowchart LR
 
+  
+
 %% ======================
+
 %% ACTORES
+
 %% ======================
+
 Admin[Administrador]
+
 Docente[Docente]
+
 Alumno[Alumno]
 
+Usuario[Usuario]
+
+  
+
+Usuario --> Docente
+
+Usuario --> Admin
+
+Usuario --> Alumno
+
+  
+  
+
 %% ======================
+
 %% SISTEMA
+
 %% ======================
+
 subgraph Sistema de Gestión Estudiantil
 
+  
+
 %% --- USUARIOS ---
+
 UC1[Gestionar usuarios]
+
 UC2[Autenticarse]
 
+UC23[alta, baja y modificación de datos personales]
+
+  
+
 %% --- MATERIAS ---
+
 UC3[Gestionar materias]
-UC4[Definir correlatividades]
+
+UC4[consultar correlatividades]
+
 UC5[Visualizar correlativas]
 
+  
+
 %% --- PLANES ---
+
 UC6[Gestionar planes de estudio]
+
 UC7[Asignar alumno a plan]
+
 UC8[Definir equivalencias]
 
+  
+
 %% --- ACADÉMICO ---
-UC9[Inscribirse a cursada]
+
+UC9[Inscribirse a materia]
+
 UC10[Inscribirse a examen]
+
 UC11[Registrar calificaciones]
-UC12[Registrar asistencia]
+
 UC13[Consultar historial académico]
 
+  
+
 %% --- DESEMPEÑO ---
+
 UC14[Ver progreso académico]
-UC15[Recibir alertas]
+
+UC15[Recibir notificaciones]
+
+  
 
 %% --- TAREAS ---
+
 UC16[Publicar tareas]
+
 UC17[Entregar tareas]
+
 UC18[Calificar entregas]
+
 UC19[Ver calendario]
 
+  
+
 %% --- REPORTES ---
+
 UC20[Generar reportes]
-UC21[Ver dashboard]
+
+  
 
 end
 
+  
+
 %% ======================
+
 %% RELACIONES ACTORES
+
 %% ======================
+
+  
+
+Usuario --> UC23
+
+  
 
 Admin --> UC1
+
 Admin --> UC3
+
 Admin --> UC6
+
 Admin --> UC8
+
 Admin --> UC20
-Admin --> UC21
+
+  
+  
 
 Docente --> UC11
-Docente --> UC12
+
 Docente --> UC16
+
 Docente --> UC18
+
 Docente --> UC5
 
+  
+
 Alumno --> UC9
+
 Alumno --> UC10
+
 Alumno --> UC13
+
 Alumno --> UC14
+
 Alumno --> UC15
+
 Alumno --> UC17
+
 Alumno --> UC19
+
 Alumno --> UC5
 
-%% ======================
-%% RELACIONES INCLUDE
+  
+
 %% ======================
 
+%% RELACIONES INCLUDE
+
+%% ======================
+
+  
+
 UC9 --> UC4
+
 UC9 --> UC7
+
+  
 
 UC10 --> UC4
 
+  
+
 UC17 --> UC16
+
+  
 
 UC18 --> UC17
 
-UC14 --> UC13 
+  
+
+UC14 --> UC13
 ```
 
 ### Diagrama de componentes
