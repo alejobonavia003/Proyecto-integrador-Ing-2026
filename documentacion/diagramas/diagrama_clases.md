@@ -1,266 +1,197 @@
-```mermaid
-classDiagram
-    class Persona {
-        - nombre : String
-        - apellido : String
-        - dni : int
-        - email : String
-        - telefono : String
-        - direccion : String
-    }
-
-    class Profesor {
-        - id_doc : String
-    }
-
-    class Estudiante {
-        - estado : Estado
-    }
-
-    class Materia {
-        - cod_Mat : int
-        - nombre : String
-    }
-
-    class Mat_Apro {
-        - codigo : int
-    }
-
-    class Nota_Final {
-        - nota : int
-        - condicion : Condicion
-    }
-
-    class Plan_Estudio {
-        - id_p : int
-        - ano_plan : fecha
-        - version : int
-    }
-
-    class Carrera {
-        - cod_carrera : int
-        - nombre : String
-        - duracion : int
-    }
-
-    class Periodo {
-        - ano : int
-        - periodo : int
-        - cargo : Cargo
-        - par : Participacion
-    }
-
-    class Cargo {
-        <<enumeration>>
-        responsable_cat
-        jtp
-        ayudante
-    }
-
-    class Participacion {
-        <<enumeration>>
-        responsable
-        colaborador
-    }
-
-    class Condicion {
-        <<enumeration>>
-        Aprobado
-        Regular
-        Libre
-    }
-
-    class Estado {
-        <<enumeration>>
-        ingresante
-        avanzado
-    }
-
-    class periodo {
-        <<enumeration>>
-        cuatrimestral
-        anual
-    }
-
-    Persona <|-- Profesor
-    Persona <|-- Estudiante
-
-    Profesor "1" -- "1..*" Periodo
-    Materia "0..*" -- "1..*" Periodo
-
-    Materia "1..*" --> "0..*" Materia : correlatividad
-    Materia "1" -- "1..*" Mat_Apro
-
-    Estudiante "0..*" -- "0..*" Materia : cursa
-    Estudiante "0..*" -- "0..*" Materia : rindo
-    Estudiante "1..*" -- "0..*" Nota_Final
-    Materia "1..*" -- "0..*" Nota_Final
-
-    Carrera "1" -- "1" Plan_Estudio : vigente
-    Plan_Estudio "1" -- "1..*" Materia
-    Carrera "1" -- "1..*" Estudiante
-```
-## Propuesta
 #### Diagrama de clases 
-
 ```mermaid
 classDiagram
+    %% ======================
+    %% ENUMERADOS (Indispensables para la lógica)
+    %% ======================
+    class Modalidad {
+        <<enumeration>>
+        PRESENCIAL
+        VIRTUAL
+        HIBRIDA
+    }
+    class EstadoInscripcion {
+        <<enumeration>>
+        PENDIENTE
+        ACEPTADA
+        RECHAZADA
+        CANCELADA
+    }
+    class TipoCalificacion {
+        <<enumeration>>
+        PARCIAL
+        FINAL
+        TRABAJO_PRACTICO
+    }
+    class CondicionAlumno {
+        <<enumeration>>
+        REGULAR
+        LIBRE
+        PROMOCIONADO
+    }
+    class EstadoEntrega {
+        <<enumeration>>
+        PENDIENTE
+        ENTREGADO
+        CALIFICADO
+        FUERA_DE_TERMINO
+    }
+    class TipoReporte {
+        <<enumeration>>
+        RENDIMIENTO_ACADEMICO
+        ASISTENCIA_GENERAL
+        OCUPACION_COMISIONES
+    }
 
-%% ======================
-%% USUARIOS Y ROLES
-%% ======================
-class Usuario {
-  +id: int
-  +nombre: String
-  +dni: String
-  +email: String
-  +password: String
-  +login()
-  +logout()
-}
+    %% ======================
+    %% USUARIOS Y ROLES
+    %% ======================
+    class Usuario {
+        +int id
+        +String nombre
+        +String dni
+        +String email
+        +String password
+        +login(String email, String password) boolean
+        +logout () void
+    }
 
-class Rol {
-  +id: int
-  +nombre: String
-  +permisos: String[]
-}
+    class Rol {
+        +int id
+        +String nombre
+        +List~String~ permisos
+    }
 
-class Administrador
-class Docente
-class Alumno {
-  +legajo: String
-}
+    class Administrador {
+        +crearUsuario(Usuario u) void
+        +generarReporte(TipoReporte tipo) Reporte
+    }
 
-Usuario --> Rol
-Administrador --|> Usuario
-Docente --|> Usuario
-Alumno --|> Usuario
+    class Docente {
+        +crearTarea(Tarea t) void
+        +cargarNota(Calificacion c) void
+    }
 
-%% ======================
-%% MATERIAS Y CORRELATIVAS
-%% ======================
-class Materia {
-  +id: int
-  +nombre: String
-  +codigo: String
-  +cargaHoraria: int
-  +modalidad: String
-}
+    class Alumno {
+        +String legajo
+        +verHistorial() List~Calificacion~
+    }
 
-Materia --> "0..*" Materia : correlativas
+    Usuario "1" --> "1" Rol
+    Administrador --|> Usuario
+    Docente --|> Usuario
+    Alumno --|> Usuario
 
-%% ======================
-%% PLAN DE ESTUDIO
-%% ======================
-class PlanEstudio {
-  +id: int
-  +nombre: String
-  +version: String
-}
+    %% ======================
+    %% MATERIA Y PLAN
+    %% ======================
+    class Materia {
+        +int id
+        +String nombre
+        +String codigo
+        +Modalidad modalidad
+    }
 
-class PlanMateria {
-  +anio: int
-  +cuatrimestre: int
-}
+    class Correlatividad {
+        +int id
+        +boolean requiereAprobada
+    }
 
-PlanEstudio --> "1..*" PlanMateria
-PlanMateria --> Materia
-Alumno --> PlanEstudio
+    class PlanEstudio {
+        +int id
+        +String nombre
+        +String version
+    }
 
-class Equivalencia {
-  +id: int
-}
 
-Equivalencia --> Materia : origen
-Equivalencia --> Materia : destino
+    Materia "1" *-- "0..*" Correlatividad : tiene
+    Correlatividad "1" --> "1" Materia : materiaRequisito
+    PlanEstudio "1" *-- "1..*" Materia
+    PlanEstudio "0..*" --> "1" Materia
+    Alumno "0..*" --> "1" PlanEstudio
 
-%% ======================
-%% ADMINISTRACIÓN ACADÉMICA
-%% ======================
-class Comision {
-  +id: int
-  +nombre: String
-}
+    %% ======================
+    %% ADMINISTRACIÓN ACADÉMICA
+    %% ======================
+    class Comision {
+        +int id
+        +String nombre
+        +int capacidad
+    }
 
-Comision --> Materia
-Docente --> "1..*" Comision
+    class InscripcionCursada {
+        +Date fecha
+        +EstadoInscripcion estado
+    }
 
-class InscripcionCursada {
-  +fecha: Date
-}
+    class ExamenFinal {
+        +Date fecha
+        +cerrarInscripcion() void
+    }
 
-Alumno --> "0..*" InscripcionCursada
-InscripcionCursada --> Comision
+    class InscripcionExamen {
+        +Date fecha
+        +EstadoInscripcion estado
+    }
 
-class ExamenFinal {
-  +fecha: Date
-}
+    class Calificacion {
+        +float nota
+        +TipoCalificacion tipo
+        +CondicionAlumno condicion
+    }
 
-class InscripcionExamen {
-  +fecha: Date
-}
+    class Asistencia {
+        +Date fecha
+        +boolean presente
+    }
+    Alumno "1" --> "0..*" Asistencia
+    Asistencia "0..*" --> "1" Materia
+    Comision "0..*" --> "1" Materia
+    Docente "1..*" --> "1..*" Comision
+    Alumno "1" --> "0..*" InscripcionCursada
+    InscripcionCursada "0..*" --> "1" Comision
+    Alumno "1" --> "0..*" InscripcionExamen
+    InscripcionExamen "0..*" --> "1" ExamenFinal
+    ExamenFinal "0..*" --> "1" Materia
+    InscripcionCursada "1" *-- "0..*" Calificacion
+  
 
-Alumno --> "0..*" InscripcionExamen
-InscripcionExamen --> ExamenFinal
-ExamenFinal --> Materia
+    %% ======================
+    %% TAREAS Y ENTREGAS
+    %% ======================
+    class Tarea {
+        +int id
+        +String descripcion
+        +Date fechaEntrega
+    }
 
-class Calificacion {
-  +nota: float
-  +tipo: String
-  +condicion: String
-}
+    class Entrega {
+        +String archivo
+        +Date fecha
+        +float nota
+        +EstadoEntrega estado
+    }
 
-Alumno --> "0..*" Calificacion
-Calificacion --> Materia
+    Docente "1" --> "0..*" Tarea
+    Tarea "0..*" --> "1" Materia
+    Alumno "1" --> "0..*" Entrega
+    Entrega "0..*" --> "1" Tarea
 
-class Asistencia {
-  +fecha: Date
-  +presente: boolean
-}
+    %% ======================
+    %% OTROS
+    %% ======================
+    class Notificacion {
+        +String mensaje
+        +Date fecha
+    }
 
-Alumno --> "0..*" Asistencia
-Asistencia --> Comision
+    class Reporte {
+        +TipoReporte tipo
+        +generar() void
+    }
 
-%% ======================
-%% TAREAS
-%% ======================
-class Tarea {
-  +id: int
-  +descripcion: String
-  +fechaEntrega: Date
-}
-
-class Entrega {
-  +archivo: String
-  +fecha: Date
-  +nota: float
-  +comentario: String
-}
-
-Docente --> "0..*" Tarea
-Tarea --> Materia
-Alumno --> "0..*" Entrega
-Entrega --> Tarea
-
-%% ======================
-%% NOTIFICACIONES
-%% ======================
-class Notificacion {
-  +mensaje: String
-  +fecha: Date
-}
-
-Usuario --> "0..*" Notificacion
-
-%% ======================
-%% REPORTES
-%% ======================
-class Reporte {
-  +tipo: String
-  +generar()
-}
-
-Administrador --> "0..*" Reporte
+    Usuario "1" --> "0..*" Notificacion
+    Administrador "1" --> "0..*" Reporte
 ```
 
 #### Diagrama Entidad relacion 
