@@ -1,3 +1,110 @@
+<<<<<<< HEAD
+=======
+
+```mermaid
+classDiagram
+    class Persona {
+        - nombre : String
+        - apellido : String
+        - dni : int
+        - email : String
+        - telefono : String
+        - direccion : String
+    }
+
+    class Profesor {
+        - id_doc : String
+    }
+
+    class Estudiante {
+        - estado : Estado
+    }
+
+    class Materia {
+        - cod_Mat : int
+        - nombre : String
+    }
+
+    class Mat_Apro {
+        - codigo : int
+    }
+
+    class Nota_Final {
+        - nota : int
+        - condicion : Condicion
+    }
+
+    class Plan_Estudio {
+        - id_p : int
+        - ano_plan : fecha
+        - version : int
+    }
+
+    class Carrera {
+        - cod_carrera : int
+        - nombre : String
+        - duracion : int
+    }
+
+    class Periodo {
+        - ano : int
+        - periodo : int
+        - cargo : Cargo
+        - par : Participacion
+    }
+
+    class Cargo {
+        <<enumeration>>
+        responsable_cat
+        jtp
+        ayudante
+    }
+
+    class Participacion {
+        <<enumeration>>
+        responsable
+        colaborador
+    }
+
+    class Condicion {
+        <<enumeration>>
+        Aprobado
+        Regular
+        Libre
+    }
+
+    class Estado {
+        <<enumeration>>
+        ingresante
+        avanzado
+    }
+
+    class periodo {
+        <<enumeration>>
+        cuatrimestral
+        anual
+    }
+
+    Persona <|-- Profesor
+    Persona <|-- Estudiante
+
+    Profesor "1" -- "1..*" Periodo
+    Materia "0..*" -- "1..*" Periodo
+
+    Materia "1..*" --> "0..*" Materia : correlatividad
+    Materia "1" -- "1..*" Mat_Apro
+
+    Estudiante "0..*" -- "0..*" Materia : cursa
+    Estudiante "0..*" -- "0..*" Materia : rindo
+    Estudiante "1..*" -- "0..*" Nota_Final
+    Materia "1..*" -- "0..*" Nota_Final
+
+    Carrera "1" -- "1" Plan_Estudio : vigente
+    Plan_Estudio "1" -- "1..*" Materia
+    Carrera "1" -- "1..*" Estudiante
+```
+
+>>>>>>> fd48374dc852c7830073feb68a4ca3fb79ad763d
 #### Diagrama de clases 
 ```mermaid
 classDiagram
@@ -43,6 +150,7 @@ classDiagram
         OCUPACION_COMISIONES
     }
 
+<<<<<<< HEAD
     %% ======================
     %% USUARIOS Y ROLES
     %% ======================
@@ -192,6 +300,331 @@ classDiagram
 
     Usuario "1" --> "0..*" Notificacion
     Administrador "1" --> "0..*" Reporte
+=======
+  
+
+%% ======================
+
+%% USUARIOS Y ROLES
+
+%% ======================
+
+class Usuario {
+
+  +id: int
+
+  +nombre: String
+
+  +dni: String
+
+  +email: String
+
+  +password: String
+
+  +login()
+
+  +logout()
+
+}
+
+  
+
+class Administrador
+
+class Docente
+
+class Alumno {
+
+  +legajo: String
+
+}
+
+  
+
+Administrador --|> Usuario
+
+Docente --|> Usuario
+
+Alumno --|> Usuario
+
+  
+
+%% ======================
+
+%% MATERIAS Y CORRELATIVAS
+
+%% ======================
+
+class Materia {
+
+  +id: int
+
+  +nombre: String
+
+  +codigo: String
+
+  +cargaHoraria: int
+
+  +modalidad: String
+
+}
+
+  
+
+Materia --> "0..*" Materia : correlativas
+
+  
+  
+  
+
+%% ======================
+
+%% PLAN DE ESTUDIO
+
+%% ======================
+
+class PlanEstudio {
+
+  +id: int
+
+  +nombre: String
+
+  +version: String
+
+}
+
+  
+
+class Carrera {
+
+  +codigoCarrera: int
+
+  +duracion: time
+
+  +nombre: String
+
+}
+
+  
+  
+
+Alumno -->"1..*" Carrera : cursa
+
+  
+  
+
+Carrera "1" *-- "1" PlanEstudio : vigente
+
+Carrera "1" *-- "1..*" PlanEstudio
+
+PlanEstudio "1" --> "1..*" Materia : tiene
+
+  
+  
+
+class Equivalencia {
+
+  +id: int
+
+}
+
+  
+
+Equivalencia --> Materia : origen
+
+Equivalencia --> Materia : destino
+
+  
+
+%% ======================
+
+%% ADMINISTRACIÓN ACADÉMICA
+
+%% ======================
+
+class Comision {
+
+  +id: int
+
+  +nombre: String
+
+}
+
+  
+
+Materia --> Comision
+
+Docente --> "1..*" Comision
+
+Docente  "1" --> "1..*" Materia : responsable
+
+Docente  "1..*" --> "1..*" Materia : docenteComun
+
+  
+
+class Periodo {
+
+    +anio : int
+
+    +periodo : Tperiodo
+
+    +cargo : cargo
+
+    +participacion : Tparticipacion
+
+}
+
+  
+
+Docente --> Periodo
+
+Materia --> Periodo
+
+  
+
+class InscripcionCursada {
+
+  +fecha: Date
+
+}
+
+  
+
+Alumno --> "0..*" InscripcionCursada
+
+InscripcionCursada --> Comision
+
+  
+
+class ExamenFinal {
+
+  +fecha: Date
+
+  +nota: float
+
+}
+
+  
+
+class InscripcionExamen {
+
+  +fecha: Date
+
+}
+
+  
+
+Alumno --> "0..*" InscripcionExamen
+
+InscripcionExamen --> ExamenFinal
+
+ExamenFinal --> Materia
+
+  
+
+class Calificacion {
+
+  +nota: float
+
+  +tipo: String
+
+  +condicion: String
+
+}
+
+  
+
+Alumno --> "0..*" Calificacion
+
+Calificacion --> Materia
+
+  
+  
+
+%% ======================
+
+%% TAREAS
+
+%% ======================
+
+class Tarea {
+
+  +id: int
+
+  +descripcion: String
+
+  +fechaEntrega: Date
+
+}
+
+  
+
+class Entrega {
+
+  +archivo: String
+
+  +fecha: Date
+
+  +nota: float
+
+  +comentario: String
+
+}
+
+  
+
+Docente --> "0..*" Tarea
+
+Tarea --> Materia
+
+Alumno --> "0..*" Entrega
+
+Entrega --> Tarea
+
+  
+
+%% ======================
+
+%% NOTIFICACIONES
+
+%% ======================
+
+class Notificacion {
+
+  +mensaje: String
+
+  +fecha: Date
+
+}
+
+  
+
+Usuario --> "0..*" Notificacion
+
+Notificacion --> "1..*" Usuario
+
+  
+
+%% ======================
+
+%% REPORTES
+
+%% ======================
+
+class Reporte {
+
+  +tipo: String
+
+  +generar()
+
+}
+
+  
+
+Administrador --> "0..*" Reporte
+
+Administrador --> Carrera
+>>>>>>> fd48374dc852c7830073feb68a4ca3fb79ad763d
 ```
 
 #### Diagrama Entidad relacion 
@@ -384,95 +817,195 @@ USUARIO ||--o{ NOTIFICACION : recibe
 ``` mermaid
 flowchart LR
 
+  
+
 %% ======================
+
 %% ACTORES
+
 %% ======================
+
 Admin[Administrador]
+
 Docente[Docente]
+
 Alumno[Alumno]
 
+Usuario[Usuario]
+
+  
+
+Usuario --> Docente
+
+Usuario --> Admin
+
+Usuario --> Alumno
+
+  
+  
+
 %% ======================
+
 %% SISTEMA
+
 %% ======================
+
 subgraph Sistema de Gestión Estudiantil
 
+  
+
 %% --- USUARIOS ---
+
 UC1[Gestionar usuarios]
+
 UC2[Autenticarse]
 
+UC23[alta, baja y modificación de datos personales]
+
+  
+
 %% --- MATERIAS ---
+
 UC3[Gestionar materias]
-UC4[Definir correlatividades]
+
+UC4[consultar correlatividades]
+
 UC5[Visualizar correlativas]
 
+  
+
 %% --- PLANES ---
+
 UC6[Gestionar planes de estudio]
+
 UC7[Asignar alumno a plan]
+
 UC8[Definir equivalencias]
 
+  
+
 %% --- ACADÉMICO ---
-UC9[Inscribirse a cursada]
+
+UC9[Inscribirse a materia]
+
 UC10[Inscribirse a examen]
+
 UC11[Registrar calificaciones]
-UC12[Registrar asistencia]
+
 UC13[Consultar historial académico]
 
+  
+
 %% --- DESEMPEÑO ---
+
 UC14[Ver progreso académico]
-UC15[Recibir alertas]
+
+UC15[Recibir notificaciones]
+
+  
 
 %% --- TAREAS ---
+
 UC16[Publicar tareas]
+
 UC17[Entregar tareas]
+
 UC18[Calificar entregas]
+
 UC19[Ver calendario]
 
+  
+
 %% --- REPORTES ---
+
 UC20[Generar reportes]
-UC21[Ver dashboard]
+
+  
 
 end
 
+  
+
 %% ======================
+
 %% RELACIONES ACTORES
+
 %% ======================
+
+  
+
+Usuario --> UC23
+
+  
 
 Admin --> UC1
+
 Admin --> UC3
+
 Admin --> UC6
+
 Admin --> UC8
+
 Admin --> UC20
-Admin --> UC21
+
+  
+  
 
 Docente --> UC11
-Docente --> UC12
+
 Docente --> UC16
+
 Docente --> UC18
+
 Docente --> UC5
 
+  
+
 Alumno --> UC9
+
 Alumno --> UC10
+
 Alumno --> UC13
+
 Alumno --> UC14
+
 Alumno --> UC15
+
 Alumno --> UC17
+
 Alumno --> UC19
+
 Alumno --> UC5
 
-%% ======================
-%% RELACIONES INCLUDE
+  
+
 %% ======================
 
+%% RELACIONES INCLUDE
+
+%% ======================
+
+  
+
 UC9 --> UC4
+
 UC9 --> UC7
+
+  
 
 UC10 --> UC4
 
+  
+
 UC17 --> UC16
+
+  
 
 UC18 --> UC17
 
-UC14 --> UC13 
+  
+
+UC14 --> UC13
 ```
 
 ### Diagrama de componentes
