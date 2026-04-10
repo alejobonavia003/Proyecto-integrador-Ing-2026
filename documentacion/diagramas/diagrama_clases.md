@@ -43,7 +43,6 @@ classDiagram
         OCUPACION_COMISIONES
     }
 
-<<<<<<< HEAD
     %% ======================
     %% USUARIOS Y ROLES
     %% ======================
@@ -193,7 +192,7 @@ classDiagram
 
     Usuario "1" --> "0..*" Notificacion
     Administrador "1" --> "0..*" Reporte
-=======
+
   
 
 %% ======================
@@ -517,7 +516,6 @@ class Reporte {
 Administrador --> "0..*" Reporte
 
 Administrador --> Carrera
->>>>>>> fd48374dc852c7830073feb68a4ca3fb79ad763d
 ```
 
 #### Diagrama Entidad relacion 
