@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="proyecto-ing-2026" company="" webLink="http://" view-date="2026-04-30" view-index="0" gantt-divider-location="580" resource-divider-location="300" version="3.3.3316" locale="es_AR">
+    <description/>
+    <view zooming-state="default:0" id="gantt-chart">
+        <field id="tpd3" name="Name" width="320" order="0"/>
+        <field id="tpd4" name="Begin date" width="120" order="1"/>
+        <field id="tpd5" name="End date" width="124" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+        <timeline><![CDATA[0]]></timeline>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="210" order="0"/>
+        <field id="1" name="Default role" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" uid="036c169c3ba94dda945a462a4413d890" name="Acomodar arquitectura" meeting="false" start="2026-04-14" duration="5" complete="0" priority="4" expand="false">
+            <notes><![CDATA[| Actividad | Descripción                                      | Precedencia | Duración | Persona |
+|----------|--------------------------------------------------|-------------|----------|---------|
+| A1       | Definir estructura de carpetas                   | -           | 0.5 día  |         |
+| A2       | Configurar proyecto base (Maven + dependencias)  | A1          | 0.5 día  |         |
+| A3       | Configurar conexión a BD (DBConnection)          | A2          | 0.5 día  |         |
+| A4       | Definir Models base (Usuario, Rol)               | A1          | 1 día    |         |
+| A5       | Definir interfaces DAO                          | A3 A4       | 0.5 día  |         |
+| A6       | Definir estructura Service                      | A4          | 0.5 día  |         |
+| A7       | Configurar Controllers + rutas (Spark)          | A2          | 0.5 día  |         |
+| A8       | Configurar sistema de Views (Mustache)          | A2          | 0.5 día  |         |
+| A9       | Implementar flujo base end-to-end (test dummy)  | A3 A5 A6 A7 | 1 día    |         |]]></notes>
+            <depend id="1" type="2" difference="0" hardness="Strong"/>
+            <depend id="42" type="2" difference="0" hardness="Strong"/>
+            <task id="20" uid="7db01d0040cb4b819578c4822e119044" name="Implementar flujo base end-to-end (test dummy)" meeting="false" start="2026-04-20" duration="1" complete="0" expand="true"/>
+            <task id="19" uid="7cf47340115f4e789d760b77215734e1" name="Configurar sistema de Views (Mustache)" meeting="false" start="2026-04-16" duration="1" complete="0" expand="true"/>
+            <task id="18" uid="a228f280583f48be92f28597f6f41907" name="Configurar Controllers + rutas (Spark)" meeting="false" start="2026-04-16" duration="1" complete="0" expand="true">
+                <depend id="20" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="17" uid="69101ed34c8149a09759c3a728ff1484" name="Definir estructura Service" meeting="false" start="2026-04-16" duration="1" complete="0" expand="true"/>
+            <task id="16" uid="5f8722d3f02e4d26b006582557a17b53" name="Definir interfaces DAO" meeting="false" start="2026-04-17" duration="1" complete="0" expand="true">
+                <depend id="20" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="15" uid="b90a1314b841490f8a971cf70b19df77" name="Definir Models base (Usuario, Rol)" meeting="false" start="2026-04-15" duration="1" complete="0" expand="true">
+                <depend id="16" type="2" difference="0" hardness="Strong"/>
+                <depend id="17" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="14" uid="16e109f8076d46d58355be3abf55cac0" name="Configurar conexión a BD (DBConnection)" meeting="false" start="2026-04-16" duration="1" complete="0" expand="true">
+                <depend id="16" type="2" difference="0" hardness="Strong"/>
+                <depend id="20" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="13" uid="76218cb016514ee59e00d8daa406d947" name="Configurar proyecto base (Maven + dependencias)" meeting="false" start="2026-04-15" duration="1" complete="0" expand="true">
+                <depend id="14" type="2" difference="0" hardness="Strong"/>
+                <depend id="18" type="2" difference="0" hardness="Strong"/>
+                <depend id="19" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="12" uid="be910953f70b4f47aaa9eea6b50871db" name="Definir estructura de carpetas" meeting="false" start="2026-04-14" duration="1" complete="0" expand="true">
+                <depend id="13" type="2" difference="0" hardness="Strong"/>
+                <depend id="15" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="1" uid="b4a9e58c0a9146cfb07168a91bd3ed31" name="Autenticacion y Autorizacion" meeting="false" start="2026-04-21" duration="5" complete="0" expand="false">
+            <notes><![CDATA[| Actividad | Descripción                               | Precedencia | Duración | Persona |
+|----------|-------------------------------------------|-------------|----------|---------|
+| A1       | Crear LoginDTO                            | -           | 0.5 día  |         |
+| A2       | Implementar PasswordHasher                | -           | 0.5 día  |         |
+| A3       | Implementar UsuarioDAO.buscarPorEmail     | -           | 1 día    |         |
+| A4       | Implementar AuthService.login             | A1 A2 A3    | 1 día    |         |
+| A5       | Implementar AuthController (/login)       | A4          | 0.5 día  |         |
+| A6       | Crear vista login.mustache                | A5          | 0.5 día  |         |
+| A7       | Implementar manejo de sesión              | A5          | 0.5 día  |         |
+| A8       | Implementar filtros de autorización       | A7          | 0.5 día  |         |]]></notes>
+            <depend id="2" type="2" difference="0" hardness="Strong"/>
+            <depend id="3" type="2" difference="0" hardness="Strong"/>
+            <task id="28" uid="9b3abb00a643415fb3a7ac848aff2702" name="Implementar filtros de autorización" meeting="false" start="2026-04-27" duration="1" complete="0" expand="true"/>
+            <task id="27" uid="c28c2e4da9094883a30059679b408695" name="Implementar manejo de sesión" meeting="false" start="2026-04-24" duration="1" complete="0" expand="true">
+                <depend id="28" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="26" uid="f774eac943ec4d0cb0c3f272fc39e0d9" name="Crear vista login.mustache" meeting="false" start="2026-04-24" duration="1" complete="0" expand="true"/>
+            <task id="25" uid="98d4d52b15c44589b5c050777b0def59" name="Implementar AuthController (/login)" meeting="false" start="2026-04-23" duration="1" complete="0" expand="true">
+                <depend id="26" type="2" difference="0" hardness="Strong"/>
+                <depend id="27" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="24" uid="b1a5171d266543b7b884e551ddf786ec" name="Implementar AuthService.login" meeting="false" start="2026-04-22" duration="1" complete="0" expand="true">
+                <depend id="25" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="23" uid="492fa9a7c105496785bc077c491387d9" name="Implementar UsuarioDAO.buscarPorEmail" meeting="false" start="2026-04-21" duration="1" complete="0" expand="true">
+                <depend id="24" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="22" uid="a7a2d65ab24e4e9080c38b9e5aaa74a6" name="Implementar PasswordHasher" meeting="false" start="2026-04-21" duration="1" complete="0" expand="true"/>
+            <task id="21" uid="65087bdf97bc4225b0b637b7a69af1cb" name="Crear LoginDTO" meeting="false" start="2026-04-21" duration="1" complete="0" expand="true">
+                <depend id="24" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="2" uid="bd04d621a9b54e0bb428cd48ccc4eb2d" name="Gestion de Usuarios" meeting="false" start="2026-04-28" duration="4" complete="0" expand="false" cost-manual-value="0.0" cost-calculated="false">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| B1       | Crear UsuarioDTO                         | -           | 0.5 día  |         |
+| B2       | Implementar UsuarioDAO (CRUD)            | -           | 1 día    |         |
+| B3       | Implementar UsuarioService               | B1 B2       | 1 día    |         |
+| B4       | Implementar UsuarioController            | B3          | 1 día    |         |
+| B5       | Crear vistas de usuarios                 | B4          | 1 día    |         |]]></notes>
+            <depend id="6" type="2" difference="0" hardness="Strong"/>
+            <task id="33" uid="5fa7a412cd144938bd6a70fafc69c530" name="Crear vistas de usuarios" meeting="false" start="2026-05-01" duration="1" complete="0" expand="true"/>
+            <task id="32" uid="15ba41e2bfe941309696b9db7b09c963" name="Implementar UsuarioController" meeting="false" start="2026-04-30" duration="1" complete="0" expand="true">
+                <depend id="33" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="31" uid="0d2bf8b744ab4d06bcdea04853270042" name="Implementar UsuarioService" meeting="false" start="2026-04-29" duration="1" complete="0" expand="true">
+                <depend id="32" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="30" uid="c0f9f6e1f4a44f7eb39cb509e281cefd" name="Implementar UsuarioDAO (CRUD)" meeting="false" start="2026-04-28" duration="1" complete="0" expand="true">
+                <depend id="31" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="29" uid="1a0ba131f8f14f288271b2132908b902" name="Crear UsuarioDTO" meeting="false" start="2026-04-28" duration="1" complete="0" expand="true">
+                <depend id="31" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="3" uid="96dcd1a0ee544751ad5716f874ca4ea4" name="Gestion de materias" meeting="false" start="2026-04-28" duration="5" complete="0" expand="false">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| C1       | Crear Materia model y DTO                | -           | 0.5 día  |         |
+| C2       | Implementar MateriaDAO                   | -           | 1 día    |         |
+| C3       | Implementar lógica de correlatividades   | C2          | 1 día    |         |
+| C4       | Implementar MateriaService               | C1 C2       | 1 día    |         |
+| C5       | Implementar MateriaController            | C4          | 1 día    |         |
+| C6       | Crear vistas de materias                 | C5          | 1 día    |         |]]></notes>
+            <depend id="4" type="2" difference="0" hardness="Strong"/>
+            <depend id="5" type="2" difference="0" hardness="Strong"/>
+            <depend id="6" type="2" difference="0" hardness="Strong"/>
+            <depend id="7" type="2" difference="0" hardness="Strong"/>
+            <depend id="9" type="2" difference="0" hardness="Strong"/>
+            <task id="39" uid="bba1ed484a974bad86d13486a08c85cc" name="Crear vistas de materias" meeting="false" start="2026-05-04" duration="1" complete="0" expand="true"/>
+            <task id="38" uid="03cea36ae95c49d787e0a5039469db6e" name="Implementar MateriaController" meeting="false" start="2026-05-01" duration="1" complete="0" expand="true">
+                <depend id="39" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="37" uid="df1429483ffd48d190d46250cc704b34" name="Implementar MateriaService" meeting="false" start="2026-04-30" duration="1" complete="0" expand="true">
+                <depend id="38" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="36" uid="2b56b9d7531347069cdfb82b5c679b22" name="Implementar lógica de correlatividades" meeting="false" start="2026-04-29" duration="1" complete="0" expand="true">
+                <depend id="37" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="35" uid="9e7f575f7ba5476d9ffb965ff2f6601c" name="Implementar MateriaDAO" meeting="false" start="2026-04-28" duration="1" complete="0" expand="true">
+                <depend id="36" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="34" uid="0f51f669310947a3adf593a5242a898a" name="Crear Materia model y DTO" meeting="false" start="2026-04-28" duration="1" complete="0" expand="true">
+                <depend id="36" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="4" uid="e07410bb552648948398b9339e67f8e7" name="Gestion de planes de estudio" meeting="false" start="2026-05-05" duration="4" complete="0" expand="false">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| D1       | Crear PlanEstudio model y DTO            | -           | 0.5 día  |         |
+| D2       | Implementar PlanDAO                      | -           | 1 día    |         |
+| D3       | Implementar relación plan-materia        | D2          | 1 día    |         |
+| D4       | Implementar PlanService                  | D1 D2       | 1 día    |         |
+| D5       | Implementar PlanController               | D4          | 1 día    |         |]]></notes>
+            <task id="45" uid="11e28a50ab1548319be4c422033b96b1" name="Implementar vistas para planes" meeting="false" start="2026-05-08" duration="1" complete="0" expand="true"/>
+            <task id="44" uid="19e2a12310084999b55093044e1a97d4" name="Implementar PlanController" meeting="false" start="2026-05-07" duration="1" complete="0" expand="true">
+                <depend id="45" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="43" uid="c89f259154da4b62951521c62b7c72f3" name="Implementar PlanService" meeting="false" start="2026-05-06" duration="1" complete="0" expand="true">
+                <depend id="44" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="42" uid="8dccd6a5c950401284f79a9327c9c87b" name="Implementar relación plan-materia" meeting="false" start="2026-05-06" duration="1" complete="0" expand="true"/>
+            <task id="41" uid="d6c327548cee4254860d1d3b5f4905c0" name="Implementar PlanDAO" meeting="false" start="2026-05-05" duration="1" complete="0" expand="true">
+                <depend id="42" type="2" difference="0" hardness="Strong"/>
+                <depend id="43" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="40" uid="dbe9a1be41054eacae26190cbac1f84e" name="Crear PlanEstudio model y DTO" meeting="false" start="2026-05-05" duration="1" complete="0" expand="true">
+                <depend id="43" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="5" uid="006e6ef662b248fbabbde63b70e04488" name="Gestion de comiciones" meeting="false" start="2026-05-05" duration="3" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| E1       | Crear Comision model                     | -           | 0.5 día  |         |
+| E2       | Implementar ComisionDAO                  | -           | 1 día    |         |
+| E3       | Implementar ComisionService              | E1 E2       | 1 día    |         |
+| E4       | Implementar ComisionController           | E3          | 1 día    |         |]]></notes>
+            <depend id="6" type="2" difference="0" hardness="Strong"/>
+            <depend id="9" type="2" difference="0" hardness="Strong"/>
+            <task id="49" uid="2e709f501dfb4223ad693cd9b949e66c" name="Implementar ComisionController" meeting="false" start="2026-05-07" duration="1" complete="0" expand="true"/>
+            <task id="48" uid="2a4505e7e55e429a8bde5d4f9233e93e" name="Implementar ComisionService" meeting="false" start="2026-05-06" duration="1" complete="0" expand="true">
+                <depend id="49" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="47" uid="a15f2644d3234533bfbcb9fb51e35398" name="Implementar ComisionDAO" meeting="false" start="2026-05-05" duration="1" complete="0" expand="true">
+                <depend id="48" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="46" uid="4a6140aaa69b4183aa14f2c552431c23" name="Crear Comision model" meeting="false" start="2026-05-05" duration="1" complete="0" expand="true">
+                <depend id="48" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="6" uid="2bd7b9dac7984687adfd327439c77148" name="Inscripcion a cursada" meeting="false" start="2026-05-08" duration="4" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| F1       | Crear Inscripcion model y DTO            | -           | 0.5 día  |         |
+| F2       | Implementar InscripcionDAO               | -           | 1 día    |         |
+| F3       | Implementar validación de correlativas   | F2          | 1 día    |         |
+| F4       | Implementar InscripcionService           | F1 F2 F3    | 1 día    |         |
+| F5       | Implementar InscripcionController        | F4          | 1 día    |         |]]></notes>
+            <depend id="8" type="2" difference="0" hardness="Strong"/>
+            <depend id="10" type="2" difference="0" hardness="Strong"/>
+            <task id="54" uid="b7957c7bbc974c6f93d4dbdde97d98ac" name="Implementar InscripcionController" meeting="false" start="2026-05-13" duration="1" complete="0" expand="true"/>
+            <task id="53" uid="43090c389d584e9db26b938cd413c446" name="Implementar InscripcionService" meeting="false" start="2026-05-12" duration="1" complete="0" expand="true">
+                <depend id="54" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="52" uid="d3d212552e4b47b7beed1d6b71bd438f" name="Implementar validación de correlativas" meeting="false" start="2026-05-11" duration="1" complete="0" expand="true">
+                <depend id="53" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="51" uid="250ca525f1244feba251b92290723fbf" name="Implementar InscripcionDAO" meeting="false" start="2026-05-08" duration="1" complete="0" expand="true">
+                <depend id="52" type="2" difference="0" hardness="Strong"/>
+                <depend id="53" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="50" uid="9766d62d58304732bbbcf2184cf55b0e" name="Crear Inscripcion model y DTO" meeting="false" start="2026-05-08" duration="1" complete="0" expand="true">
+                <depend id="53" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="7" uid="57b8d4f7ec2e417d84ca85dbed597b15" name="Examenes finales" meeting="false" start="2026-05-05" duration="3" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| G1       | Crear Examen model                       | -           | 0.5 día  |         |
+| G2       | Implementar ExamenDAO                    | -           | 1 día    |         |
+| G3       | Implementar ExamenService                | G2          | 1 día    |         |
+| G4       | Implementar ExamenController             | G3          | 1 día    |         |]]></notes>
+            <depend id="8" type="2" difference="0" hardness="Strong"/>
+            <task id="58" uid="4da9da40b07a41efb0fb0eed2711aef5" name="Implementar ExamenController" meeting="false" start="2026-05-07" duration="1" complete="0" expand="true"/>
+            <task id="57" uid="0b71c3b49aa6497bb977c6720338cdf3" name="Implementar ExamenService" meeting="false" start="2026-05-06" duration="1" complete="0" expand="true">
+                <depend id="58" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="56" uid="5b4926e9a71d4d688bdc104544a98a1b" name="Implementar ExamenDAO" meeting="false" start="2026-05-05" duration="1" complete="0" expand="true">
+                <depend id="57" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="55" uid="77b8d2955a954687ac798189c0af48ac" name="Crear Examen model" meeting="false" start="2026-05-05" duration="1" complete="0" expand="true">
+                <depend id="57" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="8" uid="48961215422e4d81944dada9fc43354e" name="Calificaccion y asistencia" meeting="false" start="2026-05-14" duration="4" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| H1       | Crear Calificacion model                 | -           | 0.5 día  |         |
+| H2       | Implementar CalificacionDAO              | -           | 1 día    |         |
+| H3       | Implementar lógica de notas              | H2          | 1 día    |         |
+| H4       | Implementar CalificacionService          | H1 H2 H3    | 1 día    |         |
+| H5       | Implementar CalificacionController       | H4          | 1 día    |         |]]></notes>
+            <depend id="10" type="2" difference="0" hardness="Strong"/>
+            <depend id="11" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="9" uid="d6d15b43e7ad42bdaff82a674663fce2" name="Tareas y entregas" meeting="false" start="2026-05-08" duration="3" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| I1       | Crear Tarea y Entrega model              | -           | 0.5 día  |         |
+| I2       | Implementar TareaDAO                     | -           | 1 día    |         |
+| I3       | Implementar EntregaDAO                   | -           | 1 día    |         |
+| I4       | Implementar TareaService                 | I2 I3       | 1 día    |         |
+| I5       | Implementar TareaController              | I4          | 1 día    |         |]]></notes>
+            <depend id="10" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="10" uid="f46a099f669543eca5666f18a569c060" name="Notificaciones" meeting="false" start="2026-05-20" duration="2" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| J1       | Crear Notificacion model                 | -           | 0.5 día  |         |
+| J2       | Implementar NotificacionDAO              | -           | 1 día    |         |
+| J3       | Implementar lógica de disparo            | J2          | 1 día    |         |
+| J4       | Integrar con otros módulos               | J3          | 1 día    |         |]]></notes>
+            <depend id="11" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="11" uid="9751e72cef9b4308acbf7adeafc6a88f" name="Reportes y dashboards" meeting="false" start="2026-05-22" duration="3" complete="0" expand="true">
+            <notes><![CDATA[| Actividad | Descripción                              | Precedencia | Duración | Persona |
+|----------|------------------------------------------|-------------|----------|---------|
+| K1       | Definir estructura de reportes           | -           | 0.5 día  |         |
+| K2       | Implementar queries complejas            | -           | 1 día    |         |
+| K3       | Implementar ReporteService               | K1 K2       | 1 día    |         |
+| K4       | Implementar ReporteController            | K3          | 1 día    |         |
+| K5       | Crear dashboard (vista)                  | K4          | 1 día    |         |]]></notes>
+        </task>
+    </tasks>
+    <resources>
+        <resource id="0" name="Lautaro Fiore" function="Default:0" contacts="" phone="">
+            <rate name="standard" value="5"/>
+        </resource>
+        <resource id="1" name="Aldana Oviedo" function="Default:0" contacts="" phone=""/>
+        <resource id="2" name="Alejo Bonavia" function="Default:1" contacts="" phone="">
+            <rate name="standard" value="5"/>
+        </resource>
+        <resource id="3" name="Lautaro Viglione" function="Default:0" contacts="" phone=""/>
+        <resource id="4" name="Mila Delfino" function="Default:0" contacts="" phone=""/>
+    </resources>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
