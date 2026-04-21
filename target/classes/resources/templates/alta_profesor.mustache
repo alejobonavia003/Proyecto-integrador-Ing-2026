@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alta de Profesor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+    <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Registrar profesor</h1>
+
+    {{#successMessage}}
+        <p style="color:green;">{{successMessage}}</p>
+    {{/successMessage}}
+
+    {{#errorMessage}}
+        <p style="color:red;">{{errorMessage}}</p>
+    {{/errorMessage}}
+        <form action="/profesor" method="post" class= "flex-column gap-3">
+                <div>
+                    <label for="nombre" class="block text-gray-700 text-sm font-medium mb-1">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><br><br>
+                </div>
+                <div>
+                    <label for="apellido" class="block text-gray-700 text-sm font-medium mb-1">Apellido:</label>
+                    <input type="text" id="apellido" name="apellido" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><br><br>
+                </div>
+                <div>
+                    <label for="dni" class="block text-gray-700 text-sm font-medium mb-1">DNI:</label>
+                    <input type="text" id="dni" name="dni" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><br><br>
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 text-sm font-medium mb-1">Correo:</label>
+                    <input type="email" id="email" name="email" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><br><br>
+                </div>
+                <div>
+                    <label for="telefono" class="block text-gray-700 text-sm font-medium mb-1">Telefono:</label>
+                    <input type="text" id="telefono" name="telefono" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><br><br>
+                </div>
+                <div>
+                    <label for="direccion" class="block text-gray-700 text-sm font-medium mb-1">Direccion:</label>
+                    <input type="text" id="direccion" name="direccion" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"><br><br>
+                </div>
+
+                <div class="col-span-1 md:col-span-2 text-center mt-4">
+                    <button type="submit"
+                            class="bg-blue-600 text-white py-2 px-8 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Registrar
+                    </button>
+                        <a href="/profesor" class="text-blue-600 hover:underline text-sm mt-3 block">Volver a gestion</a>
+                </div>
+        </form>
+
+</body>
+</html>
