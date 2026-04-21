@@ -943,9 +943,9 @@ flowchart TD
 ```
 #### Estructura de las carpetas
 ``` folders
-src/main/java/com/gestionestudiantil/
+src/main/java/
 
-├── Main.java
+├── App.java
 
 ├── config/
 │   ├── Routes.java
