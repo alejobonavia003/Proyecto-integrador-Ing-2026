@@ -1,4 +1,4 @@
-package com.is1.proyecto.models.persona;
+package models.persona;
 
 public class Rindio {
     

@@ -1,4 +1,4 @@
-package com.is1.proyecto.models;
+package models;
 
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;

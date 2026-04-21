@@ -1,4 +1,4 @@
-package com.is1.proyecto.models.carrera;
+package models.carrera;
 
 public class PlanDeEstudio {
     

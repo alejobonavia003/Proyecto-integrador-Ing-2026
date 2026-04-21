@@ -1,4 +1,4 @@
-package com.is1.proyecto; // Define el paquete de la aplicación, debe coincidir con la estructura de carpetas.
+
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,11 +11,11 @@ import org.javalite.activejdbc.Base; // Clase central de ActiveJDBC para gestion
 import org.mindrot.jbcrypt.BCrypt; // Utilidad para hashear y verificar contraseñas de forma segura.
 
 import com.fasterxml.jackson.databind.ObjectMapper; // Representa un modelo de datos y el nombre de la vista a renderizar.
-import com.is1.proyecto.config.DBConfigSingleton; // Motor de plantillas Mustache para Spark.
-import com.is1.proyecto.models.User; // Para crear mapas de datos (modelos para las plantillas).
-import com.is1.proyecto.models.persona.PersonaAbs;
-import com.is1.proyecto.models.persona.PersonaConcreta;
-import com.is1.proyecto.models.persona.Profesor;
+import config.DBConfigSingleton; // Motor de plantillas Mustache para Spark.
+import models.User; // Para crear mapas de datos (modelos para las plantillas).
+import models.persona.PersonaAbs;
+import models.persona.PersonaConcreta;
+import models.persona.Profesor;
 
 import spark.ModelAndView; // Interfaz Map, utilizada para Map.of() o HashMap.
 import static spark.Spark.after; // Clase Singleton para la configuración de la base de datos.

@@ -1,4 +1,4 @@
-package com.is1.proyecto.models.carrera;
+package models.carrera;
 
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;

@@ -1,5 +1,5 @@
 // Archivo: com/is1/proyecto/config/DBConfigSingleton.java
-package com.is1.proyecto.config;
+package config;
 
 import org.javalite.activejdbc.Base; // Necesitarás esta importación para usar Base.open y Base.close
 
