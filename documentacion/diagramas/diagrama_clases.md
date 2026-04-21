@@ -901,49 +901,45 @@ UC14 --> UC13
 
 ### Diagrama de componentes
 ``` mermaid
-flowchart TB
+flowchart TD
 
-%% ======================
-%% CLIENTE
-%% ======================
-Cliente["Cliente (Browser)"]
+    subgraph Cliente
+        Browser["Cliente (Browser)"]
+    end
 
-%% ======================
-%% SERVIDOR
-%% ======================
-subgraph Servidor
+    subgraph Servidor
+        subgraph Presentacion
+            Controllers["Controllers (Spark Routes)"]
+            Views["Views (Mustache)"]
+        end
 
-Controller["Controllers (Spark Routes)"]
-View["Views (Mustache)"]
+        subgraph Logica
+            Services["Services"]
+        end
 
-subgraph Logica
-Service["Services"]
-end
+        subgraph Modelo
+            Models["Models (Usuario, Materia, etc.)"]
+        end
 
-subgraph Datos
-DAO["DAO (JDBC)"]
-DBConn["DB Connection"]
-end
+        subgraph Datos
+            DAO["DAO (JDBC)"]
+            DBConn["DB Connection"]
+        end
+    end
 
-end
+    DB[(PostgreSQL)]
 
-%% ======================
-%% BASE DE DATOS
-%% ======================
-DB["PostgreSQL"]
+    Browser --> Controllers
+    Controllers --> Services
+    Controllers --> Views
 
-%% ======================
-%% RELACIONES
-%% ======================
-Cliente --> Controller
-Controller --> Service
-Controller --> View
+    Services --> DAO
+    Services --> Models
 
-Service --> DAO
-DAO --> DBConn
-DBConn --> DB
+    DAO --> Models
+    DAO --> DBConn
 
-View --> Cliente
+    DBConn --> DB
 ```
 #### Estructura de las carpetas
 ``` folders
@@ -1026,56 +1022,84 @@ alta modificacion y registro de un usuario
 ```mermaid 
 sequenceDiagram
 
-actor Admin
-participant Controller
-participant Service
-participant DAO
-participant DB
+actor Usuario
+participant Vista as login.mustache
+participant Controller as AuthController
+participant Service as AuthService
+participant DAO as UsuarioDAO
+participant DB as PostgreSQL
 
-%% ======================
-%% ALTA DE USUARIO
-%% ======================
-Admin->>Controller: POST /usuarios (datos)
-Controller->>Service: crearUsuario(UsuarioDTO)
-Service->>Service: validarDatos()
-Service->>DAO: insertarUsuario(dto)
-DAO->>DB: INSERT INTO usuario
-DB-->>DAO: OK
-DAO-->>Service: usuario creado
-Service-->>Controller: resultado OK
-Controller-->>Admin: Usuario creado
+Usuario->>Vista: Completa formulario
+Vista->>Controller: POST /login (email, password)
 
-%% ======================
-%% MODIFICACIÓN
-%% ======================
-Admin->>Controller: PUT /usuarios/{id}
-Controller->>Service: actualizarUsuario(dto)
-Service->>DAO: buscarUsuario(id)
-DAO->>DB: SELECT usuario
+Controller->>Controller: crear LoginDTO
+
+Controller->>Service: login(dto)
+
+Service->>DAO: buscarPorEmail(email)
+DAO->>DB: SELECT usuario + rol
 DB-->>DAO: datos
 DAO-->>Service: Usuario
 
-Service->>Service: validarCambios()
+Service->>Service: validar password
 
-Service->>DAO: updateUsuario(dto)
-DAO->>DB: UPDATE usuario
-DB-->>DAO: OK
-DAO-->>Service: actualizado
-Service-->>Controller: OK
-Controller-->>Admin: Usuario actualizado
-
-%% ======================
-%% BAJA
-%% ======================
-Admin->>Controller: DELETE /usuarios/{id}
-Controller->>Service: eliminarUsuario(id)
-
-Service->>DAO: deleteUsuario(id)
-DAO->>DB: DELETE FROM usuario
-DB-->>DAO: OK
-
-DAO-->>Service: eliminado
-Service-->>Controller: OK
-Controller-->>Admin: Usuario eliminado
+alt credenciales válidas
+    Service-->>Controller: Usuario
+    Controller->>Controller: guardar sesión
+    Controller-->>Usuario: redirect /dashboard
+else credenciales inválidas
+    Service-->>Controller: excepción
+    Controller-->>Vista: login.mustache + error
+end
 ```
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant Controller as MateriaController
+    participant Service as MateriaService
+    participant DAO as MateriaDAO
+    participant DB as PostgreSQL
 
+    Note over Admin, DB: CRUD DE MATERIAS
+
+    Admin->>Controller: POST /materias (datosMateria)
+    Controller->>Service: crearMateria(MateriaDTO)
+    Service->>DAO: insertarMateria(materia)
+    DAO->>DB: INSERT INTO MATERIA...
+    DB-->>DAO: id_generado
+    DAO-->>Service: materia_confirmada
+    Service-->>Controller: OK (201 Created)
+    Controller-->>Admin: Materia creada con éxito
+
+    Admin->>Controller: DELETE /materias/{id}
+    Controller->>Service: eliminarMateria(id)
+    Service->>DAO: tieneInscripcionesActivas(id)
+    DAO->>DB: SELECT COUNT(*) FROM INSCRIPCION...
+    DB-->>DAO: 0
+    DAO-->>Service: false
+    Service->>DAO: borrarMateria(id)
+    DAO->>DB: DELETE FROM MATERIA WHERE id = ?
+    DB-->>DAO: OK
+    Service-->>Controller: OK
+    Controller-->>Admin: Materia eliminada
+
+    Note over Admin, DB: ASIGNACIÓN A PLAN Y CORRELATIVIDADES
+
+    Admin->>Controller: POST /planes/{id}/materias (materia_id, anio, cuatri)
+    Controller->>Service: asignarMateriaAPlan(dto)
+    Service->>DAO: vincularMateriaAPlan(planId, matId, anio, cuatri)
+    DAO->>DB: INSERT INTO PLAN_MATERIA...
+    DB-->>DAO: OK
+    Service-->>Controller: Vinculación exitosa
+    Controller-->>Admin: Materia asignada al plan académico
+
+    Admin->>Controller: POST /materias/{id}/correlativas (id_requisito)
+    Controller->>Service: agregarCorrelativa(id_principal, id_requisito)
+    Service->>Service: validarNoCiclico(id_principal, id_requisito)
+    Note right of Service: Evita que A dependa de B y B de A
+    Service->>DAO: guardarCorrelativa(id_principal, id_requisito)
+    DAO->>DB: INSERT INTO CORRELATIVA...
+    DB-->>DAO: OK
+    Service-->>Controller: Correlativa registrada
+    Controller-->>Admin: Requisito académico guardado
+```
