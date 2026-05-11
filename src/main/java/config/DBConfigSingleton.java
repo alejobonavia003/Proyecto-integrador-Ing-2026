@@ -1,25 +1,25 @@
-// Archivo: com/is1/proyecto/config/DBConfigSingleton.java
 package config;
 
-import org.javalite.activejdbc.Base; // Necesitarás esta importación para usar Base.open y Base.close
-
-public final class DBConfigSingleton {
+public class DBConfigSingleton {
 
     private static DBConfigSingleton instance;
 
-    // Ya no es necesario que sean final si los vas a configurar dinámicamente o mantener una sola instancia
+    private final String driver;
     private final String dbUrl;
     private final String user;
     private final String pass;
-    private final String driver;
 
-    // Constructor privado para evitar instanciación directa
     private DBConfigSingleton() {
-        // Configuraciones para SQLite
-        this.driver = "org.sqlite.JDBC"; // Driver JDBC para SQLite
-        this.dbUrl = System.getProperty("db.url", "jdbc:sqlite:./db/dev.db");
-        this.user = ""; // SQLite no usa usuario
-        this.pass = ""; // SQLite no usa contraseña
+        this.driver = "org.sqlite.JDBC";
+        this.dbUrl = "jdbc:sqlite:./db/dev.db";
+        this.user = "";
+        this.pass = "";
+
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("No se pudo cargar el driver JDBC: " + driver, e);
+        }
     }
 
     public static synchronized DBConfigSingleton getInstance() {
@@ -29,17 +29,18 @@ public final class DBConfigSingleton {
         return instance;
     }
 
-    // Métodos para abrir y cerrar la conexión
     public void openConnection() {
-        // Utiliza los valores de las propiedades de la clase para abrir la conexión
-        Base.open(this.driver, this.dbUrl, this.user, this.pass);
+        org.javalite.activejdbc.Base.open(driver, dbUrl, user, pass);
     }
 
     public void closeConnection() {
-        Base.close();
+        org.javalite.activejdbc.Base.close();
     }
 
-    // Getters existentes
+    public String getDriver() {
+        return driver;
+    }
+
     public String getDbUrl() {
         return dbUrl;
     }
@@ -51,9 +52,4 @@ public final class DBConfigSingleton {
     public String getPass() {
         return pass;
     }
-
-    public String getDriver() {
-        return driver;
-    }
 }
-
