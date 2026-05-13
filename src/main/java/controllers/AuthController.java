@@ -49,15 +49,19 @@ public class AuthController {
                 String name = req.queryParams("name");
                 String password = req.queryParams("password");
 
+                System.out.println("creando usuario en controlador");
+
                 authService.registerUser(name, password);
 
+                System.out.println("creando usuario exitoso controlador");
                 res.redirect("/user/create?message=Cuenta creada exitosamente para " + name + "!");
                 return "";
             } catch (IllegalArgumentException e) {
+                
                 res.redirect("/user/create?error=" + e.getMessage());
                 return "";
             } catch (Exception e) {
-                res.redirect("/user/create?error=Error interno al crear la cuenta.");
+                res.redirect("/user/create?error=Error interno al crear la cuenta." + e.getMessage());
                 return "";
             }
         });
@@ -92,7 +96,7 @@ public class AuthController {
                 return new ModelAndView(model, "login.mustache");
             } catch (Exception e) {
                 res.status(500);
-                model.put("errorMessage", "Error interno del servidor.");
+                model.put("errorMessage", "Error interno del servidor."+e.getMessage());
                 return new ModelAndView(model, "login.mustache");
             }
         }, engine);
@@ -120,7 +124,8 @@ public class AuthController {
 
             } catch (Exception e) {
                 res.status(500);
-                response.put("error", "Error interno al registrar usuario.");
+                e.printStackTrace();
+                response.put("error", "Error interno al registrar usuario."+ e.getMessage());
                 return objectMapper.writeValueAsString(response);
             }
         });

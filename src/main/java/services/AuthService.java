@@ -18,7 +18,6 @@ public class AuthService {
         validateNotBlank(password, "Contraseña");
 
         try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false);
 
             try {
                 Optional<User> existing = userDAO.findByName(conn, name);
@@ -26,15 +25,16 @@ public class AuthService {
                     throw new IllegalArgumentException("Ya existe un usuario con ese nombre.");
                 }
 
+                System.out.println("Creando usuario de");
+
                 User user = new User();
                 user.setName(name);
                 user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 
                 userDAO.save(conn, user);
-                conn.commit();
+                System.out.println("Usuario creado");
                 return user;
             } catch (Exception e) {
-                conn.rollback();
                 throw e;
             }
         }

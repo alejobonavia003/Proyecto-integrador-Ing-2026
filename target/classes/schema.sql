@@ -1,16 +1,30 @@
--- Elimina la tabla 'users' si ya existe para asegurar un inicio limpio
+-- Elimina las tablas si ya existen (en orden por dependencias)
+DROP TABLE IF EXISTS Dicta;
+DROP TABLE IF EXISTS Rindio;
+DROP TABLE IF EXISTS Cursa;
+DROP TABLE IF EXISTS Correlativa;
+DROP TABLE IF EXISTS Materia;
+DROP TABLE IF EXISTS Vigente;
+DROP TABLE IF EXISTS PlanEstudio;
+DROP TABLE IF EXISTS Carrera;
+DROP TABLE IF EXISTS Profesor;
+DROP TABLE IF EXISTS Estudiante;
+DROP TABLE IF EXISTS Persona;
 DROP TABLE IF EXISTS users;
 
--- Crea la tabla 'users' con los campos originales, adaptados para SQLite
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, -- Clave primaria autoincremental para SQLite
-    name TEXT NOT NULL UNIQUE,          -- Nombre de usuario (TEXT es el tipo de cadena recomendado para SQLite), con restricción UNIQUE
-    password TEXT NOT NULL           -- Contraseña hasheada (TEXT es el tipo de cadena recomendado para SQLite)
+-- =========================
+-- Tabla de usuarios
+-- =========================
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
 );
 
-
--- Tabla base de personas
-CREATE TABLE Persona (
+-- =========================
+-- Tabla base Persona
+-- =========================
+CREATE TABLE IF NOT EXISTS Persona (
     dni INTEGER PRIMARY KEY,
     nombre TEXT NOT NULL,
     apellido TEXT NOT NULL,
@@ -19,30 +33,37 @@ CREATE TABLE Persona (
     email TEXT
 );
 
--- Estudiante hereda de Persona (1 a 1)
-CREATE TABLE Estudiante (
+-- =========================
+-- Estudiante (hereda Persona)
+-- =========================
+CREATE TABLE IF NOT EXISTS Estudiante (
     dni INTEGER PRIMARY KEY,
     legajo TEXT,
     FOREIGN KEY (dni) REFERENCES Persona(dni)
 );
 
--- Profesor hereda de Persona (1 a 1)
-CREATE TABLE Profesor (
+-- =========================
+-- Profesor (hereda Persona)
+-- =========================
+CREATE TABLE IF NOT EXISTS Profesor (
     dni INTEGER PRIMARY KEY,
-    id_doc TEXT AUTOINCREMENT
-    ,
+    id_doc TEXT,
     FOREIGN KEY (dni) REFERENCES Persona(dni)
 );
 
+-- =========================
 -- Carrera
-CREATE TABLE Carrera (
+-- =========================
+CREATE TABLE IF NOT EXISTS Carrera (
     cod_carrera INTEGER PRIMARY KEY,
     duracion INTEGER,
-    nombre TEXT
+    nombre TEXT NOT NULL
 );
 
+-- =========================
 -- Plan de Estudio
-CREATE TABLE PlanEstudio (
+-- =========================
+CREATE TABLE IF NOT EXISTS PlanEstudio (
     id INTEGER PRIMARY KEY,
     anio_plan INTEGER,
     version INTEGER,
@@ -50,8 +71,10 @@ CREATE TABLE PlanEstudio (
     FOREIGN KEY (cod_carrera) REFERENCES Carrera(cod_carrera)
 );
 
--- Relación vigente (Carrera - PlanEstudio)
-CREATE TABLE Vigente (
+-- =========================
+-- Relación Vigente
+-- =========================
+CREATE TABLE IF NOT EXISTS Vigente (
     cod_carrera INTEGER NOT NULL,
     id_plan INTEGER NOT NULL,
     PRIMARY KEY (cod_carrera, id_plan),
@@ -59,16 +82,20 @@ CREATE TABLE Vigente (
     FOREIGN KEY (id_plan) REFERENCES PlanEstudio(id)
 );
 
+-- =========================
 -- Materia
-CREATE TABLE Materia (
+-- =========================
+CREATE TABLE IF NOT EXISTS Materia (
     codigo INTEGER PRIMARY KEY,
-    nombre TEXT,
+    nombre TEXT NOT NULL,
     id_plan INTEGER NOT NULL,
     FOREIGN KEY (id_plan) REFERENCES PlanEstudio(id)
 );
 
--- Relación recursiva: correlativas de una materia
-CREATE TABLE Correlativa (
+-- =========================
+-- Correlativas
+-- =========================
+CREATE TABLE IF NOT EXISTS Correlativa (
     codigo_materia INTEGER NOT NULL,
     codigo_correlativa INTEGER NOT NULL,
     PRIMARY KEY (codigo_materia, codigo_correlativa),
@@ -76,8 +103,10 @@ CREATE TABLE Correlativa (
     FOREIGN KEY (codigo_correlativa) REFERENCES Materia(codigo)
 );
 
--- Relación Estudiante - Materia (Cursa)
-CREATE TABLE Cursa (
+-- =========================
+-- Estudiante cursa materia
+-- =========================
+CREATE TABLE IF NOT EXISTS Cursa (
     dni INTEGER NOT NULL,
     codigo_materia INTEGER NOT NULL,
     PRIMARY KEY (dni, codigo_materia),
@@ -85,8 +114,10 @@ CREATE TABLE Cursa (
     FOREIGN KEY (codigo_materia) REFERENCES Materia(codigo)
 );
 
--- Relación Estudiante - Materia (Rindió)
-CREATE TABLE Rindio (
+-- =========================
+-- Estudiante rindió materia
+-- =========================
+CREATE TABLE IF NOT EXISTS Rindio (
     dni INTEGER NOT NULL,
     codigo_materia INTEGER NOT NULL,
     nota INTEGER NOT NULL,
@@ -96,8 +127,10 @@ CREATE TABLE Rindio (
     FOREIGN KEY (codigo_materia) REFERENCES Materia(codigo)
 );
 
--- Relación Profesor - Materia (Dicta)
-CREATE TABLE Dicta (
+-- =========================
+-- Profesor dicta materia
+-- =========================
+CREATE TABLE IF NOT EXISTS Dicta (
     dni_prof INTEGER NOT NULL,
     codigo_materia INTEGER NOT NULL,
     PRIMARY KEY (dni_prof, codigo_materia),
