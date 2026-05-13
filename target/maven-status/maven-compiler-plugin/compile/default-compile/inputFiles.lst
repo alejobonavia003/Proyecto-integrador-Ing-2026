@@ -1,16 +1,8 @@
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/AuthController.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/persona/Estudiante.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/persona/PersonaConcreta.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/services/ProfesorService.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/dao/ProfesorDAO.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/dao/PersonaDAO.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/dao/UserDAO.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/User.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/config/DBConfigSingleton.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/persona/Profesor.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/ProfesorController.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/services/AuthService.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/config/DBConnection.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/ErrorController.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/persona/PersonaAbs.java
-/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/app/App.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\models\User.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\services\AuthService.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\app\App.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\controllers\AuthController.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\config\DBConnection.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\dao\UserDAO.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\config\DBConfigSingleton.java
+C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\controllers\ErrorController.java

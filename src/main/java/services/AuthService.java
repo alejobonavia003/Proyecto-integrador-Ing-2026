@@ -1,66 +1,94 @@
+// Archivo: src/main/java/services/AuthService.java
 package services;
 
-import config.DBConnection;
 import dao.UserDAO;
 import models.User;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Optional;
 
+// -------------------------------------------------------
+// un detalle del servicio es que podriamos inyectarle el dao 
+// con esto podriamos luego testear pasandole bocetos de dao con datos falsos para 
+// facilitar el teste en produccion 
+// -------------------------------------------------------
+
+
+/**
+ * Capa de Servicio: Orquestador de la lógica de negocio para Autenticación.
+ * Esta capa actúa como mediadora entre los Controladores (Web) y el DAO (Persistencia).
+ */
 public class AuthService {
 
+    // Dependencia del DAO para interactuar con la base de datos de usuarios
     private final UserDAO userDAO = new UserDAO();
 
-    public User registerUser(String name, String password) throws SQLException {
+    /**
+     * Registra un nuevo usuario aplicando reglas de validación y seguridad.
+     * @param name Nombre elegido por el usuario.
+     * @param password Contraseña en texto plano (será hasheada).
+     * @return El objeto User persistido (con ID generado).
+     */
+    public User registerUser(String name, String password) {
+        // Validaciones preventivas: Aseguran que no entren datos vacíos a la lógica de negocio
         validateNotBlank(name, "Nombre");
         validateNotBlank(password, "Contraseña");
 
-        try (Connection conn = DBConnection.getConnection()) {
-
-            try {
-                Optional<User> existing = userDAO.findByName(conn, name);
-                if (existing.isPresent()) {
-                    throw new IllegalArgumentException("Ya existe un usuario con ese nombre.");
-                }
-
-                System.out.println("Creando usuario de");
-
-                User user = new User();
-                user.setName(name);
-                user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-
-                userDAO.save(conn, user);
-                System.out.println("Usuario creado");
-                return user;
-            } catch (Exception e) {
-                throw e;
-            }
+        // Regla de Negocio: No pueden existir dos usuarios con el mismo nombre.
+        // Se usa Optional para manejar la posibilidad de que el nombre no esté registrado.
+        Optional<User> existing = userDAO.findByName(name);
+        if (existing.isPresent()) {
+            throw new IllegalArgumentException("Ya existe un usuario con ese nombre.");
         }
+
+        // Creación de la entidad User
+        User user = new User();
+        user.setName(name);
+        
+        // SEGURIDAD: Nunca guardamos la contraseña plana. 
+        // BCrypt aplica un 'salt' aleatorio y genera un hash irreversible.
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+
+        // Delegamos la persistencia al DAO y retornamos el objeto resultante
+        return userDAO.save(user);
     }
 
-    public Optional<User> login(String username, String plainPassword) throws SQLException {
+    /**
+     * Valida las credenciales de un usuario.
+     * @param username Nombre de usuario ingresado.
+     * @param plainPassword Contraseña ingresada en el formulario.
+     * @return Un Optional conteniendo el Usuario si es exitoso, o vacío si falla.
+     */
+    public Optional<User> login(String username, String plainPassword) {
+        // Validación de campos requeridos
         validateNotBlank(username, "Nombre de usuario");
         validateNotBlank(plainPassword, "Contraseña");
 
-        try (Connection conn = DBConnection.getConnection()) {
-            Optional<User> userOpt = userDAO.findByName(conn, username);
+        // Buscamos al usuario en la base de datos por su nombre
+        Optional<User> userOpt = userDAO.findByName(username);
 
-            if (userOpt.isEmpty()) {
-                return Optional.empty();
-            }
-
-            User user = userOpt.get();
-
-            if (BCrypt.checkpw(plainPassword, user.getPassword())) {
-                return Optional.of(user);
-            }
-
+        // Si el usuario no existe, retornamos vacío inmediatamente (Fail-Fast)
+        if (userOpt.isEmpty()) {
             return Optional.empty();
         }
+
+        // Si existe, extraemos el objeto del contenedor Optional
+        User user = userOpt.get();
+
+        // SEGURIDAD: Comparamos la clave plana contra el hash guardado en la DB.
+        // BCrypt.checkpw se encarga de extraer el salt del hash y validar la coincidencia.
+        if (BCrypt.checkpw(plainPassword, user.getPassword())) {
+            return Optional.of(user); // Credenciales correctas
+        }
+
+        // Si la clave no coincide, retornamos vacío
+        return Optional.empty();
     }
 
+    /**
+     * metodo privado para validar que no lleguen en blanco las casillas 
+     * lo hiice metodo aparte para no tener que repetir el codigo en cada lugar que lo use 
+     */
     private void validateNotBlank(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(fieldName + " es requerido.");

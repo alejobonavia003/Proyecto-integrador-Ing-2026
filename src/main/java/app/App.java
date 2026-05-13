@@ -9,9 +9,10 @@ import static spark.Spark.halt;
 import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.ErrorController;
-import controllers.ProfesorController;
 import spark.template.mustache.MustacheTemplateEngine;
 
+
+//TODO: agregar un logger para remplazar los sout 
 /**
  * Clase principal de la aplicación Spark.
  * Se encarga de:
@@ -40,6 +41,8 @@ public class App {
         // Motor de plantillas Mustache
         MustacheTemplateEngine engine = new MustacheTemplateEngine();
 
+
+        //TODO: revisar los filtros por que abren y cierran la conexion esto nose si tiene sentido
         // -------------------------------------------------------
         // Filtro BEFORE
         // Se ejecuta antes de cada request HTTP.
@@ -55,6 +58,7 @@ public class App {
             }
         });
 
+        
         // -------------------------------------------------------
         // Filtro AFTER
         // Se ejecuta después de cada request HTTP.
@@ -73,7 +77,6 @@ public class App {
         // Cada controlador define sus rutas.
         // -------------------------------------------------------
         AuthController.init(engine);
-        ProfesorController.init(engine);
         ErrorController.init(engine);
     }
 }
