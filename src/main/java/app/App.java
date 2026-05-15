@@ -1,14 +1,13 @@
 package app;
 
-import static spark.Spark.after;
-import static spark.Spark.before;
-import static spark.Spark.port;
-import static spark.Spark.staticFiles;
-import static spark.Spark.halt;
-
 import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.ErrorController;
+import static spark.Spark.after;
+import static spark.Spark.before;
+import static spark.Spark.halt;
+import static spark.Spark.port;
+import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
 
 

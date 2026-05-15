@@ -3,10 +3,10 @@ package config;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.DriverManager;
-import java.util.stream.Collectors;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.stream.Collectors;
 
 public class DBConfigSingleton {
 

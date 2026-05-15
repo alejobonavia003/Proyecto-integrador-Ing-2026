@@ -54,10 +54,11 @@ CREATE TABLE IF NOT EXISTS Profesor (
 -- =========================
 -- Carrera
 -- =========================
-CREATE TABLE IF NOT EXISTS Carrera (
-    cod_carrera INTEGER PRIMARY KEY,
-    duracion INTEGER,
-    nombre TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS carreras (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    codigo VARCHAR(50) NOT NULL UNIQUE,
+    nombre VARCHAR(100) NOT NULL,
+    duracion INTEGER NOT NULL
 );
 
 -- =========================

@@ -1,8 +1,10 @@
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\models\User.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\services\AuthService.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\app\App.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\controllers\AuthController.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\config\DBConnection.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\dao\UserDAO.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\config\DBConfigSingleton.java
-C:\Users\bonav\Desktop\copia de seguridad\Proyecto-integrador-Ing-2026\src\main\java\controllers\ErrorController.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/services/AuthService.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/controllers/AuthController.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/dao/UserDAO.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/models/Carrera.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/models/User.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/config/DBConfigSingleton.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/config/DBConnection.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/dao/CarreraDAO.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/app/App.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026-main/src/main/java/controllers/ErrorController.java
