@@ -1,7 +1,6 @@
 // Archivo: src/main/java/services/AuthService.java
 package services;
 
-import dao.UserDAO;
 import models.User;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -20,8 +19,6 @@ import java.util.Optional;
  */
 public class AuthService {
 
-    // Dependencia del DAO para interactuar con la base de datos de usuarios
-    private final UserDAO userDAO = new UserDAO();
 
     /**
      * Registra un nuevo usuario aplicando reglas de validación y seguridad.
@@ -34,9 +31,8 @@ public class AuthService {
         validateNotBlank(name, "Nombre");
         validateNotBlank(password, "Contraseña");
 
-        // Regla de Negocio: No pueden existir dos usuarios con el mismo nombre.
-        // Se usa Optional para manejar la posibilidad de que el nombre no esté registrado.
-        Optional<User> existing = userDAO.findByName(name);
+        //objeto que es null si no existe y uso el metodo del modelo para buscar la primera coincidencia
+        Optional<User> existing = Optional.ofNullable(User.findFirst("name = ?", name));
         if (existing.isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con ese nombre.");
         }
@@ -49,8 +45,10 @@ public class AuthService {
         // BCrypt aplica un 'salt' aleatorio y genera un hash irreversible.
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 
+
+        user.saveIt();
         // Delegamos la persistencia al DAO y retornamos el objeto resultante
-        return userDAO.save(user);
+        return user;
     }
 
     /**
@@ -64,8 +62,8 @@ public class AuthService {
         validateNotBlank(username, "Nombre de usuario");
         validateNotBlank(plainPassword, "Contraseña");
 
-        // Buscamos al usuario en la base de datos por su nombre
-        Optional<User> userOpt = userDAO.findByName(username);
+        // Buscamos al usuario en la base de datos por su nombre (desde el modelo)
+        Optional<User> userOpt = Optional.ofNullable(User.findFirst("name = ?", username));
 
         // Si el usuario no existe, retornamos vacío inmediatamente (Fail-Fast)
         if (userOpt.isEmpty()) {
