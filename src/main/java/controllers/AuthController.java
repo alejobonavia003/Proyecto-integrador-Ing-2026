@@ -139,7 +139,7 @@ public class AuthController {
                 }
 
                 logger.log(Level.WARNING, "Intento de inicio de sesión fallido para las credenciales: [{0}]", usernameInput);
-                res.redirect("/?error=Usuario o contraseña incorrectos");
+                res.redirect("/?error=" + java.net.URLEncoder.encode("Usuario o contraseña incorrectos","UTF-8"));
                 return null;
 
             } catch (IllegalArgumentException e) {

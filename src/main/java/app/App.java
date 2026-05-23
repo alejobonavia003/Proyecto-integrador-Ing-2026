@@ -20,10 +20,13 @@ import org.javalite.activejdbc.Base; // <-- IMPORTANTE: Importar Base de ActiveJ
  * Clase principal de la aplicación Spark.
  */
 public class App {
+    
 
     private static final Logger logger = Logger.getLogger(App.class.getName());
 
     public static void main(String[] args) {
+        // 1. Formatear el Logger de Java para que solo muestre: [NIVEL] Mensaje
+        System.setProperty("java.util.logging.SimpleFormatter.format", "[%4$s] %5$s%n");
 
         port(8080);
         staticFiles.location("/public");

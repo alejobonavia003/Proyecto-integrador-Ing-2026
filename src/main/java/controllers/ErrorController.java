@@ -26,5 +26,18 @@ public class ErrorController {
 
             return new ModelAndView(model, "error.mustache");
         }, engine);
+
+        // NUEVA RUTA: Manejo específico para el Error 403 (Acceso Denegado)
+        get("/error/403", (req, res) -> {
+            // Es buena práctica establecer el código HTTP real de error
+            res.status(403);
+            
+            Map<String, Object> model = new HashMap<>();
+            model.put("errorType", "403 - Acceso Denegado");
+            model.put("errorMessage", "No tienes los permisos necesarios para acceder a esta sección. Si crees que esto es un error, contacta al administrador.");
+            
+            // Renderizamos una plantilla específica para el 403
+            return new ModelAndView(model, "error_403.mustache");
+        }, engine);
     }
 }
