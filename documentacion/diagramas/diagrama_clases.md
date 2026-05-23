@@ -519,192 +519,90 @@ Administrador --> Carrera
 ```
 
 #### Diagrama Entidad relacion 
-``` mermaid
+db
+```mermaid
 erDiagram
 
-%% ======================
-%% USUARIOS Y ROLES
-%% ======================
-USUARIO {
-  int id PK
-  string nombre
-  string dni
-  string email
-  string password
-  int rol_id FK
-}
+    roles {
+        INTEGER id PK
+        VARCHAR name UK
+    }
 
-ROL {
-  int id PK
-  string nombre
-}
+    users {
+        INTEGER id PK
+        VARCHAR dni UK
+        VARCHAR name
+        VARCHAR email UK
+        VARCHAR password
+        INTEGER role_id FK
+    }
 
-USUARIO }o--|| ROL : pertenece
+    courses {
+        INTEGER id PK
+        VARCHAR code UK
+        VARCHAR name
+        INTEGER weekly_hours
+    }
 
-%% ======================
-%% PLANES Y MATERIAS
-%% ======================
-PLAN_ESTUDIO {
-  int id PK
-  string nombre
-  string version
-}
+    course_classes {
+        INTEGER id PK
+        VARCHAR name
+        INTEGER course_id FK
+        INTEGER teacher_id FK
+    }
 
-MATERIA {
-  int id PK
-  string nombre
-  string codigo
-  int carga_horaria
-  string modalidad
-}
+    enrollments {
+        INTEGER id PK
+        INTEGER student_id FK
+        INTEGER course_class_id FK
+        TIMESTAMP enrolled_at
+    }
 
-PLAN_MATERIA {
-  int id PK
-  int plan_id FK
-  int materia_id FK
-  int anio
-  int cuatrimestre
-}
+    grades {
+        INTEGER id PK
+        INTEGER enrollment_id FK
+        VARCHAR exam_name
+        DECIMAL score
+        VARCHAR status
+    }
 
-PLAN_ESTUDIO ||--o{ PLAN_MATERIA : contiene
-MATERIA ||--o{ PLAN_MATERIA : pertenece
+    assignments {
+        INTEGER id PK
+        INTEGER course_class_id FK
+        VARCHAR title
+        TEXT description
+        TIMESTAMP due_date
+    }
 
-ALUMNO_PLAN {
-  int id PK
-  int alumno_id FK
-  int plan_id FK
-}
+    submissions {
+        INTEGER id PK
+        INTEGER assignment_id FK
+        INTEGER student_id FK
+        TEXT content_reference
+        DECIMAL grade
+        TIMESTAMP submitted_at
+    }
 
-USUARIO ||--o{ ALUMNO_PLAN : alumno
-PLAN_ESTUDIO ||--o{ ALUMNO_PLAN : asignado
+    roles ||--o{ users : has
 
-%% ======================
-%% CORRELATIVAS
-%% ======================
-CORRELATIVA {
-  int id PK
-  int materia_id FK
-  int materia_correlativa_id FK
-}
+    users ||--o{ course_classes : teaches
+    users ||--o{ enrollments : attends
+    users ||--o{ submissions : submits
 
-MATERIA ||--o{ CORRELATIVA : tiene
-MATERIA ||--o{ CORRELATIVA : es_requisito
+    courses ||--o{ course_classes : contains
 
-%% ======================
-%% COMISIONES
-%% ======================
-COMISION {
-  int id PK
-  string nombre
-  int materia_id FK
-  int docente_id FK
-}
+    course_classes ||--o{ enrollments : includes
+    course_classes ||--o{ assignments : publishes
 
-MATERIA ||--o{ COMISION : tiene
-USUARIO ||--o{ COMISION : docente
+    enrollments ||--o{ grades : receives
 
-%% ======================
-%% CURSADAS
-%% ======================
-INSCRIPCION_CURSADA {
-  int id PK
-  int alumno_id FK
-  int comision_id FK
-  date fecha
-}
-
-USUARIO ||--o{ INSCRIPCION_CURSADA : alumno
-COMISION ||--o{ INSCRIPCION_CURSADA : cursada
-
-%% ======================
-%% EXAMENES
-%% ======================
-EXAMEN_FINAL {
-  int id PK
-  int materia_id FK
-  date fecha
-}
-
-INSCRIPCION_EXAMEN {
-  int id PK
-  int alumno_id FK
-  int examen_id FK
-  date fecha
-}
-
-MATERIA ||--o{ EXAMEN_FINAL : tiene
-EXAMEN_FINAL ||--o{ INSCRIPCION_EXAMEN : incluye
-USUARIO ||--o{ INSCRIPCION_EXAMEN : alumno
-
-%% ======================
-%% CALIFICACIONES
-%% ======================
-CALIFICACION {
-  int id PK
-  int alumno_id FK
-  int materia_id FK
-  float nota
-  string tipo
-  string condicion
-}
-
-USUARIO ||--o{ CALIFICACION : recibe
-MATERIA ||--o{ CALIFICACION : evalua
-
-%% ======================
-%% ASISTENCIA
-%% ======================
-ASISTENCIA {
-  int id PK
-  int alumno_id FK
-  int comision_id FK
-  date fecha
-  boolean presente
-}
-
-USUARIO ||--o{ ASISTENCIA : alumno
-COMISION ||--o{ ASISTENCIA : registra
-
-%% ======================
-%% TAREAS
-%% ======================
-TAREA {
-  int id PK
-  int materia_id FK
-  int docente_id FK
-  string descripcion
-  date fecha_entrega
-}
-
-ENTREGA {
-  int id PK
-  int tarea_id FK
-  int alumno_id FK
-  string archivo
-  date fecha
-  float nota
-  string comentario
-}
-
-MATERIA ||--o{ TAREA : tiene
-USUARIO ||--o{ TAREA : docente
-TAREA ||--o{ ENTREGA : recibe
-USUARIO ||--o{ ENTREGA : alumno
-
-%% ======================
-%% NOTIFICACIONES
-%% ======================
-NOTIFICACION {
-  int id PK
-  int usuario_id FK
-  string mensaje
-  date fecha
-}
-
-USUARIO ||--o{ NOTIFICACION : recibe
+    assignments ||--o{ submissions : requires
 ```
 
+
+
 #### Diagrama de casos de uso
+
 ``` mermaid
 flowchart LR
 
@@ -983,12 +881,6 @@ src/main/java/com/gestionestudiantil/
 │   ├── Calificacion.java
 │   ├── Tarea.java
 
-├── dto/            (TRANSFERENCIA)
-│   ├── UsuarioDTO.java
-│   ├── LoginDTO.java
-│   ├── InscripcionDTO.java
-│   ├── TareaDTO.java
-
 ├── utils/
 │   ├── DBConnection.java
 │   ├── PasswordHasher.java
@@ -1005,101 +897,3 @@ src/main/java/com/gestionestudiantil/
     └── public/     (CSS, JS)
 ```
 
-#### Flujo completo por ej login
-1. Usuario envía formulario (frontend)
-2. Controller recibe request
-3. Controller crea DTO
-4. Service valida reglas:
-    - correlativas
-    - estado del alumno
-5. DAO ejecuta SQL
-6. DB responde
-7. DAO transforma → objeto
-8. Service devuelve resultado
-9. Controller renderiza vista
-## EJEMPLO DE FLUJO DE DATOS
-alta modificacion y registro de un usuario 
-```mermaid 
-sequenceDiagram
-
-actor Usuario
-participant Vista as login.mustache
-participant Controller as AuthController
-participant Service as AuthService
-participant DAO as UsuarioDAO
-participant DB as PostgreSQL
-
-Usuario->>Vista: Completa formulario
-Vista->>Controller: POST /login (email, password)
-
-Controller->>Controller: crear LoginDTO
-
-Controller->>Service: login(dto)
-
-Service->>DAO: buscarPorEmail(email)
-DAO->>DB: SELECT usuario + rol
-DB-->>DAO: datos
-DAO-->>Service: Usuario
-
-Service->>Service: validar password
-
-alt credenciales válidas
-    Service-->>Controller: Usuario
-    Controller->>Controller: guardar sesión
-    Controller-->>Usuario: redirect /dashboard
-else credenciales inválidas
-    Service-->>Controller: excepción
-    Controller-->>Vista: login.mustache + error
-end
-```
-```mermaid
-sequenceDiagram
-    actor Admin
-    participant Controller as MateriaController
-    participant Service as MateriaService
-    participant DAO as MateriaDAO
-    participant DB as PostgreSQL
-
-    Note over Admin, DB: CRUD DE MATERIAS
-
-    Admin->>Controller: POST /materias (datosMateria)
-    Controller->>Service: crearMateria(MateriaDTO)
-    Service->>DAO: insertarMateria(materia)
-    DAO->>DB: INSERT INTO MATERIA...
-    DB-->>DAO: id_generado
-    DAO-->>Service: materia_confirmada
-    Service-->>Controller: OK (201 Created)
-    Controller-->>Admin: Materia creada con éxito
-
-    Admin->>Controller: DELETE /materias/{id}
-    Controller->>Service: eliminarMateria(id)
-    Service->>DAO: tieneInscripcionesActivas(id)
-    DAO->>DB: SELECT COUNT(*) FROM INSCRIPCION...
-    DB-->>DAO: 0
-    DAO-->>Service: false
-    Service->>DAO: borrarMateria(id)
-    DAO->>DB: DELETE FROM MATERIA WHERE id = ?
-    DB-->>DAO: OK
-    Service-->>Controller: OK
-    Controller-->>Admin: Materia eliminada
-
-    Note over Admin, DB: ASIGNACIÓN A PLAN Y CORRELATIVIDADES
-
-    Admin->>Controller: POST /planes/{id}/materias (materia_id, anio, cuatri)
-    Controller->>Service: asignarMateriaAPlan(dto)
-    Service->>DAO: vincularMateriaAPlan(planId, matId, anio, cuatri)
-    DAO->>DB: INSERT INTO PLAN_MATERIA...
-    DB-->>DAO: OK
-    Service-->>Controller: Vinculación exitosa
-    Controller-->>Admin: Materia asignada al plan académico
-
-    Admin->>Controller: POST /materias/{id}/correlativas (id_requisito)
-    Controller->>Service: agregarCorrelativa(id_principal, id_requisito)
-    Service->>Service: validarNoCiclico(id_principal, id_requisito)
-    Note right of Service: Evita que A dependa de B y B de A
-    Service->>DAO: guardarCorrelativa(id_principal, id_requisito)
-    DAO->>DB: INSERT INTO CORRELATIVA...
-    DB-->>DAO: OK
-    Service-->>Controller: Correlativa registrada
-    Controller-->>Admin: Requisito académico guardado
-```

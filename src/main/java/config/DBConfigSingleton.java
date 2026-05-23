@@ -3,12 +3,16 @@ package config;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.DriverManager;
-import java.util.stream.Collectors;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.stream.Collectors;
+
+import java.util.logging.Logger;
 
 public class DBConfigSingleton {
+
+    private static final Logger logger = Logger.getLogger(DBConfigSingleton.class.getName());
 
     private static DBConfigSingleton instance;
 
@@ -26,7 +30,7 @@ public class DBConfigSingleton {
         try {
             Class.forName(driver);
             initDatabase();
-            System.out.println("Creando base de datos");
+            logger.info("Creando base de datos");
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException("No se pudo cargar el driver JDBC: " + driver, e);
         }
@@ -36,7 +40,7 @@ public class DBConfigSingleton {
         // 1. Leer el archivo schema.sql de resources
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("schema.sql")) {
             if (is == null) {
-                System.out.println("No se encontró schema.sql, saltando inicialización.");
+                logger.info("No se encontró schema.sql, saltando inicialización.");
                 return;
             }
 
@@ -52,11 +56,11 @@ public class DBConfigSingleton {
                 
                 // SQLite permite ejecutar múltiples sentencias separadas por ;
                 stmt.executeUpdate(sql);
-                System.out.println("Base de datos inicializada con éxito.");
+                logger.info("Base de datos inicializada con éxito.");
                 
             }
         } catch (Exception e) {
-            System.err.println("ERROR al inicializar la base de datos: " + e.getMessage());
+            logger.severe("ERROR al inicializar la base de datos: " + e.getMessage());
             e.printStackTrace();
         }
     }
