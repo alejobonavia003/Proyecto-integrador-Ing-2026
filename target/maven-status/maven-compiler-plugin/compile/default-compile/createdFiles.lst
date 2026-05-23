@@ -1,9 +1,11 @@
 app\App.class
 controllers\AuthController.class
 models\User.class
+controllers\SecurityController.class
+controllers\DashboardController.class
+models\Role.class
 models\Carrera.class
 config\DBConnection.class
 controllers\ErrorController.class
 services\AuthService.class
-dao\CarreraDAO.class
 config\DBConfigSingleton.class

@@ -12,14 +12,19 @@ public class SecurityController {
             String path = req.pathInfo();
 
             // Permitir explícitamente rutas públicas de autenticación y archivos estáticos
-            if (path.equals("/login") || path.equals("/logout") || path.startsWith("/public/")) {
+            if (path.equals("/user/create") ||
+                path.equals("/") || 
+                path.equals("/user/new") || 
+                path.equals("/login") || 
+                path.equals("/logout") || 
+                path.startsWith("/public/")) {
                 return; 
             }
 
             // Verificar si hay un usuario logueado en la sesión
             Long userId = req.session().attribute("user_id");
             if (userId == null) {
-                res.redirect("/login");
+                res.redirect("/");
                 halt();
             }
         });

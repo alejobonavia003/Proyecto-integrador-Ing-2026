@@ -14,82 +14,64 @@ import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
 
 import java.util.logging.Logger;
+import org.javalite.activejdbc.Base; // <-- IMPORTANTE: Importar Base de ActiveJDBC
 
-
- 
 /**
  * Clase principal de la aplicación Spark.
- * Se encarga de:
- * - configurar el puerto
- * - definir recursos estáticos
- * - abrir y cerrar la conexión a la base de datos
- * - registrar los controladores
  */
 public class App {
 
-        private static final Logger logger = Logger.getLogger(App.class.getName());
+    private static final Logger logger = Logger.getLogger(App.class.getName());
 
-    /**
-     * Método principal.
-     * Arranca la aplicación web y registra toda la configuración inicial.
-     */
     public static void main(String[] args) {
 
-        // Puerto donde va a correr la aplicación
         port(8080);
-
-        // Carpeta de archivos estáticos: css, js, imágenes, etc.
         staticFiles.location("/public");
 
-        // Instancia única de la configuración de la base de datos
         DBConfigSingleton dbConfig = DBConfigSingleton.getInstance();
-
-        // Motor de plantillas Mustache
         MustacheTemplateEngine engine = new MustacheTemplateEngine();
 
-
-        
         // -------------------------------------------------------
-        // Filtro BEFORE
-        // Se ejecuta antes de cada request HTTP.
-        // Abre la conexión a la base de datos.
+        // Filtro BEFORE - Infraestructura (Apertura de BD)
         // -------------------------------------------------------
         before((req, res) -> {
             try {
-                dbConfig.openConnection();
-                logger.info("Conexión abierta -> " + req.url());
+                // SOLUCIÓN AL ERROR: Solo abrimos si NO hay una conexión en este hilo
+                if (!Base.hasConnection()) {
+                    dbConfig.openConnection();
+                    logger.info("Conexión abierta -> " + req.url());
+                }
             } catch (Exception e) {
                 logger.severe("Error al abrir conexión con la base de datos: " + e.getMessage());
                 halt(500, "Error interno del servidor: no se pudo conectar a la base de datos.");
             }
         });
 
-        
         // -------------------------------------------------------
-        // Filtro AFTER
-        // Se ejecuta después de cada request HTTP.
-        // Cierra la conexión a la base de datos.
+        // Filtro AFTER - Infraestructura (Cierre de BD)
         // -------------------------------------------------------
         after((req, res) -> {
             try {
-                dbConfig.closeConnection();
+                // SOLUCIÓN AL ERROR: Solo intentamos cerrar si efectivamente hay una conexión
+                if (Base.hasConnection()) {
+                    dbConfig.closeConnection();
+                }
             } catch (Exception e) {
                 logger.severe("Error al cerrar conexión con la base de datos: " + e.getMessage());
             }
         });
 
         // -------------------------------------------------------
-        // Registro de controladores
-        // Cada controlador define sus rutas.
-        // -------------------------------------------------------
-        AuthController.init(engine);
-        ErrorController.init(engine);
-        DashboardController.init(engine);
-
-        // -------------------------------------------------------
-        // Inicialización de la Seguridad y Roles
-        // Intercepta las solicitudes antes de que lleguen a las rutas de negocio
+        // 1. Inicialización de la Seguridad y Roles
+        // DEBE IR AQUÍ: Intercepta las solicitudes antes de que los controladores las procesen
         // -------------------------------------------------------
         SecurityController.init();
+
+        // -------------------------------------------------------
+        // 2. Registro de controladores de negocio
+        // -------------------------------------------------------
+        AuthController.init(engine);
+        DashboardController.init(engine);
+        ErrorController.init(engine);
     }
 }
