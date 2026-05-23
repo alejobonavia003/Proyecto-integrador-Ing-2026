@@ -2,6 +2,7 @@ package app;
 
 import config.DBConfigSingleton;
 import controllers.AuthController;
+import controllers.DashboardController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 
@@ -12,8 +13,10 @@ import static spark.Spark.port;
 import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
 
+import java.util.logging.Logger;
 
-//TODO: agregar un logger para remplazar los sout 
+
+ 
 /**
  * Clase principal de la aplicación Spark.
  * Se encarga de:
@@ -23,6 +26,8 @@ import spark.template.mustache.MustacheTemplateEngine;
  * - registrar los controladores
  */
 public class App {
+
+        private static final Logger logger = Logger.getLogger(App.class.getName());
 
     /**
      * Método principal.
@@ -43,7 +48,7 @@ public class App {
         MustacheTemplateEngine engine = new MustacheTemplateEngine();
 
 
-        //TODO: revisar los filtros por que abren y cierran la conexion esto nose si tiene sentido
+        
         // -------------------------------------------------------
         // Filtro BEFORE
         // Se ejecuta antes de cada request HTTP.
@@ -52,9 +57,9 @@ public class App {
         before((req, res) -> {
             try {
                 dbConfig.openConnection();
-                System.out.println("DEBUG: Conexión abierta -> " + req.url());
+                logger.info("Conexión abierta -> " + req.url());
             } catch (Exception e) {
-                System.err.println("Error al abrir conexión con la base de datos: " + e.getMessage());
+                logger.severe("Error al abrir conexión con la base de datos: " + e.getMessage());
                 halt(500, "Error interno del servidor: no se pudo conectar a la base de datos.");
             }
         });
@@ -69,7 +74,7 @@ public class App {
             try {
                 dbConfig.closeConnection();
             } catch (Exception e) {
-                System.err.println("Error al cerrar conexión con la base de datos: " + e.getMessage());
+                logger.severe("Error al cerrar conexión con la base de datos: " + e.getMessage());
             }
         });
 
@@ -79,6 +84,7 @@ public class App {
         // -------------------------------------------------------
         AuthController.init(engine);
         ErrorController.init(engine);
+        DashboardController.init(engine);
 
         // -------------------------------------------------------
         // Inicialización de la Seguridad y Roles
