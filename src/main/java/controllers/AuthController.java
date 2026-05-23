@@ -128,14 +128,16 @@ public class AuthController {
         post("/user/new", (req, res) -> {
             try {
 
-                //TODO: el usuario tendria que iniciar seccion y registrarce con su dni
+                
                 //extraemos el nombre y la contraceña 
                 String name = req.queryParams("name");
                 String password = req.queryParams("password");
-
+                String email = req.queryParams("email");
+                String dni = req.queryParams("dni");
+                Long role = Long.parseLong(req.queryParams("role"));
 
                 //llamamos al servicio de registro
-                authService.registerUser(name, password);
+                authService.registerUser(name, dni, email, password, role);
 
                 //esto muestra el mensaje en verde arriba
                 res.redirect("/user/create?message=Cuenta creada exitosamente para " + name + "!");
@@ -211,54 +213,7 @@ public class AuthController {
         }, engine);
 
 
-        /**
-         * Ruta para procesar la creación de usuarios desde un formulario web.
-         * Aplica el patrón Post-Redirect-Get (PRG) para mantener la consistencia de la UI.
-         */
-        post("/add_users", (req, res) -> {
-            // 1. No establecemos res.type("application/json") porque vamos a redirigir al navegador,
-            // no a devolver un cuerpo de datos JSON.
-
-            try {
-                // 2. Rescatamos los datos del formulario (body-params)
-                String name = req.queryParams("name");
-                String password = req.queryParams("password");
-
-                // 3. Delegamos la lógica de negocio al servicio. 
-                // Si el usuario ya existe o los datos son inválidos, el servicio lanzará una excepción.
-                User user = authService.registerUser(name, password);
-
-                // 4. ÉXITO: Redirigimos a la vista de creación con un mensaje de éxito.
-                // Usamos URLEncoder para que el mensaje sea seguro en la URL (manejo de espacios y caracteres).
-                String successMsg = java.net.URLEncoder.encode(
-                    "Usuario '" + user.getName() + "' registrado con éxito.", 
-                    "UTF-8"
-                );
-                
-                res.redirect("/user/create?message=" + successMsg);
-                return null; // Importante: retornar null para finalizar el ciclo de Spark en esta ruta.
-
-            } catch (IllegalArgumentException e) {
-                // 5. ERROR DE VALIDACIÓN: El usuario puso datos mal (ej. nombre duplicado o vacío).
-                // Redirigimos de vuelta al formulario para que intente de nuevo.
-                String errorMsg = java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
-                
-                res.redirect("/user/create?error=" + errorMsg);
-                return null;
-
-            } catch (Exception e) {
-                // 6. ERROR TÉCNICO: Fallo de base de datos u otro error no controlado.
-                // Mandamos al usuario a la página de error global que creamos antes.
-                String criticalError = java.net.URLEncoder.encode(
-                    "Error interno al registrar usuario: " + e.getMessage(), 
-                    "UTF-8"
-                );
-                
-                res.redirect("/error?type=RegistrationError&message=" + criticalError);
-                return null;
-            }
-        });
-
+      
     }
 
     private static boolean isLoggedIn(Request req) {

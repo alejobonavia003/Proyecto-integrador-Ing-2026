@@ -3,6 +3,8 @@ package app;
 import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.ErrorController;
+import controllers.SecurityController;
+
 import static spark.Spark.after;
 import static spark.Spark.before;
 import static spark.Spark.halt;
@@ -77,5 +79,11 @@ public class App {
         // -------------------------------------------------------
         AuthController.init(engine);
         ErrorController.init(engine);
+
+        // -------------------------------------------------------
+        // Inicialización de la Seguridad y Roles
+        // Intercepta las solicitudes antes de que lleguen a las rutas de negocio
+        // -------------------------------------------------------
+        SecurityController.init();
     }
 }

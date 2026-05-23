@@ -26,20 +26,26 @@ public class AuthService {
      * @param password Contraseña en texto plano (será hasheada).
      * @return El objeto User persistido (con ID generado).
      */
-    public User registerUser(String name, String password) {
+    public User registerUser(String name, String dni, String email, String password, Long role) {
         // Validaciones preventivas: Aseguran que no entren datos vacíos a la lógica de negocio
         validateNotBlank(name, "Nombre");
         validateNotBlank(password, "Contraseña");
+        validateNotBlank(dni, "dni");
+        validateNotBlank(email, "email");
+        
 
         //objeto que es null si no existe y uso el metodo del modelo para buscar la primera coincidencia
-        Optional<User> existing = Optional.ofNullable(User.findFirst("name = ?", name));
+        Optional<User> existing = Optional.ofNullable(User.findFirst("dni = ?", dni));
         if (existing.isPresent()) {
-            throw new IllegalArgumentException("Ya existe un usuario con ese nombre.");
+            throw new IllegalArgumentException("Ya existe un usuario con ese dni.");
         }
 
         // Creación de la entidad User
         User user = new User();
         user.setName(name);
+        user.setDni(dni);
+        user.setEmail(email);
+        user.setRoleId(role);
         
         // SEGURIDAD: Nunca guardamos la contraseña plana. 
         // BCrypt aplica un 'salt' aleatorio y genera un hash irreversible.

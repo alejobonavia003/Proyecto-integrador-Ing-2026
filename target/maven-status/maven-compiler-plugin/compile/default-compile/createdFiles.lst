@@ -4,7 +4,6 @@ models\User.class
 models\Carrera.class
 config\DBConnection.class
 controllers\ErrorController.class
-dao\UserDAO.class
 services\AuthService.class
 dao\CarreraDAO.class
 config\DBConfigSingleton.class

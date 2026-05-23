@@ -1,6 +1,19 @@
 -- Habilitar el soporte de Claves Foráneas en SQLite (Ejecutar siempre al conectar)
 PRAGMA foreign_keys = ON;
 
+-- =========================================
+-- DROP TABLES
+-- =========================================
+
+DROP TABLE IF EXISTS submissions;
+DROP TABLE IF EXISTS assignments;
+DROP TABLE IF EXISTS grades;
+DROP TABLE IF EXISTS enrollments;
+DROP TABLE IF EXISTS course_classes;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS roles;
+
 -- 1. Table: roles
 CREATE TABLE roles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,7 +28,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role_id INTEGER NOT NULL,
-    FOREIGN KEY (role_id) REFERENCES roles(id) ON RESTRICT
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT
 );
 
 -- 3. Table: courses
@@ -33,7 +46,7 @@ CREATE TABLE course_classes (
     course_id INTEGER NOT NULL,
     teacher_id INTEGER NOT NULL,
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    FOREIGN KEY (teacher_id) REFERENCES users(id) ON RESTRICT
+    FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE RESTRICT
 );
 
 -- 5. Table: enrollments (Inscripciones)
