@@ -95,7 +95,7 @@ public class AuthController {
 
                 authService.registerUser(name, dni, email, password, role);
 
-                logger.log(Level.INFO, "Nuevo usuario registrado exitosamente: [DNI: {0}, Nombre: {1}]", new Object[]{dni, name});
+                logger.log(Level.INFO, "Nuevo usuario registrado exitosamente: [DNI: {0}, Nombre: {1}, Rol: {2}]", new Object[]{dni, name, role});
                 res.redirect("/user/create?message=Cuenta creada exitosamente para " + name + "!");
                 return "";
             } catch (IllegalArgumentException e) {
@@ -126,6 +126,7 @@ public class AuthController {
                     req.session(true).attribute("username", user.getName());
                     req.session().attribute("userId", user.getId());
                     req.session().attribute("loggedIn", true);
+                    req.session().attribute("role_id", user.getRoleId());
                     
                     // Inyectamos el rol recuperado desde la relación del modelo de ActiveJDBC
                     String assignedRole = user.getRole().getName();

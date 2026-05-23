@@ -51,6 +51,32 @@ public class User extends Model {
     }
 
     /**
+     * no hace falta ...
+     * Obtiene el nombre del rol en MAYÚSCULAS basado en el número de role_id.
+     * 0 = ADMIN, 1 = TEACHER, 2 = STUDENT
+     
+    public String getRoleName() {
+        Integer roleId = getInteger("role_id");
+        
+        if (roleId == null) {
+            return "UNKNOWN"; // Por si hay algún usuario corrupto sin rol
+        }
+
+        switch (roleId) {
+            case 0:
+                return "ADMIN";
+            case 1:
+                return "TEACHER";
+            case 2:
+                return "STUDENT";
+            default:
+                return "UNKNOWN";
+        }
+    }
+    */  
+
+
+    /**
      * Obtiene el objeto Role asociado a este usuario.
      * ActiveJDBC deduce la relación gracias a la columna 'role_id'.
      */

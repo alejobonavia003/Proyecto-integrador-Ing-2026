@@ -1,6 +1,4 @@
 package controllers;
-
-import models.User;
 import spark.ModelAndView;
 import spark.Request;
 import spark.template.mustache.MustacheTemplateEngine;

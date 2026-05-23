@@ -3,9 +3,15 @@ package controllers;
 import static spark.Spark.before;
 import static spark.Spark.halt;
 
+import java.util.logging.Logger;
+
 public class SecurityController {
 
+    private static final Logger log = Logger.getLogger(SecurityController.class.getName());
+
     public static void init() {
+
+        
 
         // 1. Proteger de forma general todo el sistema (excepto login y recursos públicos)
         before("/*", (req, res) -> {
@@ -14,16 +20,19 @@ public class SecurityController {
             // Permitir explícitamente rutas públicas de autenticación y archivos estáticos
             if (path.equals("/user/create") ||
                 path.equals("/") || 
+                path.equals("/login") ||
                 path.equals("/user/new") || 
-                path.equals("/login") || 
+                path.equals("/dashboard") || 
                 path.equals("/logout") || 
                 path.startsWith("/public/")) {
+                    log.info("Acceso a ruta publica ");
                 return; 
             }
 
             // Verificar si hay un usuario logueado en la sesión
-            Long userId = req.session().attribute("user_id");
+            Object userId = req.session().attribute("userId");
             if (userId == null) {
+                log.warning("Un usuario hizo un intento de acceder a una ruta privada sin una session");
                 res.redirect("/");
                 halt();
             }
