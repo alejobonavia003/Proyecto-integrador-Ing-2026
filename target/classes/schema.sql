@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS course_classes;
 DROP TABLE IF EXISTS courses;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS study_plans;
 
 -- 1. Table: roles
 CREATE TABLE roles (
@@ -91,6 +92,13 @@ CREATE TABLE submissions (
     UNIQUE (student_id, assignment_id),
     FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
     FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Table: study_plans (Plan de Estudio)
+CREATE TABLE study_plans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    code VARCHAR(20) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL
 );
 
 -- Datos iniciales obligatorios
