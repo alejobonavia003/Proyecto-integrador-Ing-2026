@@ -1,10 +1,15 @@
 package app;
 
+import java.util.logging.Logger;
+
+import org.javalite.activejdbc.Base;
+
 import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.DashboardController;
 import controllers.ErrorController;
 import controllers.SecurityController;
+import controllers.SubjectController;
 
 import static spark.Spark.after;
 import static spark.Spark.before;
@@ -12,9 +17,6 @@ import static spark.Spark.halt;
 import static spark.Spark.port;
 import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
-
-import java.util.logging.Logger;
-import org.javalite.activejdbc.Base; // <-- IMPORTANTE: Importar Base de ActiveJDBC
 
 /**
  * Clase principal de la aplicación Spark.
@@ -76,5 +78,8 @@ public class App {
         AuthController.init(engine);
         DashboardController.init(engine);
         ErrorController.init(engine);
+        SubjectController.init(engine);
+
+       
     }
 }

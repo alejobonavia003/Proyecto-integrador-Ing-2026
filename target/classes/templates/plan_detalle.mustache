@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estructura Curricular</title>
+</head>
+<body>
+    <h1>Detalle del Plan de Estudio</h1>
+    
+    <div style="background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd;">
+        <h2>{{plan.name}}</h2>
+        <p><strong>Código de Resolución/Plan:</strong> {{plan.code}}</p>
+    </div>
+
+    <h3>Materias Correspondientes</h3>
+    <ul>
+        {{#plan_courses}}
+        <li style="margin-bottom: 10px;">
+            <strong>{{code}}</strong> - {{name}} 
+            <br>
+            <small>Carga horaria: {{weekly_hours}} hs</small>
+        </li>
+        {{/plan_courses}}
+        
+        {{^plan_courses}}
+        <p><em>Este plan de estudio aún no tiene materias asignadas en su currícula.</em></p>
+        {{/plan_courses}}
+    </ul>
+
+    <hr>
+    <a href="javascript:history.back()">Volver a la pantalla anterior</a>
+</body>
+</html>

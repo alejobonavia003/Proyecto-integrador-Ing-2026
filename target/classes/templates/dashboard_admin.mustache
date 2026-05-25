@@ -1,28 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Panel de Administrador</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Bienvenido, {{username}} 👋</h1>
-    <h3>Rol: {{role}}</h3>
-    <hr>
 
-    <div>
-        <h2>Gestión de Usuarios</h2>
-        <ul>
-            <li><a href="/user/create">Registrar Nuevo Usuario</a></li>
-        </ul>
+<body class="bg-gray-100 min-h-screen">
 
-        <h2>Gestión Académica</h2>
-        <ul>
-            <li><a href="/admin/courses/create">Crear Nueva Materia</a></li>
-            <li><a href="/admin/courses">Listar Todas las Materias</a></li>
-        </ul>
+    <div class="max-w-5xl mx-auto p-8">
+
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+
+            <h1 class="text-3xl font-bold text-gray-800">
+                Bienvenido, {{username}} 👋
+            </h1>
+
+            <p class="text-gray-600 mt-2">
+                Rol actual:
+                <span class="font-semibold text-blue-600">
+                    {{role}}
+                </span>
+            </p>
+
+        </div>
+
+        <!-- Gestión de Usuarios -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+                Gestión de Usuarios
+            </h2>
+
+            <div class="flex flex-wrap gap-4">
+
+                <a
+                    href="/user/create"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-md transition">
+
+                    Registrar Nuevo Usuario
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Gestión Académica -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+                Gestión Académica
+            </h2>
+
+            <div class="flex flex-wrap gap-4">
+
+                <a
+                    href="/admin/subjects/new"
+                    class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-md transition">
+
+                    Crear Nueva Materia
+
+                </a>
+
+                <a
+                    href="/admin/subjects"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-md transition">
+
+                    Listar Materias
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Logout -->
+        <div class="text-center mt-8">
+
+            <a
+                href="/logout"
+                class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md transition">
+
+                Cerrar Sesión
+
+            </a>
+
+        </div>
+
     </div>
 
-    <br>
-    <a href="/logout" style="color: red;">Cerrar Sesión</a>
 </body>
 </html>
