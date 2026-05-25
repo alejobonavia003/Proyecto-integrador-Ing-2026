@@ -8,14 +8,13 @@ import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.DashboardController;
 import controllers.ErrorController;
-import controllers.MateriaController;
 import controllers.SecurityController;
+import controllers.SubjectController;
+
 import static spark.Spark.after;
 import static spark.Spark.before;
-import static spark.Spark.get; // <-- IMPORTANTE: Importar Base de ActiveJDBC
 import static spark.Spark.halt;
 import static spark.Spark.port;
-import static spark.Spark.post;
 import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
 
@@ -79,42 +78,8 @@ public class App {
         AuthController.init(engine);
         DashboardController.init(engine);
         ErrorController.init(engine);
-
-        // ==========================================
-        // ENDPOINTS DE MATERIAS
-        // ==========================================
-
-        // SQA: Solo los usuarios con rol Administrador tienen acceso a modificación
-        before("/materias/nueva", (req, res) -> {
-            // Se asume que guardas el usuario en "currentUser" al hacer login en AuthController
-            models.User currentUser = req.session().attribute("currentUser");
-            
-            if (currentUser == null) {
-                res.redirect("/login");
-                halt();
-            }
-            
-            // Verificamos usando tu modelo Role existente
-            models.Role rol = currentUser.parent(models.Role.class);
-            if (rol == null || (!"Administrador".equalsIgnoreCase(rol.getString("name")) && !"Admin".equalsIgnoreCase(rol.getString("name")))) {
-                halt(403, "Acceso Denegado: Solo el Administrador puede modificar dependencias académicas.");
-            }
-        });
-
-        /// ==========================================
-        // ENDPOINTS DE MATERIAS
-        // ==========================================
+        SubjectController.init(engine);
 
        
-        get("/admin/courses", MateriaController::getMaterias, engine);
-        get("/materias", MateriaController::getMaterias, engine); // Opcional: mantener la ruta original
-
-        // Rutas existentes
-        get("/admin/courses/create", MateriaController::mostrarFormulario, new MustacheTemplateEngine());
-        post("/materias/nueva", MateriaController::crearMateria, engine);
-        get("/materias/:id/correlativas", MateriaController::getCorrelativas, engine);
-        
-        // POST para procesar el formulario de correlatividades múltiple
-        post("/materias/:id/correlativas", MateriaController::asignarCorrelativas, engine);
     }
 }

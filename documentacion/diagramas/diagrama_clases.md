@@ -537,17 +537,42 @@ erDiagram
         INTEGER role_id FK
     }
 
-    courses {
+    careers {
+        INTEGER id PK
+        VARCHAR code UK
+        VARCHAR name
+        INTEGER duration
+    }
+
+    study_plans {
+        INTEGER id PK
+        VARCHAR code UK
+        VARCHAR name
+        VARCHAR version
+        INTEGER career_id FK
+    }
+
+    subjects {
         INTEGER id PK
         VARCHAR code UK
         VARCHAR name
         INTEGER weekly_hours
+        VARCHAR modality
+        INTEGER study_plan_id FK
+    }
+
+    correlativities {
+        INTEGER id PK
+        INTEGER subject_id FK
+        INTEGER required_subject_id FK
+        BOOLEAN requires_approved
     }
 
     course_classes {
         INTEGER id PK
         VARCHAR name
-        INTEGER course_id FK
+        INTEGER capacity
+        INTEGER subject_id FK
         INTEGER teacher_id FK
     }
 
@@ -583,20 +608,34 @@ erDiagram
         TIMESTAMP submitted_at
     }
 
-    roles ||--o{ users : has
+    %% =====================================
+    %% RELACIONES
+    %% =====================================
 
-    users ||--o{ course_classes : teaches
-    users ||--o{ enrollments : attends
-    users ||--o{ submissions : submits
+    roles ||--o{ users : "has"
 
-    courses ||--o{ course_classes : contains
+    careers ||--o{ study_plans : "contains"
 
-    course_classes ||--o{ enrollments : includes
-    course_classes ||--o{ assignments : publishes
+    study_plans ||--o{ subjects : "includes"
 
-    enrollments ||--o{ grades : receives
+    subjects ||--o{ correlativities : "has"
+    subjects ||--o{ correlativities : "required_by"
 
-    assignments ||--o{ submissions : requires
+    subjects ||--o{ course_classes : "opens"
+
+    users ||--o{ course_classes : "teaches"
+
+    users ||--o{ enrollments : "enrolls"
+
+    course_classes ||--o{ enrollments : "contains"
+
+    enrollments ||--o{ grades : "receives"
+
+    course_classes ||--o{ assignments : "publishes"
+
+    assignments ||--o{ submissions : "receives"
+
+    users ||--o{ submissions : "submits"
 ```
 
 

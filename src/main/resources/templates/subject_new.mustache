@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Materia</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+
+        <h1 class="text-2xl font-bold mb-6 text-center">
+            Crear Materia
+        </h1>
+
+        {{#errorMessage}}
+        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+            {{errorMessage}}
+        </div>
+        {{/errorMessage}}
+
+        <form action="/admin/subjects/new" method="POST" class="space-y-4">
+
+            <div>
+                <label class="block mb-1">Nombre</label>
+
+                <input
+                    type="text"
+                    name="name"
+                    required
+                    class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block mb-1">Código</label>
+
+                <input
+                    type="text"
+                    name="code"
+                    required
+                    class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block mb-1">Carga Horaria</label>
+
+                <input
+                    type="number"
+                    name="weekly_hours"
+                    required
+                    class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block mb-1">Modalidad</label>
+
+                <input
+                    type="text"
+                    name="modality"
+                    required
+                    placeholder="Presencial / Virtual"
+                    class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block mb-1">
+                    ID Plan de Estudio
+                </label>
+
+                <input
+                    type="number"
+                    name="study_plan_id"
+                    required
+                    class="w-full border rounded px-3 py-2">
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+
+                Crear Materia
+
+            </button>
+
+        </form>
+
+        <div class="mt-4 text-center">
+            <a
+                href="/admin/subjects"
+                class="text-blue-600 hover:underline">
+
+                Volver
+
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>
