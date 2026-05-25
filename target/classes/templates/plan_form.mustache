@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Plan de Estudio</title>
+</head>
+<body>
+    <h1>{{#plan}}Editar{{/plan}}{{^plan}}Armar Nuevo{{/plan}} Plan de Estudio</h1>
+    
+    <form action="/planes/guardar" method="POST">
+        <input type="hidden" name="id" value="{{plan.id}}">
+
+        <fieldset>
+            <legend>Datos Generales</legend>
+            <label for="code">Código del Plan (Ej. PLAN-2026):</label><br>
+            <input type="text" id="code" name="code" value="{{plan.code}}" required><br><br>
+
+            <label for="name">Nombre de la Carrera/Plan:</label><br>
+            <input type="text" id="name" name="name" value="{{plan.name}}" required><br>
+        </fieldset>
+
+        <br>
+
+        <fieldset>
+            <legend>Estructura Curricular (Seleccionar Materias)</legend>
+            <p><i>Seleccione las materias que componen este plan de estudio:</i></p>
+            
+            <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+                {{#courses}}
+                <div>
+                    <input type="checkbox" id="course_{{id}}" name="course_ids" value="{{id}}" {{#selected}}checked{{/selected}}>
+                    <label for="course_{{id}}">
+                        <strong>{{code}}</strong> - {{name}} ({{weekly_hours}} hs/sem)
+                    </label>
+                </div>
+                {{/courses}}
+                
+                {{^courses}}
+                <p>No hay materias cargadas en el sistema. Debes crear Materias (Courses) primero.</p>
+                {{/courses}}
+            </div>
+        </fieldset>
+
+        <br>
+        <button type="submit">Guardar Plan de Estudio</button>
+        <a href="/planes">Cancelar</a>
+    </form>
+</body>
+</html>

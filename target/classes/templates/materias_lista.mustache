@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Materias</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .acciones a { margin-right: 10px; text-decoration: none; color: #0066cc; }
+    </style>
+    <script>
+        // Lógica para el filtro por modalidad
+        function filtrarModalidad() {
+            const filtro = document.getElementById("filtroModalidad").value.toLowerCase();
+            const filas = document.querySelectorAll(".fila-materia");
+            
+            filas.forEach(fila => {
+                const modalidad = fila.getAttribute("data-modalidad").toLowerCase();
+                if (filtro === "todas" || modalidad === filtro) {
+                    fila.style.display = "";
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Catálogo de Materias</h1>
+    
+    <label for="filtroModalidad"><strong>Filtro por Modalidad:</strong></label>
+    <select id="filtroModalidad" onchange="filtrarModalidad()">
+        <option value="todas">Todas</option>
+        <option value="presencial">Presencial</option>
+        <option value="virtual">Virtual</option>
+        <option value="hibrida">Híbrida</option>
+    </select>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Modalidad</th>
+                <th>Carga Horaria</th>
+                <th>Materias que Bloquea (Criterio SQA)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#materias}}
+            <tr class="fila-materia" data-modalidad="{{modalidad}}">
+                <td>{{codigo_materia}}</td>
+                <td><strong>{{nombre}}</strong></td>
+                <td>{{modalidad}}</td>
+                <td>{{carga_horaria}} hs</td>
+                <td>
+                    <ul>
+                        {{#materias_bloqueadas}}
+                            <li>🔒 {{nombre}} ({{codigo_materia}})</li>
+                        {{/materias_bloqueadas}}
+                        {{^materias_bloqueadas}}
+                            <li><em style="color: green;">Ninguna</em></li>
+                        {{/materias_bloqueadas}}
+                    </ul>
+                </td>
+                <td class="acciones">
+                    <a href="/materias/{{id}}/correlativas">🔄 Asignar Correlativas</a>
+                </td>
+            </tr>
+            {{/materias}}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/admin/courses/create"><button>+ Crear Nueva Materia</button></a>
+    <a href="/dashboard">Volver al Dashboard</a>
+</body>
+</html>

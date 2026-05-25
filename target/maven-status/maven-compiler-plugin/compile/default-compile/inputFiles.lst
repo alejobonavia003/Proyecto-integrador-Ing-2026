@@ -8,6 +8,7 @@
 /home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/config/DBConnection.java
 /home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/models/Materia.java
 /home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/controllers/ErrorController.java
+/home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/controllers/MateriaController.java
 /home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/models/User.java
 /home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/models/Role.java
 /home/lauty23/Descargas/Proyecto-integrador-Ing-2026/src/main/java/config/DBConfigSingleton.java

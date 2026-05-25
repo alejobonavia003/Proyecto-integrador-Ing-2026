@@ -3,6 +3,7 @@ controllers/DashboardController.class
 controllers/ErrorController.class
 models/Materia.class
 models/Carrera.class
+controllers/MateriaController.class
 controllers/AuthController.class
 controllers/SecurityController.class
 models/Role.class
