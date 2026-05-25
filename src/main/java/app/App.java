@@ -10,6 +10,7 @@ import controllers.DashboardController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 import controllers.SubjectController;
+import controllers.UserController;
 
 import static spark.Spark.after;
 import static spark.Spark.before;
@@ -76,6 +77,7 @@ public class App {
         // 2. Registro de controladores de negocio
         // -------------------------------------------------------
         AuthController.init(engine);
+        UserController.init(engine);
         DashboardController.init(engine);
         ErrorController.init(engine);
         SubjectController.init(engine);

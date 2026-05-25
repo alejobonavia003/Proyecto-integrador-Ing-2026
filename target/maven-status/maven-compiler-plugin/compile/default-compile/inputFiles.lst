@@ -5,6 +5,8 @@
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/Role.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/User.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/config/DBConfigSingleton.java
+/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/services/UserService.java
+/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/UserController.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/SubjectController.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/services/AuthService.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/config/DBConnection.java
