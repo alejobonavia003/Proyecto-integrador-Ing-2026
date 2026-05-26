@@ -35,4 +35,17 @@ public class CareerService {
     public List<Model> getStudyPlansByCareer(Long careerId) {
         return StudyPlan.where("career_id = ?", careerId);
     }
+
+    // NUEVO MÉTODO: Crear un plan de estudio asociado a una carrera
+    public void createStudyPlan(String name, String code, String version, Long careerId) {
+        StudyPlan plan = new StudyPlan();
+        plan.set("name", name);
+        plan.set("code", code);
+        plan.set("version", version);
+        plan.set("career_id", careerId);
+        
+        if (!plan.save()) {
+            throw new IllegalArgumentException("Error al guardar el plan de estudio: " + plan.errors());
+        }
+    }
 }
