@@ -24,7 +24,5 @@ hs_err_pid*
 replay_pid*
 
 .obsidian
-/target/*
-target/
-target
+
 
