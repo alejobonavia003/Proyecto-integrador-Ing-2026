@@ -6,12 +6,12 @@ import org.javalite.activejdbc.Base;
 
 import config.DBConfigSingleton;
 import controllers.AuthController;
+import controllers.CareerController;
 import controllers.DashboardController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 import controllers.SubjectController;
 import controllers.UserController;
-
 import static spark.Spark.after;
 import static spark.Spark.before;
 import static spark.Spark.halt;
@@ -81,7 +81,7 @@ public class App {
         DashboardController.init(engine);
         ErrorController.init(engine);
         SubjectController.init(engine);
-
+        CareerController.init(engine);
        
     }
 }

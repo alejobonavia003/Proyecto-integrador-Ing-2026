@@ -1,5 +1,6 @@
 models/User.class
 controllers/DashboardController.class
+controllers/CareerController.class
 controllers/ErrorController.class
 controllers/UserController.class
 controllers/AuthController.class
@@ -7,12 +8,13 @@ controllers/SubjectController.class
 models/StudyPlan.class
 controllers/SecurityController.class
 models/Role.class
+services/CareerService.class
 models/CourseClass.class
 services/UserService.class
 config/DBConnection.class
 config/DBConfigSingleton.class
-services/SubjectService.class
 app/App.class
+services/SubjectService.class
 services/AuthService.class
 models/Subject.class
 models/Career.class
