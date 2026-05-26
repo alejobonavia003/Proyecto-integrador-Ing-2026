@@ -243,3 +243,63 @@ CREATE TABLE submissions (
 
 -- Datos iniciales obligatorios
 INSERT INTO roles (name) VALUES ('ADMIN'), ('TEACHER'), ('STUDENT');
+
+-- =========================================
+-- 1. CREAR USUARIO ADMIN
+-- =========================================
+-- Asignamos role_id = 1 (que corresponde a 'ADMIN' según tus inserts iniciales)
+
+INSERT INTO users (dni, name, email, password, role_id) 
+VALUES (
+    '144899798', 
+    'admin', 
+    'bonaviaalejo@gmail.com', 
+    '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 
+    1
+);
+
+-- =========================================
+-- 2. CREAR CARRERA DE COMPUTACIÓN
+-- =========================================
+-- Asumimos que esta es la primera carrera, por lo que tendrá id = 1
+
+INSERT INTO careers (code, name, duration) 
+VALUES ('COMP', 'Analista en Ciencias de la Computación', 3);
+
+-- =========================================
+-- 3. CREAR 2 PLANES DE ESTUDIO PARA LA CARRERA
+-- =========================================
+-- Asignamos career_id = 1 (la carrera que acabamos de crear)
+
+INSERT INTO study_plans (code, name, version, career_id) 
+VALUES 
+    ('PLAN-2019', 'Plan 2019 - Ciencias de la Computación', '2019', 1),
+    ('PLAN-2024', 'Plan 2024 - Analista (Actualizado)', '2024', 1);
+
+-- =========================================
+-- 4. CREAR MATERIAS PARA LOS PLANES
+-- =========================================
+-- Las primeras materias van al Plan 2019 (id = 1), las otras al Plan 2024 (id = 2)
+
+INSERT INTO subjects (code, name, weekly_hours, modality, study_plan_id) 
+VALUES 
+    -- Materias del Plan 2019 (study_plan_id = 1)
+    ('ALG-01', 'Algoritmos y Estructuras de Datos', 6, 'PRESENCIAL', 1),
+    ('ARQ-01', 'Arquitectura de Computadoras', 4, 'PRESENCIAL', 1),
+    ('BD-01', 'Bases de Datos I', 6, 'PRESENCIAL', 1),
+    
+    -- Materias del Plan 2024 (study_plan_id = 2)
+    ('PAR-02', 'Paradigmas de Programación', 6, 'PRESENCIAL', 2),
+    ('SOR-02', 'Sistemas Operativos y Redes', 8, 'PRESENCIAL', 2),
+    ('IS2-02', 'Ingeniería de Software II', 6, 'PRESENCIAL', 2),
+    ('TFI-02', 'Trabajo Final Integrador', 4, 'VIRTUAL', 2);
+
+-- =========================================
+-- 5. AGREGAR ALGUNAS CORRELATIVIDADES (OPCIONAL)
+-- =========================================
+-- Esto es un extra para que pruebes bien las relaciones.
+-- Hacemos que "Ingeniería de Software II" (id=6) requiera "Paradigmas de Programación" (id=4)
+-- y que "Paradigmas..." requiera estar aprobada (requires_approved = 1 o true en SQLite).
+
+INSERT INTO correlativities (subject_id, required_subject_id, requires_approved) 
+VALUES (6, 4, 1);

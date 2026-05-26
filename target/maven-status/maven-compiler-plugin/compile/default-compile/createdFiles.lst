@@ -13,8 +13,8 @@ models/CourseClass.class
 services/UserService.class
 config/DBConnection.class
 config/DBConfigSingleton.class
-app/App.class
 services/SubjectService.class
+app/App.class
 services/AuthService.class
 models/Subject.class
 models/Career.class
