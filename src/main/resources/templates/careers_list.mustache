@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>Listado de Carreras</title></head>
+<body>
+    <h1>Carreras Registradas</h1>
+    <a href="/admin/careers/new"><button>Crear Nueva Carrera</button></a>
+    <a href="/dashboard"><button>Volver al Dashboard</button></a>
+    
+    <table border="1" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Código</th>
+                <th>Duración (Años)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#careers}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{code}}</td>
+                <td>{{duration}}</td>
+                <td>
+                    <a href="/admin/careers/{{id}}"><button>Ver Detalles / Planes</button></a>
+                </td>
+            </tr>
+            {{/careers}}
+        </tbody>
+    </table>
+</body>
+</html>

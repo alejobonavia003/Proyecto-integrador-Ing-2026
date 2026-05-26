@@ -1,5 +1,6 @@
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/Subject.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/AuthController.java
+/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/CareerController.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/StudyPlan.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/CourseClass.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/models/Role.java
@@ -11,6 +12,7 @@
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/services/AuthService.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/config/DBConnection.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/ErrorController.java
+/home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/services/CareerService.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/SecurityController.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/controllers/DashboardController.java
 /home/oxxoxxx/Documentos/Proyecto-integrador-Ing-2026/src/main/java/app/App.java
