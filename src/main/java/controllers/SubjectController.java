@@ -1,12 +1,9 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import org.javalite.activejdbc.Model;
+import java.util.List;
 
 import models.CourseClass;
 import models.Subject;
@@ -71,35 +68,8 @@ public class SubjectController {
                 "Cargando listado de materias."
         );
 
-        Map<String, Object> model =
-                new HashMap<>();
-
-        // Lista de materias
-
-        List<Map<String, Object>> subjectsView =
-                new ArrayList<>();
-
-        for (Model subject : Subject.findAll()) {
-
-        Map<String, Object> row =
-                new HashMap<>();
-
-        row.put("id", subject.getId());
-        row.put("name", subject.getString("name"));
-        row.put("code", subject.getString("code"));
-        row.put(
-                "weekly_hours",
-                subject.getInteger("weekly_hours")
-        );
-        row.put(
-                "modality",
-                subject.getString("modality")
-        );
-
-        subjectsView.add(row);
-        }
-
-        model.put("subjects", subjectsView);
+        Map<String, Object> model = new HashMap<>();
+        model.put("subjects", subjectService.getAllSubjectsView());
 
         // Datos de sesión
         model.put(
@@ -115,7 +85,7 @@ public class SubjectController {
         // Contador útil para estadísticas simples
         model.put(
                 "subjectCount",
-                Subject.count()
+                subjectService.getTotalSubjectsCount()
         );
 
         return engine.render(

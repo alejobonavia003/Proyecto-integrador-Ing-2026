@@ -859,22 +859,18 @@ flowchart TD
         end
 
         subgraph Datos
-            DAO["DAO (JDBC)"]
             DBConn["DB Connection"]
         end
     end
 
-    DB[(PostgreSQL)]
+    DB[(sqlite)]
 
     Browser --> Controllers
     Controllers --> Services
     Controllers --> Views
 
-    Services --> DAO
+    Services --> DBConn
     Services --> Models
-
-    DAO --> Models
-    DAO --> DBConn
 
     DBConn --> DB
 ```
