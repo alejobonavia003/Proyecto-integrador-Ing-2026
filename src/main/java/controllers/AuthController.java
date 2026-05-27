@@ -1,19 +1,18 @@
 package controllers;
 
-import models.User;
-import services.AuthService;
-import spark.ModelAndView;
-import spark.Request;
-import spark.template.mustache.MustacheTemplateEngine;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import models.User;
+import services.AuthService;
+import spark.ModelAndView;
+import spark.Request;
 import static spark.Spark.get;
 import static spark.Spark.post;
+import spark.template.mustache.MustacheTemplateEngine;
 
 /**
  * Controlador de autenticación + rutas de acceso inicial.
@@ -26,10 +25,6 @@ public class AuthController {
 
     public static void init(MustacheTemplateEngine engine) {
 
-        /**
-         * Renderiza la plantilla de login.
-         * Si el usuario ya está logueado, mantiene la sesión y lo desvía al dashboard.
-         */
         get("/", (req, res) -> {
             if (isLoggedIn(req)) {
                 res.redirect("/dashboard");
@@ -51,9 +46,6 @@ public class AuthController {
             return new ModelAndView(model, "login.mustache");
         }, engine);
 
-        /**
-         * Renderiza la plantilla para registrarse (Formulario de prueba o administrador).
-         */
         get("/user/create", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             
@@ -70,9 +62,6 @@ public class AuthController {
             return new ModelAndView(model, "user_form.mustache");
         }, engine);
 
-        /**
-         * Método para cerrar sesión.
-         */
         get("/logout", (req, res) -> {
             String username = req.session().attribute("username");
             logger.log(Level.INFO, "Usuario [{0}] ha cerrado sesión de forma voluntaria.", username);
@@ -82,21 +71,20 @@ public class AuthController {
             return null;
         });
 
-        /**
-         * Procesa el formulario POST de registro de usuarios.
-         */
         post("/user/new", (req, res) -> {
             String name = req.queryParams("name");
             try {
                 String password = req.queryParams("password");
                 String email = req.queryParams("email");
                 String dni = req.queryParams("dni");
-                Long role = Long.parseLong(req.queryParams("role"));
+                
+                // FORZAR EL ROL A 1 (ADMINISTRADOR) DESDE EL BACKEND
+                Long role = 1L;
 
                 authService.registerUser(name, dni, email, password, role);
 
-                logger.log(Level.INFO, "Nuevo usuario registrado exitosamente: [DNI: {0}, Nombre: {1}, Rol: {2}]", new Object[]{dni, name, role});
-                res.redirect("/user/create?message=Cuenta creada exitosamente para " + name + "!");
+                logger.log(Level.INFO, "Nuevo usuario ADMIN registrado exitosamente: [DNI: {0}, Nombre: {1}]", new Object[]{dni, name});
+                res.redirect("/user/create?message=Cuenta Admin creada exitosamente para " + name + "!");
                 return "";
             } catch (IllegalArgumentException e) {
                 logger.log(Level.WARNING, "Fallo en validación al intentar registrar usuario [{0}]: {1}", new Object[]{name, e.getMessage()});
@@ -109,11 +97,8 @@ public class AuthController {
             }
         });
 
-        /**
-         * Procesa el formulario de login enviado por el usuario.
-         */
         post("/login", (req, res) -> {
-            String usernameInput = req.queryParams("username"); // Usado para recibir el identificador (DNI o email)
+            String usernameInput = req.queryParams("username"); 
             try {
                 String passwordInput = req.queryParams("password");
 
@@ -122,13 +107,11 @@ public class AuthController {
                 if (userOpt.isPresent()) {
                     User user = userOpt.get();
 
-                    // Guardamos atributos limpios y cómodos en la sesión
                     req.session(true).attribute("username", user.getName());
                     req.session().attribute("userId", user.getId());
                     req.session().attribute("loggedIn", true);
                     req.session().attribute("role_id", user.getRoleId());
                     
-                    // Inyectamos el rol recuperado desde la relación del modelo de ActiveJDBC
                     String assignedRole = user.getRole().getName();
                     req.session().attribute("user_role", assignedRole);
 
