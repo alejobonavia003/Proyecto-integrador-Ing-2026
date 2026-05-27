@@ -8,6 +8,8 @@ PRAGMA foreign_keys = ON;
 -- DROP TABLES
 -- =========================================
 
+DROP TABLE IF EXISTS teacher_subjects;
+DROP TABLE IF EXISTS teacher_careers;
 DROP TABLE IF EXISTS submissions;
 DROP TABLE IF EXISTS assignments;
 DROP TABLE IF EXISTS grades;
@@ -19,7 +21,6 @@ DROP TABLE IF EXISTS study_plans;
 DROP TABLE IF EXISTS careers;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
-
 -- =========================================
 -- TABLE: roles
 -- =========================================
@@ -235,6 +236,36 @@ CREATE TABLE submissions (
         ON DELETE CASCADE
 );
 
+
+-- =========================================
+-- NUEVAS TABLAS PARA INSCRIPCIÓN DE DOCENTES
+-- =========================================
+
+-- Relación Docente - Carrera (Para saber en qué carreras está registrado)
+CREATE TABLE teacher_careers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_id INTEGER NOT NULL,
+    career_id INTEGER NOT NULL,
+    UNIQUE(teacher_id, career_id),
+    FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (career_id) REFERENCES careers(id) ON DELETE CASCADE
+);
+
+-- Relación Docente - Materia (Inscripción con rol y año)
+-- =========================================
+-- TABLE: teacher_subjects (Actualizada con Periodo Académico)
+-- =========================================
+CREATE TABLE teacher_subjects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    teacher_id INTEGER NOT NULL,
+    subject_id INTEGER NOT NULL,
+    role_charge VARCHAR(50) NOT NULL,      -- Ej: Titular, Adjunto, JTP
+    academic_year INTEGER NOT NULL,        -- Año académico (Ej: 2026)
+    academic_period VARCHAR(50) NOT NULL,  -- Periodo académico (Ej: '1° Cuatrimestre')
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+);
 -- =========================================
 -- DATOS INICIALES
 -- =========================================
@@ -301,3 +332,33 @@ VALUES
 
 INSERT INTO correlativities (subject_id, required_subject_id, requires_approved) 
 VALUES (6, 4, 1);
+
+
+-- =========================================
+-- 6. CREAR USUARIO DOCENTE Y ASIGNAR CARRERA
+-- =========================================
+-- El role_id = 2 corresponde a 'TEACHER'
+INSERT INTO users (dni, name, email, password, role_id) 
+VALUES (
+    '22222222', 
+    'Profesor', 
+    'profe@gmail.com', 
+    '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 
+    2
+);
+
+-- Inscribimos automáticamente al docente (id=2) en la carrera de Computación (id=1)
+INSERT INTO teacher_careers (teacher_id, career_id) VALUES (2, 1);
+
+-- =========================================
+-- 7. CREAR USUARIO ALUMNO
+-- =========================================
+-- El role_id = 3 corresponde a 'STUDENT'
+INSERT INTO users (dni, name, email, password, role_id) 
+VALUES (
+    '33333333', 
+    'Alumno', 
+    'alumno@gmail.com', 
+    '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 
+    3
+);

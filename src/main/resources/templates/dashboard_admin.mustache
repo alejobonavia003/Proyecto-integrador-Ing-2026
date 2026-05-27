@@ -15,7 +15,6 @@
 
 <div class="flex min-h-screen">
 
-    <!-- Sidebar -->
     <aside class="w-72 bg-slate-900 text-white p-6">
 
         <div class="mb-10">
@@ -65,10 +64,8 @@
 
     </aside>
 
-    <!-- Main -->
     <main class="flex-1 p-8">
 
-        <!-- Header -->
         <div class="bg-white rounded-xl shadow p-6 mb-8">
 
             <div class="flex justify-between items-center">
@@ -90,7 +87,6 @@
 
         </div>
 
-        <!-- Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
@@ -115,7 +111,6 @@
 
         </div>
 
-        <!-- Acciones -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             <div class="bg-white rounded-xl shadow p-6">
@@ -132,6 +127,22 @@
                     </a>
                 </div>
 
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-6 border-l-4 border-indigo-500 hover:shadow-lg transition duration-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">
+                        Asignación de Cátedras
+                    </h3>
+                    <i class="fa-solid fa-chalkboard-user text-indigo-500 text-2xl"></i>
+                </div>
+                <p class="text-gray-500 text-sm mb-5">
+                    Vincula a los profesores con las materias, definiendo su rol y el periodo académico en curso.
+                </p>
+                <a href="/admin/teacher-assignments" 
+                   class="block text-center bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold py-2.5 px-4 rounded-lg transition duration-200">
+                    Gestionar Asignaciones
+                </a>
             </div>
 
         </div>

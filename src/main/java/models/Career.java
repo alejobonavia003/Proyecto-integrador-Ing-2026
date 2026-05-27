@@ -21,4 +21,12 @@ public class Career extends Model {
                 .allowNull(true)
                 .message("La duración debe ser mayor a 0.");
     }
+
+    public String getName() {
+        return getString("name");
+    }
+
+    public String getCode() {
+        return getString("code");
+    }
 }
