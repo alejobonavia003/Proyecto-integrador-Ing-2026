@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Nuevo Usuario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Alta de Usuario (Admin)</h1>
+
+        {{#errorMessage}}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <span>{{errorMessage}}</span>
+        </div>
+        {{/errorMessage}}
+
+        <form action="/admin/users/new" method="POST" class="space-y-4">
+            
+            <div>
+                <label for="name" class="block text-gray-700 text-sm font-medium mb-1">Nombre Completo:</label>
+                <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label for="dni" class="block text-gray-700 text-sm font-medium mb-1">DNI:</label>
+                <input type="text" id="dni" name="dni" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-medium mb-1">Email:</label>
+                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label for="password" class="block text-gray-700 text-sm font-medium mb-1">Contraseña:</label>
+                <input type="password" id="password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label for="role" class="block text-gray-700 text-sm font-medium mb-1">Rol a asignar:</label>
+                <select id="role" name="role" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="" disabled selected>Seleccione un rol...</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Docente</option>
+                    <option value="3">Alumno</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 font-bold mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Crear Usuario
+            </button>
+            
+            <div class="text-center mt-4">
+                <a href="/admin/users" class="text-gray-500 hover:underline text-sm">Cancelar y volver a la lista</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
