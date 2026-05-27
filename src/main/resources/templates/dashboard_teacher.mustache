@@ -1,29 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Docente</title>
+    <title>Panel Docente</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Bienvenido, Profesor/a {{username}} 📚</h1>
-    <h3>Rol: {{role}}</h3>
-    <hr>
 
-    <div>
-        <h2>Mis Clases</h2>
-        <ul>
-            <li><a href="/teacher/classes">Ver mis Comisiones (UC-11)</a></li>
-            <li><a href="/teacher/students">Ver Alumnos Inscriptos (UC-18)</a></li>
-        </ul>
+<body class="bg-gray-100">
 
-        <h2>Evaluaciones y Tareas</h2>
-        <ul>
-            <li><a href="/teacher/grades/upload">Cargar Notas (UC-16)</a></li>
-            <li><a href="/teacher/assignments/create">Publicar Nueva Tarea (UC-19)</a></li>
-        </ul>
-    </div>
+<div class="flex min-h-screen">
 
-    <br>
-    <a href="/logout" style="color: red;">Cerrar Sesión</a>
+    <!-- Sidebar -->
+    <aside class="w-72 bg-slate-900 text-white p-6">
+
+        <div class="mb-10">
+            <h1 class="text-2xl font-bold">
+                SGE <span class="text-emerald-400">DOCENTE</span>
+            </h1>
+
+            <p class="text-gray-400 text-sm mt-1">
+                Panel Académico
+            </p>
+        </div>
+
+        <nav class="space-y-3">
+
+            <a href="#"
+               class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a href="/teacher/classes"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-users-rectangle"></i>
+                Mis Comisiones
+            </a>
+
+            <a href="/teacher/students"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-user-graduate"></i>
+                Alumnos
+            </a>
+
+            <a href="/teacher/grades/upload"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-file-pen"></i>
+                Cargar Notas
+            </a>
+
+            <a href="/teacher/assignments/create"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-book-open"></i>
+                Publicar Tareas
+            </a>
+
+        </nav>
+
+        <div class="mt-16">
+            <a href="/logout"
+               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
+                Cerrar Sesión
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-8">
+
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        Bienvenido/a, Profesor/a {{username}} 📚
+                    </h2>
+
+                    <p class="text-gray-500 mt-2">
+                        Rol:
+                        <span class="font-semibold text-emerald-600">
+                            {{role}}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
+                <p class="text-gray-500 text-sm">Comisiones</p>
+                <h3 class="text-3xl font-bold mt-2">4</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm">Alumnos</p>
+                <h3 class="text-3xl font-bold mt-2">126</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">
+                <p class="text-gray-500 text-sm">Evaluaciones</p>
+                <h3 class="text-3xl font-bold mt-2">9</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
+                <p class="text-gray-500 text-sm">Tareas Pendientes</p>
+                <h3 class="text-3xl font-bold mt-2">3</h3>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>
