@@ -94,11 +94,9 @@ CREATE TABLE subjects (
     weekly_hours INTEGER NOT NULL,
     modality VARCHAR(20),
 
-    study_plan_id INTEGER NOT NULL,
+    study_plan_id INTEGER,
 
-    FOREIGN KEY (study_plan_id)
-        REFERENCES study_plans(id)
-        ON DELETE CASCADE
+    FOREIGN KEY (study_plan_id) REFERENCES study_plans(id) ON DELETE SET NULL
 );
 
 -- =========================================

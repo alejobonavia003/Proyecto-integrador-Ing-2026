@@ -1,8 +1,8 @@
 package services;
 
-import models.Subject;
-
 import java.util.Optional;
+
+import models.Subject;
 
 /**
  * Capa de Servicio encargada de la lógica de negocio
@@ -31,11 +31,7 @@ public class SubjectService {
             );
         }
 
-        if (studyPlanId == null) {
-            throw new IllegalArgumentException(
-                    "El plan de estudio es obligatorio."
-            );
-        }
+     
 
         // Verificamos código repetido
         Optional<Subject> existing =

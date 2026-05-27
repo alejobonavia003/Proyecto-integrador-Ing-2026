@@ -1,11 +1,5 @@
 package controllers;
 
-import models.Subject;
-import services.SubjectService;
-import spark.ModelAndView;
-import spark.Request;
-import spark.template.mustache.MustacheTemplateEngine;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +8,13 @@ import java.util.logging.Logger;
 
 import org.javalite.activejdbc.Model;
 
+import models.Subject;
+import services.SubjectService;
+import spark.ModelAndView;
+import spark.Request;
 import static spark.Spark.get;
 import static spark.Spark.post;
+import spark.template.mustache.MustacheTemplateEngine;
 
 /**
  * Controlador encargado de gestionar las vistas
@@ -199,12 +198,7 @@ model.put("subjects", subjectsView);
                 String modality =
                         req.queryParams("modality");
 
-                Long studyPlanId =
-                        Long.parseLong(
-                                req.queryParams(
-                                        "study_plan_id"
-                                )
-                        );
+                Long studyPlanId = null;
 
                 logger.info(
                         "Intentando crear materia: "
