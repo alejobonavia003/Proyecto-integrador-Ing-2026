@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar Correlativas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .arbol-dependencias { background-color: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #ddd; }
+        select { width: 100%; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Asignar Correlatividades</h1>
+    <h2>Materia Seleccionada: {{materia.nombre}} ({{materia.codigo_materia}})</h2>
+
+    <div class="arbol-dependencias">
+        <h3>🌳 Árbol de Dependencias Actual</h3>
+        <ul>
+            <li><strong>{{materia.nombre}}</strong> requiere haber cursado:
+                <ul>
+                    {{#correlativas_actuales}}
+                        <li>📘 {{nombre}} ({{codigo_materia}})</li>
+                    {{/correlativas_actuales}}
+                    {{^correlativas_actuales}}
+                        <li><em>No posee correlativas requeridas actualmente.</em></li>
+                    {{/correlativas_actuales}}
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <hr>
+
+    <h3>Agregar/Modificar Correlativas</h3>
+    <form action="/materias/{{materia.id}}/correlativas" method="POST">
+        <label for="select_correlativas">Seleccione las materias correlativas requeridas:<br>
+        <small><em>(Mantenga presionada la tecla Ctrl/Cmd para seleccionar múltiples opciones)</em></small></label><br><br>
+        
+        <select name="correlativas" id="select_correlativas" multiple size="8">
+            {{#otras_materias}}
+                <option value="{{id}}">{{codigo_materia}} - {{nombre}}</option>
+            {{/otras_materias}}
+        </select>
+        
+        <br><br>
+        <button type="submit">Guardar Correlatividades</button>
+        <a href="/admin/courses">Cancelar y Volver</a>
+    </form>
+</body>
+</html>

@@ -3,70 +3,142 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Administrador</title>
+    <title>Panel Administrador</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100">
 
-    <div class="max-w-5xl mx-auto p-8">
+<div class="flex min-h-screen">
 
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">
-                Bienvenido, {{username}} 👋
+    <!-- Sidebar -->
+    <aside class="w-72 bg-slate-900 text-white p-6">
+
+        <div class="mb-10">
+            <h1 class="text-2xl font-bold">
+                SGE <span class="text-cyan-400">ADMIN</span>
             </h1>
-            <p class="text-gray-600 mt-2">
-                Rol actual:
-                <span class="font-semibold text-blue-600">
-                    {{role}}
-                </span>
+
+            <p class="text-gray-400 text-sm mt-1">
+                Panel de Control
             </p>
         </div>
 
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">
-                Gestión de Usuarios
-            </h2>
-            <div class="flex flex-wrap gap-4">
-                <a href="/user/create"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-md transition">
-                    Registrar Nuevo Usuario
-                </a>
-                <a href="/admin/users"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-md transition">
-                    Listar Usuarios
-                </a>
-            </div>
-        </div>
+        <nav class="space-y-3">
 
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">
-                Gestión Académica
-            </h2>
-            <div class="flex flex-wrap gap-4">
-                <a href="/admin/subjects"
-                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-md transition">
-                    Listar Materias
-                </a>
-                <a href="/admin/careers/new"
-                    class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-md transition">
-                    Crear Nueva Carrera
-                </a>
-                <a href="/admin/careers"
-                    class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-5 py-3 rounded-md transition">
-                    Listar Carreras
-                </a>
-            </div>
-        </div>
+            <a href="#"
+               class="flex items-center gap-3 bg-cyan-500/20 border-l-4 border-cyan-400 p-3 rounded text-white">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
 
-        <div class="text-center mt-8">
+            <a href="/admin/users"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-users"></i>
+                Usuarios
+            </a>
+
+            <a href="/admin/careers"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-graduation-cap"></i>
+                Carreras
+            </a>
+
+            <a href="/admin/subjects"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+                <i class="fa-solid fa-book"></i>
+                Materias
+            </a>
+
+        </nav>
+
+        <div class="mt-16">
             <a href="/logout"
-                class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md transition">
+               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
                 Cerrar Sesión
             </a>
         </div>
 
-    </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-8">
+
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        Bienvenido, {{username}} 👋
+                    </h2>
+
+                    <p class="text-gray-500 mt-2">
+                        Rol:
+                        <span class="font-semibold text-cyan-600">
+                            {{role}}
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
+                <p class="text-gray-500 text-sm">Usuarios</p>
+                <h3 class="text-3xl font-bold mt-2">120</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm">Carreras</p>
+                <h3 class="text-3xl font-bold mt-2">12</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">
+                <p class="text-gray-500 text-sm">Materias</p>
+                <h3 class="text-3xl font-bold mt-2">84</h3>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
+                <p class="text-gray-500 text-sm">Inscripciones</p>
+                <h3 class="text-3xl font-bold mt-2">320</h3>
+            </div>
+
+        </div>
+
+        <!-- Acciones -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <div class="bg-white rounded-xl shadow p-6">
+
+                <h3 class="text-xl font-semibold mb-5">
+                    Gestión de Usuarios
+                </h3>
+
+                <div class="flex flex-wrap gap-4">
+
+                    <a href="/user/create"
+                       class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg transition">
+                        Registrar Usuario
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
 
 </body>
 </html>

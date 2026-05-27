@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Nueva Carrera</title></head>
+<body>
+    <h1>Crear Nueva Carrera</h1>
+    
+    {{#errorMessage}}
+        <p style="color:red;">{{errorMessage}}</p>
+    {{/errorMessage}}
+
+    <form action="/admin/careers/new" method="POST">
+        <label>Nombre de la Carrera:</label>
+        <input type="text" name="name" required><br><br>
+
+        <label>Código:</label>
+        <input type="text" name="code" required><br><br>
+
+        <label>Duración (Años):</label>
+        <input type="number" name="duration" required><br><br>
+
+        <button type="submit">Guardar Carrera</button>
+        <a href="/admin/careers">Cancelar</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de profesores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+    <body class="bg-gray-100 min-h-screen p-4">
+    
+    <div class="container mx-auto max-w-4xl"> 
+    
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Tabla de Profesores</h1>
+
+         <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
+            <thead class="bg-gray-200 text-gray-800">
+            <tr>
+                <th class="py-3 px-4 text-left font-medium">ID</th>
+                <th class="py-3 px-4 text-left font-medium">Nombre</th>
+                <th class="py-3 px-4 text-left font-medium">Apellido</th>
+                <th class="py-3 px-4 text-left font-medium">DNI</th>
+                
+            </tr>
+
+           {{#profesores}}
+        
+                <tr class="border-b border-gray-200 hover:bg-gray-50">
+                  <td class="py-3 px-4 text-left">{{id}}</td>
+                  <td class="py-3 px-4 text-left">{{nombre}}</td>
+                  <td class="py-3 px-4 text-left">{{apellido}}</td>
+                  <td class="py-3 px-4 text-left">{{dni}}</td>
+                </tr>
+    
+             {{/profesores}}
+
+             {{^profesores}}
+                <tr>
+                  <td colspan="7" class="py-4 text-center text-gray-600"> 
+                   No hay profesores registrados. 
+                  </td> 
+                </tr>
+
+            {{/profesores}}
+
+        </table>  
+        <div class="text-center mt-4">
+          <a href="/profesor" 
+             class="text-black-600 hover:underline text-sm mt-2 block">
+             Volver para atras
+          </a> 
+        </div>
+        
+    </div> 
+    </body>
+</html>
