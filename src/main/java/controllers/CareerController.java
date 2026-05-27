@@ -11,9 +11,11 @@ import java.util.logging.Logger;
 import org.javalite.activejdbc.Model;
 
 import models.Career;
+import models.Correlativity;
 import models.StudyPlan;
 import models.Subject;
 import services.CareerService;
+import services.CorrelativityService;
 import services.SubjectService;
 import spark.ModelAndView;
 import static spark.Spark.get;
@@ -25,6 +27,7 @@ public class CareerController {
     private static final Logger logger = Logger.getLogger(CareerController.class.getName());
     private static final CareerService careerService = new CareerService();
     private static final SubjectService subjectService = new SubjectService();
+    private static final CorrelativityService correlativityService = new CorrelativityService();
 
     public static void init(MustacheTemplateEngine engine) {
 
@@ -205,10 +208,18 @@ public class CareerController {
             // Obtener materias asociadas a ESTE plan actualmente
             List<Model> currentPlanSubjects = Subject.where("study_plan_id = ?", planId);
             Set<Long> assignedIds = new HashSet<>();
+            List<Map<String, Object>> currentPlanSubjectsView = new ArrayList<>();
+            
             for (Model s : currentPlanSubjects) {
                 assignedIds.add(Long.parseLong(s.getId().toString()));
+                Map<String, Object> cRow = new HashMap<>();
+                cRow.put("id", s.getId());
+                cRow.put("code", s.getString("code"));
+                cRow.put("name", s.getString("name"));
+                currentPlanSubjectsView.add(cRow);
             }
 
+            // Mapeo general para la tabla incluyendo sus dependencias
             List<Map<String, Object>> allSubjectsView = new ArrayList<>();
             for (Model subject : allSubjectsFromDb) {
                 Map<String, Object> row = new HashMap<>();
@@ -218,10 +229,23 @@ public class CareerController {
                 row.put("weekly_hours", subject.get("weekly_hours"));
                 row.put("modality", subject.getString("modality"));
                 row.put("selected", assignedIds.contains(Long.parseLong(subject.getId().toString())));
+                
+                // Buscar códigos de las correlativas de la materia actual
+                List<Correlativity> corrs = Correlativity.where("subject_id = ?", subject.getId());
+                List<String> codes = new ArrayList<>();
+                for (Correlativity c : corrs) {
+                    Subject reqSub = Subject.findById(c.get("required_subject_id"));
+                    if (reqSub != null) {
+                        codes.add(reqSub.getString("code"));
+                    }
+                }
+                row.put("dependencies", codes.isEmpty() ? "Ninguna" : String.join(", ", codes));
+                
                 allSubjectsView.add(row);
             }
 
             model.put("allSubjects", allSubjectsView);
+            model.put("currentPlanSubjects", currentPlanSubjectsView); // Para el combobox del formulario
             return engine.render(new ModelAndView(model, "plan_subjects.mustache"));
         });
 
@@ -239,7 +263,6 @@ public class CareerController {
                 for (String sId : checkedSubjectIds) {
                     Subject subject = Subject.findById(Long.parseLong(sId));
                     if (subject != null) {
-                        // Cambiamos la materia para que pertenezca a este plan
                         subject.set("study_plan_id", planId);
                         subject.saveIt();
                     }
@@ -264,7 +287,15 @@ public class CareerController {
                 Integer weeklyHours = Integer.parseInt(req.queryParams("weekly_hours"));
                 String modality = req.queryParams("modality"); 
 
-                subjectService.createSubject(name, code, weeklyHours, modality, planId);
+                Subject newSubject = subjectService.createSubject(name, code, weeklyHours, modality, planId);
+
+                // Procesamiento de la materia correlativa seleccionada
+                String reqSubIdStr = req.queryParams("required_subject_id");
+                if (reqSubIdStr != null && !reqSubIdStr.isEmpty()) {
+                    Long requiredSubjectId = Long.parseLong(reqSubIdStr);
+                    boolean requiresApproved = req.queryParams("requires_approved") != null;
+                    correlativityService.addCorrelativity((Long) newSubject.getId(), requiredSubjectId, requiresApproved);
+                }
 
                 res.redirect("/admin/careers/" + careerId + "/plans/" + planId + "/subjects");
             } catch (Exception e) {
@@ -292,13 +323,11 @@ public class CareerController {
 
             Map<String, Object> model = new HashMap<>();
             
-            // Mapear los datos del plan (para {{plan.name}} y {{plan.code}})
             Map<String, Object> planData = new HashMap<>();
             planData.put("name", plan.getString("name"));
             planData.put("code", plan.getString("code"));
             model.put("plan", planData);
 
-            // Obtener las materias asociadas a este plan de estudio específico
             List<Model> subjects = Subject.where("study_plan_id = ?", planId);
             List<Map<String, Object>> coursesView = new ArrayList<>();
             
@@ -307,6 +336,18 @@ public class CareerController {
                 row.put("code", s.getString("code"));
                 row.put("name", s.getString("name"));
                 row.put("weekly_hours", s.get("weekly_hours"));
+                
+                // Buscar códigos de las correlativas para la vista de detalle
+                List<Correlativity> corrs = Correlativity.where("subject_id = ?", s.getId());
+                List<String> codes = new ArrayList<>();
+                for (Correlativity c : corrs) {
+                    Subject reqSub = Subject.findById(c.get("required_subject_id"));
+                    if (reqSub != null) {
+                        codes.add(reqSub.getString("code"));
+                    }
+                }
+                row.put("dependencies", codes.isEmpty() ? "Ninguna" : String.join(", ", codes));
+                
                 coursesView.add(row);
             }
 

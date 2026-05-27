@@ -14,8 +14,7 @@ public class Subject extends Model {
         validatePresenceOf(
                 "name",
                 "code",
-                "weekly_hours",
-                "study_plan_id"
+                "weekly_hours"
         ).message("Todos los campos obligatorios deben estar completos.");
 
         validateNumericalityOf("weekly_hours")
