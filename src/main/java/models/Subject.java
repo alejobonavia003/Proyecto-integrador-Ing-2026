@@ -21,4 +21,12 @@ public class Subject extends Model {
                 .greaterThan(0)
                 .message("La carga horaria debe ser mayor a 0.");
     }
+
+    public String getName() {
+        return getString("name");
+    }
+
+    public String getCode() {
+        return getString("code");
+    }
 }

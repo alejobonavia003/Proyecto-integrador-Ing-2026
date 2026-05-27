@@ -11,6 +11,7 @@ import controllers.DashboardController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 import controllers.SubjectController;
+import controllers.TeacherAssignmentController;
 import controllers.UserController;
 import static spark.Spark.after;
 import static spark.Spark.before;
@@ -18,7 +19,6 @@ import static spark.Spark.halt;
 import static spark.Spark.port;
 import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
-
 /**
  * Clase principal de la aplicación Spark.
  */
@@ -80,8 +80,10 @@ public class App {
         UserController.init(engine);
         DashboardController.init(engine);
         ErrorController.init(engine);
-        SubjectController.init(engine);
+        
         CareerController.init(engine);
-       
+        SubjectController.init(engine);
+        
+        TeacherAssignmentController.init(engine);
     }
 }
