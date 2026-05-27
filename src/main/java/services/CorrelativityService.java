@@ -43,6 +43,20 @@ public class CorrelativityService {
         }
     }
 
+    public List<String> getDependencyCodesForSubject(Long subjectId) {
+        List<String> codes = new ArrayList<>();
+        List<Correlativity> dependencies = Correlativity.where("subject_id = ?", subjectId);
+
+        for (Correlativity dependency : dependencies) {
+            Subject required = Subject.findById(dependency.get("required_subject_id"));
+            if (required != null) {
+                codes.add(required.getString("code"));
+            }
+        }
+
+        return codes;
+    }
+
     /**
      * ISSUE 1: Verificación de requisitos del alumno (Soporta múltiples niveles / recursivo).
      * * @param alumnoId ID del usuario (student_id)

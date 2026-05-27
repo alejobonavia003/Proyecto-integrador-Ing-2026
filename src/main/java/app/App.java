@@ -11,6 +11,7 @@ import controllers.DashboardController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 import controllers.SubjectController;
+import controllers.StudyPlanController;
 import controllers.TeacherAssignmentController;
 import controllers.UserController;
 import static spark.Spark.after;
@@ -82,6 +83,7 @@ public class App {
         ErrorController.init(engine);
         
         CareerController.init(engine);
+        StudyPlanController.init(engine);
         SubjectController.init(engine);
         
         TeacherAssignmentController.init(engine);

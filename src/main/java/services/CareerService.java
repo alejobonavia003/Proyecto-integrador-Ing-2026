@@ -1,6 +1,8 @@
 package services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.javalite.activejdbc.Model;
 
@@ -28,8 +30,81 @@ public class CareerService {
         return Career.findAll();
     }
 
+    public List<Map<String, Object>> getAllCareersView() {
+        List<Map<String, Object>> careers = new java.util.ArrayList<>();
+        for (Model career : Career.findAll()) {
+            Map<String, Object> row = new java.util.HashMap<>();
+            row.put("id", career.getId());
+            row.put("name", career.getString("name"));
+            row.put("code", career.getString("code"));
+            row.put("duration", career.getInteger("duration"));
+            careers.add(row);
+        }
+        return careers;
+    }
+
+    public Map<String, Object> getCareerDetailView(Long careerId) {
+        Career career = Career.findById(careerId);
+        if (career == null) {
+            return null;
+        }
+
+        List<Map<String, Object>> plansView = getStudyPlansViewByCareer(careerId);
+
+        Map<String, Object> view = new HashMap<>();
+        view.put("career_id", career.getId());
+        view.put("career_name", career.getString("name"));
+        view.put("career_code", career.getString("code"));
+        view.put("plans", plansView);
+        view.put("hasPlans", !plansView.isEmpty());
+
+        return view;
+    }
+
+    public List<Map<String, Object>> getStudyPlansViewByCareer(Long careerId) {
+        List<Map<String, Object>> plans = new java.util.ArrayList<>();
+        for (Model plan : StudyPlan.where("career_id = ?", careerId)) {
+            Map<String, Object> row = new java.util.HashMap<>();
+            row.put("id", plan.getId());
+            row.put("name", plan.getString("name"));
+            row.put("code", plan.getString("code"));
+            row.put("version", plan.getString("version"));
+            row.put("career_id", careerId);
+            plans.add(row);
+        }
+        return plans;
+    }
+
+    public Map<String, Object> getCareerSummary(Long careerId) {
+        Career career = Career.findById(careerId);
+        if (career == null) {
+            return null;
+        }
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("career_id", career.getId());
+        summary.put("career_name", career.getString("name"));
+        return summary;
+    }
+
+    public Map<String, Object> getPlanSummary(Long planId) {
+        StudyPlan plan = StudyPlan.findById(planId);
+        if (plan == null) {
+            return null;
+        }
+        Map<String, Object> summary = new HashMap<>();
+        summary.put("plan_id", plan.getId());
+        summary.put("plan_name", plan.getString("name"));
+        summary.put("plan_code", plan.getString("code"));
+        summary.put("career_id", plan.getLong("career_id"));
+        return summary;
+    }
+
     public Career getCareerById(Long id) {
         return Career.findById(id);
+    }
+
+    public StudyPlan getStudyPlanById(Long id) {
+        return StudyPlan.findById(id);
     }
 
     public List<Model> getStudyPlansByCareer(Long careerId) {
