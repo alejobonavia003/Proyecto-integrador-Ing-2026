@@ -1,3 +1,99 @@
-target/
+target/*
 .class
 .db
+
+# =========================
+# Java / Maven
+# =========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven wrapper logs
+.mvn/wrapper/maven-wrapper.jar
+log/
+logs/
+
+# =========================
+# Base de datos
+# =========================
+*.db
+*.mv.db
+*.trace.db
+*.sqlite
+*.sqlite3
+
+# Archivos específicos comunes
+dev.db
+database.db
+
+# =========================
+# IDEs
+# =========================
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# VSCode
+.vscode/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+
+# =========================
+# Sistema operativo
+# =========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# =========================
+# Logs y temporales
+# =========================
+*.log
+*.tmp
+*.temp
+
+# =========================
+# Variables de entorno
+# =========================
+.env
+.env.local
+.env.*
+
+# =========================
+# Obsidian
+# =========================
+documentacion/.obsidian/
+
+# =========================
+# Archivos generados
+# =========================
+coverage/
+node_modules/
+
+# =========================
+# Archivos de compilación
+# =========================
+hs_err_pid*
+replay_pid*
