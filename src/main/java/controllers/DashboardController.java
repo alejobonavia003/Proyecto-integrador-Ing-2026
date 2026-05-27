@@ -1,11 +1,15 @@
 package controllers;
-import spark.ModelAndView;
-import spark.Request;
-import spark.template.mustache.MustacheTemplateEngine;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import services.CareerService;
+import services.SubjectService;
+import services.UserService;
+import spark.ModelAndView;
+import spark.Request;
 import static spark.Spark.get;
+import spark.template.mustache.MustacheTemplateEngine;
 
 /**
  * Controlador independiente encargado de la distribución y renderizado
@@ -14,7 +18,9 @@ import static spark.Spark.get;
 public class DashboardController {
 
     private static final Logger logger = Logger.getLogger(DashboardController.class.getName());
-
+    private static final UserService userService = new UserService();   
+    private static final CareerService careerService = new CareerService();
+    private static final SubjectService subjectService = new SubjectService();
     public static void init(MustacheTemplateEngine engine) {
 
         /**
@@ -42,21 +48,30 @@ public class DashboardController {
             }
             return null;
         });
-
         /**
-         * Vista del Panel de Administrador.
-         */
+        * Vista del Panel de Administrador.
+        */
         get("/admin/dashboard", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("username", req.session().attribute("username"));
             model.put("role", "Administrador");
             
+            // Obtenemos los totales
+            long userCount = userService.getTotalUsersCount();
+            long careerCount = careerService.getTotalCareersCount();
+            long subjectCount = subjectService.getTotalSubjectsCount();
+            
+            // Los pasamos al modelo
+            model.put("userCount", userCount);
+            model.put("careerCount", careerCount);
+            model.put("subjectCount", subjectCount);
+            
             return engine.render(new ModelAndView(model, "dashboard_admin.mustache"));
         });
 
-        /**
-         * Vista del Panel de Docentes.
-         */
+        
+        //Vista del Panel de Docentes.
+         
         get("/teacher/dashboard", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("username", req.session().attribute("username"));
