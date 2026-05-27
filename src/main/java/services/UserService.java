@@ -52,5 +52,15 @@ public class UserService {
         }
 
         return usersView;
+
+        
+    }
+    
+    /**
+     * Obtiene la cantidad total de usuarios registrados en el sistema.
+     */
+    public long getTotalUsersCount() {
+        // User.count() es un método de ActiveJDBC que devuelve el total de registros en la tabla
+        return User.count(); 
     }
 }

@@ -48,4 +48,11 @@ public class CareerService {
             throw new IllegalArgumentException("Error al guardar el plan de estudio: " + plan.errors());
         }
     }
+
+    /**
+     * Obtiene la cantidad total de carreras registradas en el sistema.
+     */
+    public long getTotalCareersCount() {
+        return models.Career.count(); 
+    }
 }

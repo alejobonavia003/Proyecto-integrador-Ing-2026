@@ -72,4 +72,11 @@ public class SubjectService {
             );
         }
     }
+
+    /**
+     * Obtiene la cantidad total de materias registradas en el sistema.
+     */
+    public long getTotalSubjectsCount() {
+        return models.Subject.count(); 
+    }
 }
