@@ -56,6 +56,7 @@ public class TeacherAssignmentController {
             // Ahora el método toJson() funcionará perfectamente
             return allowedSubjects.toJson(false, "id", "name", "code");
         });
+
         // 3. POST: Asignar Docente a Carrera
         post("/admin/teacher-assignments/career", (req, res) -> {
             String teacherId = req.queryParams("teacher_id");
@@ -87,9 +88,14 @@ public class TeacherAssignmentController {
         post("/admin/teacher-assignments/subject", (req, res) -> {
             String teacherId = req.queryParams("teacher_id");
             String subjectId = req.queryParams("subject_id");
-            String roleCharge = req.queryParams("role_charge");
             String academicYear = req.queryParams("academic_year");
             String academicPeriod = req.queryParams("academic_period");
+
+            // CORRECCIÓN AQUÍ: Forzamos el rol a MAYÚSCULAS para que siempre sea 'TITULAR', 'ADJUNTO', etc.
+            String roleCharge = req.queryParams("role_charge");
+            if (roleCharge != null) {
+                roleCharge = roleCharge.toUpperCase();
+            }
 
             try {
                 Subject subject = Subject.findById(subjectId);
@@ -111,7 +117,7 @@ public class TeacherAssignmentController {
                 TeacherSubject ts = new TeacherSubject();
                 ts.set("teacher_id", teacherId);
                 ts.set("subject_id", subjectId);
-                ts.set("role_charge", roleCharge);
+                ts.set("role_charge", roleCharge); // Ahora siempre se guardará en mayúsculas
                 ts.set("academic_year", academicYear);
                 ts.set("academic_period", academicPeriod);
                 

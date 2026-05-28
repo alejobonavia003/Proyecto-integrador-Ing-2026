@@ -154,21 +154,16 @@ CREATE TABLE course_classes (
 -- TABLE: enrollments
 -- Inscripciones a cursadas
 -- =========================================
-
 CREATE TABLE enrollments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-
     student_id INTEGER NOT NULL,
     course_class_id INTEGER NOT NULL,
-
-    enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    UNIQUE(student_id, course_class_id),
+    status VARCHAR(50) DEFAULT 'REGULAR', -- <-- NUEVA COLUMNA
 
     FOREIGN KEY (student_id)
         REFERENCES users(id)
         ON DELETE CASCADE,
-
+        
     FOREIGN KEY (course_class_id)
         REFERENCES course_classes(id)
         ON DELETE CASCADE
