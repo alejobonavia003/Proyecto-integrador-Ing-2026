@@ -43,10 +43,15 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
 
     role_id INTEGER NOT NULL,
+    study_plan_id INTEGER,
 
     FOREIGN KEY (role_id)
         REFERENCES roles(id)
         ON DELETE RESTRICT
+
+    FOREIGN KEY (study_plan_id)
+        REFERENCES study_plans(id)
+        ON DELETE SET NULL
 );
 
 -- =========================================
