@@ -1,98 +1,216 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Gestionar Materias del Plan</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Plan de Estudio: {{plan_name}} ({{plan_code}})</h1>
-    <h3>Carrera: {{career_name}}</h3>
 
-    <hr>
+<body class="bg-gray-100">
 
-    {{#errorMessage}}
-        <p style="background-color: #ffcccc; color: #cc0000; padding: 10px; border: 1px solid #cc0000;">{{errorMessage}}</p>
-    {{/errorMessage}}
+<div class="flex min-h-screen">
 
-    <h2>1. Asignar Materias Existentes</h2>
-    <p><i>Nota: Al asignar una materia ya existente, esta se vinculará a este plan de estudio.</i></p>
-    <form action="/admin/careers/{{career_id}}/plans/{{plan_id}}/subjects/assign" method="POST">
-        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
-            <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; text-align: left;">
-                <thead>
-                    <tr style="background-color: #eee;">
-                        <th>Asignar</th>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Horas Semanales</th>
-                        <th>Modalidad</th>
-                        <th>Correlativas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#allSubjects}}
-                    <tr>
-                        <td>
-                            <input type="checkbox" id="subject_{{id}}" name="subject_ids" value="{{id}}" {{#selected}}checked{{/selected}}>
-                        </td>
-                        <td><strong>{{code}}</strong></td>
-                        <td>{{name}}</td>
-                        <td>{{weekly_hours}} hs</td>
-                        <td>{{modality}}</td>
-                        <td><small>{{dependencies}}</small></td>
-                    </tr>
-                    {{/allSubjects}}
-                    {{^allSubjects}}
-                    <tr>
-                        <td colspan="6">No hay materias cargadas en el sistema actualmente.</td>
-                    </tr>
-                    {{/allSubjects}}
-                </tbody>
-            </table>
+    {{>partials/admin_sidebar}}
+
+    <main class="flex-1 p-8">
+
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+
+            <h1 class="text-3xl font-bold text-gray-800">
+                {{plan_name}}
+            </h1>
+
+            <p class="text-gray-500 mt-2">
+                Carrera: {{career_name}}
+            </p>
+
         </div>
-        <button type="submit">Guardar Relaciones de Materias</button>
-    </form>
 
-    <br>
-    <hr>
+        {{#errorMessage}}
+        <div class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
+            {{errorMessage}}
+        </div>
+        {{/errorMessage}}
 
-    <h2>2. Crear una Nueva Materia y Añadirla a este Plan</h2>
-    <form action="/admin/careers/{{career_id}}/plans/{{plan_id}}/subjects/new" method="POST">
-        <fieldset>
-            <legend>Datos de la Asignatura</legend>
-            
-            <label for="subject_name">Nombre de la Materia:</label><br>
-            <input type="text" id="subject_name" name="name" required><br><br>
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
 
-            <label for="subject_code">Código de la Materia:</label><br>
-            <input type="text" id="subject_code" name="code" required><br><br>
+            <h2 class="text-2xl font-bold mb-6">
+                Asignar Materias Existentes
+            </h2>
 
-            <label for="weekly_hours">Horas Semanales:</label><br>
-            <input type="number" id="weekly_hours" name="weekly_hours" min="1" required><br><br>
+            <form action="/admin/careers/{{career_id}}/plans/{{plan_id}}/subjects/assign"
+                  method="POST">
 
-            <label for="modality">Modalidad:</label><br>
-            <select id="modality" name="modality" required>
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
-                <option value="Híbrida">Híbrida</option>
-            </select><br><br>
+                <div class="overflow-x-auto border rounded-lg">
 
-            <label for="required_subject_id">Materia Correlativa Requerida (Opcional):</label><br>
-            <select id="required_subject_id" name="required_subject_id">
-                <option value="">-- Ninguna --</option>
-                {{#currentPlanSubjects}}
-                    <option value="{{id}}">{{code}} - {{name}}</option>
-                {{/currentPlanSubjects}}
-            </select><br><br>
+                    <table class="w-full text-left">
 
-            <input type="checkbox" id="requires_approved" name="requires_approved" value="true">
-            <label for="requires_approved">¿Requiere examen final aprobado? (Si no se marca, solo requiere cursada regular)</label><br>
-        </fieldset>
-        <br>
-        <button type="submit">Crear y Añadir Materia</button>
-    </form>
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="p-4">Asignar</th>
+                                <th class="p-4">Código</th>
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Horas</th>
+                                <th class="p-4">Modalidad</th>
+                                <th class="p-4">Correlativas</th>
+                            </tr>
+                        </thead>
 
-    <br><br>
-    <a href="/admin/careers/{{career_id}}"><button type="button">Volver al Detalle de la Carrera</button></a>
+                        <tbody>
+
+                            {{#allSubjects}}
+                            <tr class="border-b hover:bg-gray-50">
+
+                                <td class="p-4">
+                                    <input type="checkbox"
+                                           id="subject_{{id}}"
+                                           name="subject_ids"
+                                           value="{{id}}"
+                                           {{#selected}}checked{{/selected}}>
+                                </td>
+
+                                <td class="p-4 font-medium">{{code}}</td>
+                                <td class="p-4">{{name}}</td>
+                                <td class="p-4">{{weekly_hours}}</td>
+                                <td class="p-4">{{modality}}</td>
+                                <td class="p-4 text-sm">{{dependencies}}</td>
+
+                            </tr>
+                            {{/allSubjects}}
+
+                            {{^allSubjects}}
+
+                                <div class="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-xl p-5">
+                                    No hay materias cargadas en el sistema actualmente.
+                                </div>
+
+                            {{/allSubjects}}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <button type="submit"
+                        class="mt-6 bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition">
+                    Guardar Relaciones
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <h2 class="text-2xl font-bold mb-6">
+                Crear Nueva Materia y Añadirla a este Plan
+            </h2>
+
+            <form action="/admin/careers/{{career_id}}/plans/{{plan_id}}/subjects/new"
+                  method="POST"
+                  class="space-y-6">
+
+                <div>
+                    <label class="block mb-2 font-medium">
+                        Nombre
+                    </label>
+
+                    <input type="text"
+                           id="subject_name"
+                           name="name"
+                           required
+                           class="w-full border rounded-lg px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-medium">
+                        Código
+                    </label>
+
+                    <input type="text"
+                           id="subject_code"
+                           name="code"
+                           required
+                           class="w-full border rounded-lg px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-medium">
+                        Horas Semanales
+                    </label>
+
+                    <input type="number"
+                           id="weekly_hours" 
+                           name="weekly_hours"
+                           required
+                           class="w-full border rounded-lg px-4 py-3">
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-medium">
+                        Modalidad
+                    </label>
+
+                    <select name="modality"
+                            class="w-full border rounded-lg px-4 py-3">
+
+                        <option value="Presencial">Presencial</option>
+                        <option value="Virtual">Virtual</option>
+                        <option value="Híbrida">Híbrida</option>
+
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-medium">
+                        Materia Correlativa
+                    </label>
+
+                    <select id="required_subject_id" name="required_subject_id"
+                            class="w-full border rounded-lg px-4 py-3">
+
+                        <option value="">-- Ninguna --</option>
+
+                        {{#currentPlanSubjects}}
+                        <option value="{{id}}">
+                            {{code}} - {{name}}
+                        </option>
+                        {{/currentPlanSubjects}}
+
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <input type="checkbox"
+                           id="requires_approved"
+                           name="requires_approved"
+                           value="true">
+
+                    <label>
+                        Requiere examen final aprobado
+                    </label>
+                </div>
+
+                <button type="submit"
+                        class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition">
+                    Crear Materia
+                </button>
+
+            </form>
+
+        </div>
+
+        <a href="/admin/careers/{{career_id}}"><button type="button">Volver al Detalle de la Carrera</button></a>
+
+    </main>
+
+</div>
+
 </body>
 </html>

@@ -1,34 +1,90 @@
 <!DOCTYPE html>
-<html>
-<head><title>Listado de Carreras</title></head>
-<body>
-    <h1>Carreras Registradas</h1>
-    <a href="/admin/careers/new"><button>Crear Nueva Carrera</button></a>
-    <a href="/dashboard"><button>Volver al Dashboard</button></a>
-    
-    <table border="1" style="margin-top: 20px;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Código</th>
-                <th>Duración (Años)</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#careers}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{code}}</td>
-                <td>{{duration}}</td>
-                <td>
-                    <a href="/admin/careers/{{id}}"><button>Ver Detalles / Planes</button></a>
-                </td>
-            </tr>
-            {{/careers}}
-        </tbody>
-    </table>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Carreras</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    {{>partials/admin_sidebar}}
+
+    <main class="flex-1 p-8">
+
+        <div class="flex justify-between items-center mb-8">
+
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Carreras Registradas
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Gestión de carreras universitarias
+                </p>
+            </div>
+
+            <a href="/admin/careers/new"
+               class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-3 rounded-lg transition">
+                Crear Nueva Carrera
+            </a>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+
+            <table class="w-full">
+
+                <thead class="bg-slate-800 text-white">
+
+                    <tr>
+                        <th class="p-4 text-left">ID</th>
+                        <th class="p-4 text-left">Nombre</th>
+                        <th class="p-4 text-left">Código</th>
+                        <th class="p-4 text-left">Duración</th>
+                        <th class="p-4 text-left">Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {{#careers}}
+
+                    <tr class="border-b hover:bg-gray-50">
+
+                        <td class="p-4">{{id}}</td>
+                        <td class="p-4 font-semibold">{{name}}</td>
+                        <td class="p-4">{{code}}</td>
+                        <td class="p-4">{{duration}} años</td>
+
+                        <td class="p-4">
+                            <a href="/admin/careers/{{id}}"
+                               class="text-cyan-600 hover:underline font-semibold">
+                                Ver Detalles / Planes
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {{/careers}}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>

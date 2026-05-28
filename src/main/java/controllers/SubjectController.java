@@ -68,8 +68,37 @@ public class SubjectController {
                 "Cargando listado de materias."
         );
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("subjects", subjectService.getAllSubjectsView());
+        Map<String, Object> model =
+                new HashMap<>();
+
+        // Lista de materias
+
+        List<Map<String, Object>> subjectsView =
+                new ArrayList<>();
+
+        for (Model subject : Subject.findAll()) {
+
+        Map<String, Object> row =
+                new HashMap<>();
+
+        row.put("id", subject.getId());
+        row.put("name", subject.getString("name"));
+        row.put("code", subject.getString("code"));
+        row.put(
+                "weekly_hours",
+                subject.getInteger("weekly_hours")
+        );
+        row.put(
+                "modality",
+                subject.getString("modality")
+        );
+
+        subjectsView.add(row);
+        }
+
+        model.put("subjects", subjectsView);
+        
+        model.put("subjectsActive",true);
 
         // Datos de sesión
         model.put(

@@ -6,7 +6,7 @@ Routes Spark
 → Controllers
 → Services
 → Models ActiveJDBC
-→ PostgreSQL
+→ SQLite
 
 ## Controllers
 
@@ -45,7 +45,8 @@ Se usa Mustache.
 Los controllers pueden renderizar vistas directamente.
 
 ## diagrama de arquitectura
-``` mermaid
+
+```mermaid
 flowchart TD
 
     subgraph Cliente

@@ -1,0 +1,60 @@
+<aside class="w-72 bg-slate-900 text-white p-6 min-h-screen">
+
+    <div class="mb-10">
+        <h1 class="text-2xl font-bold">
+            SGE <span class="text-cyan-400">ADMIN</span>
+        </h1>
+
+        <p class="text-gray-400 text-sm mt-1">
+            Panel de Control
+        </p>
+    </div>
+
+    <nav class="space-y-3">
+
+        <!-- DASHBOARD -->
+        <a href="/admin/dashboard"
+           class="flex items-center gap-3 p-3 rounded transition
+           {{#dashboardActive}}bg-cyan-500/20 border-l-4 border-cyan-400 text-white{{/dashboardActive}}
+           {{^dashboardActive}}hover:bg-white/10{{/dashboardActive}}">
+            <i class="fa-solid fa-gauge-high"></i>
+            Dashboard
+        </a>
+
+        <!-- USUARIOS -->
+        <a href="/admin/users"
+           class="flex items-center gap-3 p-3 rounded transition
+           {{#usersActive}}bg-cyan-500/20 border-l-4 border-cyan-400 text-white{{/usersActive}}
+           {{^usersActive}}hover:bg-white/10{{/usersActive}}">
+            <i class="fa-solid fa-users"></i>
+            Usuarios
+        </a>
+
+        <!-- CARRERAS -->
+        <a href="/admin/careers"
+           class="flex items-center gap-3 p-3 rounded transition
+           {{#careersActive}}bg-cyan-500/20 border-l-4 border-cyan-400 text-white{{/careersActive}}
+           {{^careersActive}}hover:bg-white/10{{/careersActive}}">
+            <i class="fa-solid fa-graduation-cap"></i>
+            Carreras
+        </a>
+
+        <!-- MATERIAS -->
+        <a href="/admin/subjects"
+           class="flex items-center gap-3 p-3 rounded transition
+           {{#subjectsActive}}bg-cyan-500/20 border-l-4 border-cyan-400 text-white{{/subjectsActive}}
+           {{^subjectsActive}}hover:bg-white/10{{/subjectsActive}}">
+            <i class="fa-solid fa-book"></i>
+            Materias
+        </a>
+
+    </nav>
+
+    <div class="mt-16">
+        <a href="/logout"
+           class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
+            Cerrar Sesión
+        </a>
+    </div>
+
+</aside>
