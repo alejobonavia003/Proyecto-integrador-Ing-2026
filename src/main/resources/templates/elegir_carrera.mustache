@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Elegir Carrera</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/student/dashboard">SGU - Panel Alumno</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-1">Seleccionar Carrera</h2>
+        <p class="text-muted">Inscríbete a un plan de estudios para comenzar a cursar materias.</p>
+
+        {{#errorMessage}}
+        <div class="alert alert-danger shadow-sm">{{errorMessage}}</div>
+        {{/errorMessage}}
+
+        <div class="card shadow-sm mt-4">
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4">Carrera</th>
+                            <th>Plan de Estudios</th>
+                            <th class="text-end pe-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#planes}}
+                        <tr>
+                            <td class="ps-4 fw-bold text-primary">{{career_name}}</td>
+                            <td>{{name}}</td>
+                            <td class="text-end pe-4">
+                                <form action="/student/carrera/confirmar" method="POST" class="m-0">
+                                    <input type="hidden" name="plan_id" value="{{id}}">
+                                    <button type="submit" class="btn btn-primary btn-sm px-3" onclick="return confirm('¿Confirmas que deseas anotarte a la carrera de {{career_name}} (Plan: {{name}})?');">
+                                        Inscribirme
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {{/planes}}
+                        
+                        {{^planes}}
+                        <tr>
+                            <td colspan="3" class="text-center py-4 text-muted">
+                                Actualmente no hay carreras ni planes de estudio habilitados.
+                            </td>
+                        </tr>
+                        {{/planes}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="/student/dashboard" class="btn btn-secondary">Volver al Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

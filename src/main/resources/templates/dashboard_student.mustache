@@ -7,16 +7,14 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body class="bg-gray-100">
 
 <div class="flex min-h-screen">
 
-    <!-- Sidebar -->
-    <aside class="w-72 bg-slate-900 text-white p-6">
+    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col">
 
         <div class="mb-10">
             <h1 class="text-2xl font-bold">
@@ -28,57 +26,51 @@
             </p>
         </div>
 
-        <nav class="space-y-3">
+        <nav class="space-y-3 flex-1">
 
-            <a href="#"
+            <a href="/student/dashboard"
                class="flex items-center gap-3 bg-blue-500/20 border-l-4 border-blue-400 p-3 rounded text-white">
                 <i class="fa-solid fa-gauge-high"></i>
                 Dashboard
             </a>
 
-            <a href="/student/enroll"
+            <a href="/student/inscripciones/nueva"
                class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
                 <i class="fa-solid fa-clipboard-check"></i>
-                Inscribirse
+                Inscribirse a Materias
             </a>
 
-            <a href="/student/enrollments"
+            <a href="/student/mis-inscripciones"
                class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
-                <i class="fa-solid fa-book"></i>
+                <i class="fa-solid fa-list-check"></i>
                 Mis Inscripciones
             </a>
-
-            <a href="/student/grades"
-               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
-                <i class="fa-solid fa-chart-column"></i>
-                Mis Notas
+            
+            {{^hasCareer}}
+            <a href="/student/elegir-carrera"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-yellow-400">
+                <i class="fa-solid fa-graduation-cap"></i>
+                Elegir Carrera
             </a>
-
-            <a href="/student/assignments"
-               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
-                <i class="fa-solid fa-file-arrow-up"></i>
-                Tareas
-            </a>
+            {{/hasCareer}}
 
         </nav>
-
-        <div class="mt-16">
-            <a href="/logout"
-               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
+        
+        <div class="mt-auto">
+            <a href="/logout" class="flex items-center gap-3 hover:bg-red-500/20 text-red-400 p-3 rounded transition">
+                <i class="fa-solid fa-right-from-bracket"></i>
                 Cerrar Sesión
             </a>
         </div>
-
     </aside>
 
-    <!-- Main -->
-    <main class="flex-1 p-8">
-
-        <!-- Header -->
-        <div class="bg-white rounded-xl shadow p-6 mb-8">
-
-            <div class="flex justify-between items-center">
-
+    <main class="flex-1 p-10">
+        
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-100 p-3 rounded-full text-blue-600">
+                    <i class="fa-solid fa-user-graduate text-2xl"></i>
+                </div>
                 <div>
                     <h2 class="text-3xl font-bold text-gray-800">
                         Bienvenido, {{username}} 🎓
@@ -92,35 +84,74 @@
                     </p>
                 </div>
             </div>
-
         </div>
 
-        <!-- Stats -->
+        {{#successMessage}}
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm" role="alert">
+            <p class="font-bold"><i class="fa-solid fa-check-circle mr-2"></i>¡Éxito!</p>
+            <p>{{successMessage}}</p>
+        </div>
+        {{/successMessage}}
+        
+        {{#errorMessage}}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
+            <p class="font-bold"><i class="fa-solid fa-circle-xmark mr-2"></i>Error</p>
+            <p>{{errorMessage}}</p>
+        </div>
+        {{/errorMessage}}
+
+        <div class="mb-8">
+            {{#hasCareer}}
+            <div class="bg-indigo-600 rounded-xl shadow-lg p-6 text-white flex items-center justify-between">
+                <div>
+                    <p class="text-indigo-200 text-sm font-semibold uppercase tracking-wider mb-1">Mi Carrera Actual</p>
+                    <h3 class="text-2xl font-bold">{{careerName}}</h3>
+                    <p class="text-indigo-100 mt-1"><i class="fa-solid fa-book-open mr-2"></i>Plan de Estudios: {{planName}}</p>
+                </div>
+                <div class="bg-indigo-500/50 p-4 rounded-full">
+                    <i class="fa-solid fa-graduation-cap text-4xl"></i>
+                </div>
+            </div>
+            {{/hasCareer}}
+            
+            {{^hasCareer}}
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-xl shadow-sm flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-bold mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Acción Requerida</h3>
+                    <p>No tienes una carrera asignada. Debes elegir una para poder inscribirte a materias.</p>
+                </div>
+                <a href="/student/elegir-carrera" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded shadow transition">
+                    Elegir Carrera
+                </a>
+            </div>
+            {{/hasCareer}}
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
                 <p class="text-gray-500 text-sm">Materias Inscriptas</p>
-                <h3 class="text-3xl font-bold mt-2">6</h3>
+                <h3 class="text-3xl font-bold mt-2">{{#hasCareer}}{{enrollmentsCount}}{{/hasCareer}}{{^hasCareer}}0{{/hasCareer}}</h3>
             </div>
 
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
                 <p class="text-gray-500 text-sm">Promedio</p>
-                <h3 class="text-3xl font-bold mt-2">8.2</h3>
+                <h3 class="text-3xl font-bold mt-2">--</h3> 
             </div>
 
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">
                 <p class="text-gray-500 text-sm">Tareas Pendientes</p>
-                <h3 class="text-3xl font-bold mt-2">3</h3>
+                <h3 class="text-3xl font-bold mt-2">--</h3>
             </div>
 
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
-                <p class="text-gray-500 text-sm">Finales Aprobados</p>
-                <h3 class="text-3xl font-bold mt-2">14</h3>
+                <p class="text-gray-500 text-sm">Alertas</p>
+                <h3 class="text-3xl font-bold mt-2">{{^hasCareer}}1{{/hasCareer}}{{#hasCareer}}0{{/hasCareer}}</h3>
             </div>
 
         </div>
-    </main>
 
+    </main>
 </div>
 
 </body>

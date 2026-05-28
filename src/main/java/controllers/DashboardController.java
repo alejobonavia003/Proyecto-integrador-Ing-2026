@@ -80,14 +80,51 @@ public class DashboardController {
             return engine.render(new ModelAndView(model, "dashboard_teacher.mustache"));
         });
 
-        /**
-         * Vista del Panel de Alumnos.
+       /**
+         * Vista del Panel de Alumnos (CON DATOS REALES)
          */
         get("/student/dashboard", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("username", req.session().attribute("username"));
             model.put("role", "Alumno");
             
+            // Si vienes de inscribirte con éxito
+            if (req.queryParams("success") != null) {
+                model.put("successMessage", req.queryParams("success"));
+            }
+
+            try {
+                Long studentId = Long.valueOf(req.session().attribute("userId").toString());
+                models.User student = models.User.findById(studentId);
+
+                if (student != null) {
+                    Long planId = student.getLong("study_plan_id");
+                    
+                    // Verificamos si el alumno ya está inscripto en un Plan/Carrera
+                    if (planId != null) {
+                        model.put("hasCareer", true);
+                        models.StudyPlan plan = models.StudyPlan.findById(planId);
+                        
+                        if (plan != null) {
+                            model.put("planName", plan.getString("name"));
+                            models.Career career = models.Career.findById(plan.getLong("career_id"));
+                            if (career != null) {
+                                model.put("careerName", career.getString("name"));
+                            }
+                        }
+                        
+                        // Contamos en cuántas materias (comisiones) está inscripto actualmente
+                        long count = models.Enrollment.count("student_id = ?", studentId);
+                        model.put("enrollmentsCount", count);
+                    } else {
+                        // No tiene carrera asignada todavía
+                        model.put("hasCareer", false);
+                    }
+                }
+            } catch (Exception e) {
+                logger.severe("Error al cargar datos del dashboard de alumno: " + e.getMessage());
+            }
+
             return engine.render(new ModelAndView(model, "dashboard_student.mustache"));
         });
     }
