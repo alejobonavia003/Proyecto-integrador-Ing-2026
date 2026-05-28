@@ -15,7 +15,6 @@
 
 <div class="flex min-h-screen">
 
-    <!-- Sidebar -->
     <aside class="w-72 bg-slate-900 text-white p-6">
 
         <div class="mb-10">
@@ -30,32 +29,26 @@
 
         <nav class="space-y-3">
 
-            <a href="#"
+            <a href="/teacher/dashboard"
                class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white">
                 <i class="fa-solid fa-gauge-high"></i>
                 Dashboard
             </a>
 
-            <a href="/teacher/classes"
+            <a href="/teacher/comisiones"
                class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
                 <i class="fa-solid fa-users-rectangle"></i>
-                Mis Comisiones
+                Gestión de Comisiones
             </a>
 
-            <a href="/teacher/students"
-               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
-                <i class="fa-solid fa-user-graduate"></i>
-                Alumnos
-            </a>
-
-            <a href="/teacher/grades/upload"
-               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+            <a href="#" onclick="alert('El módulo de carga de notas está en desarrollo.'); return false;"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-500">
                 <i class="fa-solid fa-file-pen"></i>
                 Cargar Notas
             </a>
 
-            <a href="/teacher/assignments/create"
-               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition">
+            <a href="#" onclick="alert('El módulo de tareas está en desarrollo.'); return false;"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-500">
                 <i class="fa-solid fa-book-open"></i>
                 Publicar Tareas
             </a>
@@ -71,19 +64,14 @@
 
     </aside>
 
-    <!-- Main -->
     <main class="flex-1 p-8">
 
-        <!-- Header -->
         <div class="bg-white rounded-xl shadow p-6 mb-8">
-
             <div class="flex justify-between items-center">
-
                 <div>
                     <h2 class="text-3xl font-bold text-gray-800">
                         Bienvenido/a, Profesor/a {{username}} 📚
                     </h2>
-
                     <p class="text-gray-500 mt-2">
                         Rol:
                         <span class="font-semibold text-emerald-600">
@@ -92,30 +80,28 @@
                     </p>
                 </div>
             </div>
-
         </div>
 
-        <!-- Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-emerald-500">
+                <p class="text-gray-500 text-sm">Materias Asignadas</p>
+                <h3 class="text-3xl font-bold mt-2">{{#materiasCount}}{{materiasCount}}{{/materiasCount}}{{^materiasCount}}0{{/materiasCount}}</h3>
+            </div>
+
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
-                <p class="text-gray-500 text-sm">Comisiones</p>
-                <h3 class="text-3xl font-bold mt-2">4</h3>
+                <p class="text-gray-500 text-sm">Comisiones Asociadas</p>
+                <h3 class="text-3xl font-bold mt-2">{{#comisionesCount}}{{comisionesCount}}{{/comisionesCount}}{{^comisionesCount}}0{{/comisionesCount}}</h3>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
-                <p class="text-gray-500 text-sm">Alumnos</p>
-                <h3 class="text-3xl font-bold mt-2">126</h3>
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500 opacity-50">
+                <p class="text-gray-500 text-sm">Evaluaciones (Próximamente)</p>
+                <h3 class="text-3xl font-bold mt-2">--</h3>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">
-                <p class="text-gray-500 text-sm">Evaluaciones</p>
-                <h3 class="text-3xl font-bold mt-2">9</h3>
-            </div>
-
-            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
-                <p class="text-gray-500 text-sm">Tareas Pendientes</p>
-                <h3 class="text-3xl font-bold mt-2">3</h3>
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500 opacity-50">
+                <p class="text-gray-500 text-sm">Tareas Pendientes (Próximamente)</p>
+                <h3 class="text-3xl font-bold mt-2">--</h3>
             </div>
 
         </div>

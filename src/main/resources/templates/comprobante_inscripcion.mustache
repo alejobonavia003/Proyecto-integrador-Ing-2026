@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprobante Oficial de Inscripción</title>
+</head>
+<body style="font-family: sans-serif; padding: 30px;">
+    <div style="border: 2px solid #000; padding: 20px; max-width: 600px; margin: 0 auto; background-color: #fff;">
+        <h1 style="text-align: center; margin-top: 0;">COMPROBANTE DE INSCRIPCIÓN</h1>
+        <p style="text-align: center; color: gray;">Sistema de Gestión Estudiantil Universitario</p>
+        <hr style="border: 1px solid #000;">
+
+        {{#receipt}}
+        <h3>Datos del Alumno</h3>
+        <p><b>Nombre completo:</b> {{student_name}}</p>
+        <p><b>Documento (DNI):</b> {{student_dni}}</p>
+
+        <br>
+        <h3>Detalle de la Cursada Elegida</h3>
+        <table width="100%" border="1" cellpadding="8" style="border-collapse: collapse;">
+            <tr style="background-color: #f9f9f9;">
+                <td><b>Código de Materia:</b></td>
+                <td>{{materia_code}}</td>
+            </tr>
+            <tr>
+                <td><b>Asignatura:</b></td>
+                <td>{{materia_name}}</td>
+            </tr>
+            <tr style="background-color: #f9f9f9;">
+                <td><b>Comisión Asignada:</b></td>
+                <td>{{comision_name}}</td>
+            </tr>
+            <tr>
+                <td><b>ID de Transacción:</b></td>
+                <td>#{{id}}</td>
+            </tr>
+        </table>
+        {{/receipt}}
+
+        <br>
+        <hr style="border: 1px dashed #ccc;">
+        <p style="text-align: center; font-size: 12px; color: gray;">La presente inscripción queda sujeta a las verificaciones de regularidad del departamento de alumnos.</p>
+        
+        <div style="text-align: center; margin-top: 25px;">
+            <button onclick="window.print();">Imprimir Comprobante</button>
+            <br><br>
+            <a href="/student/dashboard">Volver al Tablero Principal</a>
+        </div>
+    </div>
+</body>
+</html>

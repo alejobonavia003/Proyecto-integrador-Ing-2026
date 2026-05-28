@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscripción Académica</title>
+</head>
+<body>
+    <h1>Inscripción a Materias</h1>
+    <p>Alumno: {{username}} | <a href="/student/dashboard">Regresar al Panel</a></p>
+
+    {{#errorMessage}}
+    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
+        <p style="margin: 0; color: red;"><b>Error:</b> {{errorMessage}}</p>
+        {{#hasFaltantes}}
+        <p style="margin: 5px 0 0 0;">Correlativas obligatorias adeudadas:</p>
+        <ul>
+            {{#faltantes}}
+            <li>{{name}} (Código: {{code}})</li>
+            {{/faltantes}}
+        </ul>
+        {{/hasFaltantes}}
+    </div>
+    {{/errorMessage}}
+
+    <h2>Materias Habilitadas (Según Avance Académico)</h2>
+    <p><i>Nota: El sistema filtra automáticamente las materias de tu plan que ya tienes aprobadas.</i></p>
+
+    <table border="1" cellpadding="10" width="100%">
+        <thead>
+            <tr style="background-color: #e6e6e6;">
+                <th>Código</th>
+                <th>Materia</th>
+                <th>Comisión y Cupos Libres</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#materiasDisponibles}}
+            <tr>
+                <td><b>{{code}}</b></td>
+                <td>{{name}}</td>
+                <td>
+                    {{#hasComisiones}}
+                    <table width="100%" cellpadding="3">
+                        {{#comisiones}}
+                        <tr>
+                            <td>{{name}}</td>
+                            <td>Cupos restantes: <b>{{cupos_restantes}}</b></td>
+                            <td style="text-align: right;">
+                                {{#has_cupo}}
+                                <form action="/student/inscripciones/confirmar" method="POST" style="margin:0;">
+                                    <input type="hidden" name="subject_id" value="{{subject_id}}">
+                                    <input type="hidden" name="course_class_id" value="{{id}}">
+                                    <button type="submit">Inscribirme</button>
+                                </form>
+                                {{/has_cupo}}
+                                {{^has_cupo}}
+                                <span style="color: red; font-style: italic;">Cupo Completo</span>
+                                {{/has_cupo}}
+                            </td>
+                        </tr>
+                        {{/comisiones}}
+                    </table>
+                    {{/hasComisiones}}
+                    {{^hasComisiones}}
+                    <span style="color: gray; font-style: italic;">No hay comisiones dictándose</span>
+                    {{/hasComisiones}}
+                </td>
+            </tr>
+            {{/materiasDisponibles}}
+            {{^materiasDisponibles}}
+            <tr>
+                <td colspan="3" style="text-align: center; color: gray; padding: 20px;">No posees materias disponibles para cursar en tu plan actual.</td>
+            </tr>
+            {{/materiasDisponibles}}
+        </tbody>
+    </table>
+</body>
+</html>

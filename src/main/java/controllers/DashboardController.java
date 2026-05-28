@@ -1,5 +1,6 @@
 package controllers;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -70,16 +71,35 @@ public class DashboardController {
         });
 
         
-        //Vista del Panel de Docentes.
-         
+/**
+         * Vista del Panel de Profesores (CON DATOS REALES)
+         */
         get("/teacher/dashboard", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put("username", req.session().attribute("username"));
             model.put("role", "Docente");
-            
+
+            try {
+                Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
+
+                // 1. CORREGIDO: Usar 'teacher_id' en lugar de 'user_id'
+                long materiasCount = models.TeacherSubject.count("teacher_id = ?", teacherId);
+                model.put("materiasCount", materiasCount);
+
+                // 2. CORREGIDO: Usar 'teacher_id'
+                List<models.TeacherSubject> tsList = models.TeacherSubject.where("teacher_id = ?", teacherId);
+                long comisionesCount = 0;
+                for (models.TeacherSubject ts : tsList) {
+                    comisionesCount += models.CourseClass.count("subject_id = ?", ts.get("subject_id"));
+                }
+                model.put("comisionesCount", comisionesCount);
+
+            } catch (Exception e) {
+                System.err.println("Error al cargar stats del dashboard docente: " + e.getMessage());
+            }
+
             return engine.render(new ModelAndView(model, "dashboard_teacher.mustache"));
         });
-
        /**
          * Vista del Panel de Alumnos (CON DATOS REALES)
          */

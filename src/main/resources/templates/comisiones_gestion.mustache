@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Oferta Académica</title>
+</head>
+<body>
+    <h1>Módulo del Profesor: Gestión de Comisiones y Alumnos</h1>
+    <p>Bienvenido, {{username}} | <a href="/logout">Cerrar Sesión</a> | <a href="/dashboard">Volver</a></p>
+
+    {{#successMessage}}<p style="color: green;"><b>{{successMessage}}</b></p>{{/successMessage}}
+    {{#errorMessage}}<p style="color: red;"><b>{{errorMessage}}</b></p>{{/errorMessage}}
+
+    <hr>
+
+    <h2>Crear Nueva Comisión</h2>
+    <form action="/teacher/comisiones/crear" method="POST">
+        <label>Materia (Solo donde eres Titular):</label><br>
+        <select name="subject_id" required>
+            <option value="" disabled selected>Seleccione una materia...</option>
+            {{#materiasTitular}}
+            <option value="{{id}}">{{name}} (Código: {{code}})</option>
+            {{/materiasTitular}}
+        </select>
+        <br><br>
+
+        <label>Nombre/Número de la Comisión:</label><br>
+        <input type="text" name="name" placeholder="Ej: Comisión A1" required>
+        <br><br>
+
+        <label>Cupo de Alumnos (Capacidad Máxima):</label><br>
+        <input type="number" name="quota" value="30" min="1" required>
+        <br><br>
+
+        <button type="submit">Habilitar Comisión</button>
+    </form>
+
+    <hr>
+
+    <h2>Filtros de Alumnos Inscriptos</h2>
+    <p>Utilice un filtro a la vez para buscar estudiantes de manera independiente.</p>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Filtrar por Carrera</th>
+            <th>Filtrar por Materia</th>
+            <th>Filtrar por Comisión</th>
+        </tr>
+        <tr>
+            <td>
+                <form action="/teacher/comisiones" method="GET">
+                    <select name="career_id" onchange="this.form.submit()">
+                        <option value="">Seleccione Carrera...</option>
+                        {{#carrerasFiltro}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/carrerasFiltro}}
+                    </select>
+                </form>
+            </td>
+            <td>
+                <form action="/teacher/comisiones" method="GET">
+                    <select name="subject_id" onchange="this.form.submit()">
+                        <option value="">Seleccione Materia...</option>
+                        {{#materiasFiltro}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/materiasFiltro}}
+                    </select>
+                </form>
+            </td>
+            <td>
+                <form action="/teacher/comisiones" method="GET">
+                    <select name="course_class_id" onchange="this.form.submit()">
+                        <option value="">Seleccione Comisión...</option>
+                        {{#comisionesFiltro}}
+                        <option value="{{id}}">{{name}}</option>
+                        {{/comisionesFiltro}}
+                    </select>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <br>
+    <h3>Listado de Estudiantes - Filtro Aplicado: <span style="color: blue;">{{filtroAplicado}}</span></h3>
+    
+    <table border="1" cellpadding="8" width="100%">
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th>DNI</th>
+                <th>Nombre y Apellido</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#alumnos}}
+            <tr>
+                <td>{{dni}}</td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+            </tr>
+            {{/alumnos}}
+            {{^alumnos}}
+            <tr>
+                <td colspan="3" style="text-align: center; color: gray;">No se encontraron registros para el filtro seleccionado.</td>
+            </tr>
+            {{/alumnos}}
+        </tbody>
+    </table>
+</body>
+</html>
