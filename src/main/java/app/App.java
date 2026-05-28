@@ -8,7 +8,9 @@ import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.CareerController;
 import controllers.DashboardController;
-import controllers.EnrollmentController;
+//import controllers.EnrollmentController;
+import controllers.EnrollmentStudentController;
+import controllers.EnrollmentTeacherController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 import controllers.StudyPlanController;
@@ -89,6 +91,8 @@ public class App {
         
         TeacherAssignmentController.init(engine);
 
-        EnrollmentController.init(engine);
+        //EnrollmentController.init(engine);
+        EnrollmentStudentController.init(engine);
+        EnrollmentTeacherController.init(engine);
     }
 }

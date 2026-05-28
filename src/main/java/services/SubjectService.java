@@ -24,8 +24,7 @@ public class SubjectService {
             String code,
             Integer weeklyHours,
             String modality,
-            Long studyPlanId
-    ) {
+            Long studyPlanId) {
 
         validateNotBlank(name, "Nombre");
         validateNotBlank(code, "Código");
@@ -33,22 +32,16 @@ public class SubjectService {
 
         if (weeklyHours == null || weeklyHours <= 0) {
             throw new IllegalArgumentException(
-                    "La carga horaria debe ser mayor a 0."
-            );
+                    "La carga horaria debe ser mayor a 0.");
         }
 
-     
-
         // Verificamos código repetido
-        Optional<Subject> existing =
-                Optional.ofNullable(
-                        Subject.findFirst("code = ?", code)
-                );
+        Optional<Subject> existing = Optional.ofNullable(
+                Subject.findFirst("code = ?", code));
 
         if (existing.isPresent()) {
             throw new IllegalArgumentException(
-                    "Ya existe una materia con ese código."
-            );
+                    "Ya existe una materia con ese código.");
         }
 
         Subject subject = new Subject();
@@ -109,8 +102,7 @@ public class SubjectService {
             String code,
             Integer weeklyHours,
             String modality,
-            Long studyPlanId
-    ) {
+            Long studyPlanId) {
         Subject subject = createSubject(name, code, weeklyHours, modality, studyPlanId);
         return subject.getLong("id");
     }
@@ -192,13 +184,11 @@ public class SubjectService {
      */
     private void validateNotBlank(
             String value,
-            String fieldName
-    ) {
+            String fieldName) {
 
         if (value == null || value.trim().isEmpty()) {
             throw new IllegalArgumentException(
-                    fieldName + " es requerido."
-            );
+                    fieldName + " es requerido.");
         }
     }
 
@@ -206,6 +196,6 @@ public class SubjectService {
      * Obtiene la cantidad total de materias registradas en el sistema.
      */
     public long getTotalSubjectsCount() {
-        return models.Subject.count(); 
+        return models.Subject.count();
     }
 }

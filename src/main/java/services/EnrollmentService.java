@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.javalite.activejdbc.Model;
+
 import models.Career;
 import models.CourseClass;
-import models.Enrollment; 
+import models.Enrollment;
 import models.StudyPlan;
 import models.Subject;
 import models.TeacherSubject;
@@ -18,52 +20,51 @@ public class EnrollmentService {
     // --- SECCIÓN ALUMNO ---
 
     /**
-     * Obtiene las materias disponibles filtradas por el plan del alumno, 
+     * Obtiene las materias disponibles filtradas por el plan del alumno,
      * excluyendo automáticamente las materias que ya aprobó.
      */
     public List<Map<String, Object>> getAvailableSubjectsForStudent(Long studentId) {
         List<Map<String, Object>> disponibles = new ArrayList<>();
         User student = User.findById(studentId);
-        
+
         if (student != null && student.get("study_plan_id") != null) {
             Long planId = student.getLong("study_plan_id");
             List<Subject> materiasPlan = Subject.where("study_plan_id = ?", planId);
-            
+
             // Obtener IDs de materias ya aprobadas por el alumno
             List<Long> aprobadasIds = getApprovedSubjectIds(studentId);
-            
+
             for (Subject subject : materiasPlan) {
                 // SQA: Filtrar automáticamente las materias aprobadas
                 if (aprobadasIds.contains(subject.getLongId())) {
-                    continue; 
+                    continue;
                 }
 
                 Map<String, Object> row = new HashMap<>();
                 row.put("id", subject.getId());
                 row.put("name", subject.getString("name"));
                 row.put("code", subject.getString("code"));
-                
+
                 List<CourseClass> comisiones = CourseClass.where("subject_id = ?", subject.getId());
                 List<Map<String, Object>> comisionesList = new ArrayList<>();
-                
-                
+
                 for (CourseClass c : comisiones) {
                     Map<String, Object> cMap = new HashMap<>();
                     cMap.put("id", c.getId());
                     cMap.put("name", c.getString("name") != null ? c.getString("name") : "Comisión " + c.getId());
-                    
+
                     cMap.put("subject_id", subject.getId());
                     // SQA: Calcular y mostrar claramente los cupos restantes
                     int cupoMaximo = c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
                     long inscriptos = Enrollment.count("course_class_id = ?", c.getId());
                     long cuposRestantes = cupoMaximo - inscriptos;
-                    
+
                     cMap.put("cupos_restantes", cuposRestantes);
                     cMap.put("has_cupo", cuposRestantes > 0);
-                    
+
                     comisionesList.add(cMap);
                 }
-                
+
                 if (!comisionesList.isEmpty()) {
                     row.put("hasComisiones", true);
                     row.put("comisiones", comisionesList);
@@ -74,9 +75,270 @@ public class EnrollmentService {
         return disponibles;
     }
 
+    public Long getLastEnrollmentId(Long studentId, Long courseClassId) {
+
+        List<Enrollment> enrollments = Enrollment.where(
+                "student_id = ? AND course_class_id = ?",
+                studentId,
+                courseClassId).orderBy("id DESC");
+
+        if (enrollments.isEmpty()) {
+            return null;
+        }
+
+        return enrollments.get(0).getLongId();
+    }
+
+    public void createCommission(
+            Long teacherId,
+            Long subjectId,
+            String name,
+            int capacity) {
+
+        CourseClass cc = new CourseClass();
+
+        cc.set("subject_id", subjectId);
+        cc.set("teacher_id", teacherId);
+        cc.set("name", name);
+        cc.set("capacity", capacity);
+
+        cc.saveIt();
+    }
+
+    public Map<String, Object> getTeacherCommissionViewData(Long teacherId) {
+
+        Map<String, Object> model = new HashMap<>();
+
+        // Materias titular
+
+        List<Map<String, Object>> materiasTitularView = new ArrayList<>();
+
+        List<Subject> materiasTitulares = getSubjectsWhereTeacherIsTitular(teacherId);
+
+        for (Subject s : materiasTitulares) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", s.getId());
+            map.put("name", s.getString("name"));
+            map.put("code", s.getString("code"));
+
+            materiasTitularView.add(map);
+        }
+
+        model.put("materiasTitular", materiasTitularView);
+
+        // Carreras
+
+        List<Map<String, Object>> carrerasFiltro = new ArrayList<>();
+
+        for (Model c : Career.findAll()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", c.getId());
+            map.put("name", c.getString("name"));
+
+            carrerasFiltro.add(map);
+        }
+
+        model.put("carrerasFiltro", carrerasFiltro);
+
+        // Materias
+
+        List<Map<String, Object>> materiasFiltro = new ArrayList<>();
+
+        for (Model s : Subject.findAll()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", s.getId());
+            map.put("name", s.getString("name"));
+
+            materiasFiltro.add(map);
+        }
+
+        model.put("materiasFiltro", materiasFiltro);
+
+        // Comisiones
+
+        List<Map<String, Object>> comisionesFiltro = new ArrayList<>();
+
+        for (Model cc : CourseClass.findAll()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", cc.getId());
+
+            map.put(
+                    "name",
+                    cc.getString("name") != null
+                            ? cc.getString("name")
+                            : "Comisión " + cc.getId());
+
+            comisionesFiltro.add(map);
+        }
+
+        model.put("comisionesFiltro", comisionesFiltro);
+
+        return model;
+    }
+
+    public Map<String, Object> getFilteredStudents(
+            String careerIdParam,
+            String subjectIdParam,
+            String courseClassIdParam) {
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<User> alumnosResultado = new ArrayList<>();
+
+        String filtroAplicado = "Ninguno (Muestra todos los estudiantes)";
+
+        if (careerIdParam != null && !careerIdParam.isEmpty()) {
+
+            Long careerId = Long.parseLong(careerIdParam);
+
+            alumnosResultado = getStudentsByCareer(careerId);
+
+            filtroAplicado = "Por Carrera";
+
+        } else if (subjectIdParam != null && !subjectIdParam.isEmpty()) {
+
+            Long subjectId = Long.parseLong(subjectIdParam);
+
+            alumnosResultado = getStudentsBySubject(subjectId);
+
+            filtroAplicado = "Por Materia";
+
+        } else if (courseClassIdParam != null
+                && !courseClassIdParam.isEmpty()) {
+
+            Long courseClassId = Long.parseLong(courseClassIdParam);
+
+            alumnosResultado = getStudentsByCommission(courseClassId);
+
+            filtroAplicado = "Por Comisión";
+        }
+
+        List<Map<String, Object>> alumnosView = new ArrayList<>();
+
+        for (User u : alumnosResultado) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("dni", u.getString("dni"));
+            map.put("name", u.getString("name"));
+            map.put("email", u.getString("email"));
+
+            alumnosView.add(map);
+        }
+
+        result.put("alumnos", alumnosView);
+        result.put("filtroAplicado", filtroAplicado);
+
+        return result;
+    }
+
+    public List<Map<String, Object>> getSubjectsWhereTeacherIsTitularView(Long teacherId) {
+
+        List<Map<String, Object>> materiasView = new ArrayList<>();
+
+        List<Subject> materias = getSubjectsWhereTeacherIsTitular(teacherId);
+
+        for (Subject s : materias) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", s.getId());
+            map.put("name", s.getString("name"));
+            map.put("code", s.getString("code"));
+
+            materiasView.add(map);
+        }
+
+        return materiasView;
+    }
+
+    public List<Map<String, Object>> getCareersFilterView() {
+
+        List<Map<String, Object>> careersView = new ArrayList<>();
+
+        for (Model c : Career.findAll()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", c.getId());
+            map.put("name", c.getString("name"));
+
+            careersView.add(map);
+        }
+
+        return careersView;
+    }
+
+    public List<Map<String, Object>> getSubjectsFilterView() {
+
+        List<Map<String, Object>> subjectsView = new ArrayList<>();
+
+        for (Model s : Subject.findAll()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", s.getId());
+            map.put("name", s.getString("name"));
+
+            subjectsView.add(map);
+        }
+
+        return subjectsView;
+    }
+
+    public List<Map<String, Object>> getCourseClassesFilterView() {
+
+        List<Map<String, Object>> classesView = new ArrayList<>();
+
+        for (Model cc : CourseClass.findAll()) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("id", cc.getId());
+
+            map.put(
+                    "name",
+                    cc.getString("name") != null
+                            ? cc.getString("name")
+                            : "Comisión " + cc.getId());
+
+            classesView.add(map);
+        }
+
+        return classesView;
+    }
+
+    public List<Map<String, Object>> mapStudentsView(
+            List<User> students) {
+
+        List<Map<String, Object>> alumnosView = new ArrayList<>();
+
+        for (User u : students) {
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("dni", u.getString("dni"));
+            map.put("name", u.getString("name"));
+            map.put("email", u.getString("email"));
+
+            alumnosView.add(map);
+        }
+
+        return alumnosView;
+    }
+
     /**
      * Retorna los IDs de las materias aprobadas por el alumno.
-     * (Asume un estado 'APROBADA' o 'APPROVED' en la tabla de inscripciones/historial)
+     * (Asume un estado 'APROBADA' o 'APPROVED' en la tabla de
+     * inscripciones/historial)
      */
     public List<Long> getApprovedSubjectIds(Long studentId) {
         List<Long> aprobadas = new ArrayList<>();
@@ -97,7 +359,7 @@ public class EnrollmentService {
         // CORREGIDO: Usar "capacity"
         int cupoMaximo = c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
         long inscriptos = Enrollment.count("course_class_id = ?", courseClassId);
-        
+
         if (inscriptos >= cupoMaximo) {
             throw new IllegalStateException("No quedan cupos disponibles en esta comisión.");
         }
@@ -108,6 +370,7 @@ public class EnrollmentService {
         inscripcion.set("status", "REGULAR");
         inscripcion.saveIt();
     }
+
     /**
      * Obtiene la información detallada para el Comprobante de Inscripción.
      */
@@ -118,7 +381,8 @@ public class EnrollmentService {
             receipt.put("id", e.getId());
             CourseClass cc = CourseClass.findById(e.get("course_class_id"));
             if (cc != null) {
-                receipt.put("comision_name", cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
+                receipt.put("comision_name",
+                        cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
                 Subject s = Subject.findById(cc.get("subject_id"));
                 if (s != null) {
                     receipt.put("materia_name", s.getString("name"));
@@ -140,7 +404,8 @@ public class EnrollmentService {
      */
     public boolean isTeacherTitular(Long teacherId, Long subjectId) {
         // CORREGIDO: Busca por 'teacher_id' y 'role_charge'
-        return TeacherSubject.count("teacher_id = ? AND subject_id = ? AND role_charge = 'TITULAR'", teacherId, subjectId) > 0;
+        return TeacherSubject.count("teacher_id = ? AND subject_id = ? AND role_charge = 'TITULAR'", teacherId,
+                subjectId) > 0;
     }
 
     /**
@@ -148,9 +413,10 @@ public class EnrollmentService {
      */
     public List<Subject> getSubjectsWhereTeacherIsTitular(Long teacherId) {
         // CORREGIDO: Busca por 'teacher_id' y 'role_charge'
-        List<TeacherSubject> asignaciones = TeacherSubject.where("teacher_id = ? AND role_charge = 'TITULAR'", teacherId);
+        List<TeacherSubject> asignaciones = TeacherSubject.where("teacher_id = ? AND role_charge = 'TITULAR'",
+                teacherId);
         List<Subject> materias = new ArrayList<>();
-        
+
         for (TeacherSubject ts : asignaciones) {
             Subject s = Subject.findById(ts.get("subject_id"));
             if (s != null) {
@@ -167,14 +433,17 @@ public class EnrollmentService {
         List<User> students = new ArrayList<>();
         List<StudyPlan> planes = StudyPlan.where("career_id = ?", careerId);
         for (StudyPlan plan : planes) {
-            List<User> usersInPlan = User.where("study_plan_id = ? AND role_id = (SELECT id FROM roles WHERE name = 'STUDENT' OR name = 'Alumno' LIMIT 1)", plan.getId());
+            List<User> usersInPlan = User.where(
+                    "study_plan_id = ? AND role_id = (SELECT id FROM roles WHERE name = 'STUDENT' OR name = 'Alumno' LIMIT 1)",
+                    plan.getId());
             students.addAll(usersInPlan);
         }
         return students;
     }
 
     /**
-     * Filtro 2: Alumnos anotados en una Materia específica (a través de cualquiera de sus comisiones).
+     * Filtro 2: Alumnos anotados en una Materia específica (a través de cualquiera
+     * de sus comisiones).
      */
     public List<User> getStudentsBySubject(Long subjectId) {
         List<User> students = new ArrayList<>();
@@ -216,7 +485,8 @@ public class EnrollmentService {
             if (cc != null) {
                 Subject s = Subject.findById(cc.get("subject_id"));
                 map.put("materia_name", s != null ? s.getString("name") : "Desconocida");
-                map.put("comision_name", cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
+                map.put("comision_name",
+                        cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
             }
             list.add(map);
         }
@@ -244,11 +514,13 @@ public class EnrollmentService {
             u.saveIt();
         }
     }
-    
+
     public boolean belongsToStudentCareer(Long studentId, Long subjectId) {
         User student = User.findById(studentId);
         Subject subject = Subject.findById(subjectId);
-        if (student == null || subject == null || student.get("study_plan_id") == null || subject.get("study_plan_id") == null) return false;
+        if (student == null || subject == null || student.get("study_plan_id") == null
+                || subject.get("study_plan_id") == null)
+            return false;
         return subject.getLong("study_plan_id").equals(student.getLong("study_plan_id"));
     }
 }
