@@ -51,6 +51,7 @@ public class CareerController {
             }
 
             model.put("careers", careersView);
+            model.put("careersActive",true);
             return engine.render(new ModelAndView(model, "careers_list.mustache"));
         });
 

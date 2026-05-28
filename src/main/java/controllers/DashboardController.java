@@ -55,6 +55,8 @@ public class DashboardController {
             Map<String, Object> model = new HashMap<>();
             model.put("username", req.session().attribute("username"));
             model.put("role", "Administrador");
+
+            model.put("dashboardActive",true);
             
             // Obtenemos los totales
             long userCount = userService.getTotalUsersCount();

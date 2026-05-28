@@ -42,6 +42,8 @@ public class UserController {
             model.put("username", req.session().attribute("username"));
             model.put("role", req.session().attribute("user_role"));
             model.put("userCount", usersList.size());
+            
+            model.put("usersActive",true);
 
             // Mantener seleccionada la opción actual en el combobox de la vista
             if (roleFilter != null) {

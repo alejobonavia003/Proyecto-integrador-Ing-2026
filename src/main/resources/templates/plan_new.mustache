@@ -1,34 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Nuevo Plan de Estudio</title>
+    <title>Nuevo Plan</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Crear Plan de Estudio</h1>
-    <h3>Carrera: {{career_name}}</h3>
 
-    {{#errorMessage}}
-        <p style="color: red; font-weight: bold;">{{errorMessage}}</p>
-    {{/errorMessage}}
+<body class="bg-gray-100">
 
-    <form action="/admin/careers/{{career_id}}/plans/new" method="POST">
-        <fieldset>
-            <legend>Datos del Plan de Estudio</legend>
-            
-            <label for="name">Nombre del Plan (Ej. Plan Analista 2026):</label><br>
-            <input type="text" id="name" name="name" required><br><br>
+<div class="flex min-h-screen">
 
-            <label for="code">Código (Ej. P-2026):</label><br>
-            <input type="text" id="code" name="code" required><br><br>
+    {{>partials/admin_sidebar}}
 
-            <label for="version">Versión (Año de resolución):</label><br>
-            <input type="text" id="version" name="version" required><br><br>
-        </fieldset>
-        
-        <br>
-        <button type="submit">Guardar Plan de Estudio</button>
-        <a href="/admin/careers/{{career_id}}"><button type="button">Cancelar</button></a>
-    </form>
+    <main class="flex-1 p-8">
+
+        <div class="max-w-3xl mx-auto">
+
+            <div class="bg-white rounded-xl shadow p-8">
+
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    Crear Plan de Estudio
+                </h1>
+
+                <p class="text-gray-500 mb-8">
+                    Carrera: {{career_name}}
+                </p>
+
+                {{#errorMessage}}
+                <div class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
+                    {{errorMessage}}
+                </div>
+                {{/errorMessage}}
+
+                <form action="/admin/careers/{{career_id}}/plans/new" method="POST" class="space-y-6">
+
+                    <div>
+                        <label class="block font-medium mb-2">
+                            Nombre del Plan (Ej. Plan Analista 2026)
+                        </label>
+
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               required
+                               class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-cyan-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block font-medium mb-2">
+                            Código (Ej. P-2026)
+                        </label>
+
+                        <input type="text"
+                               id="code"
+                               name="code"
+                               required
+                               class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-cyan-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block font-medium mb-2">
+                            Versión (año de resolución)
+                        </label>
+
+                        <input type="text"
+                               id="version"
+                               name="version"
+                               required
+                               class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-cyan-500 outline-none">
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+
+                        <button type="submit"
+                                class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition">
+                            Guardar Plan
+                        </button>
+
+                        <a href="/admin/careers/{{career_id}}"
+                           class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition">
+                            Cancelar
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>

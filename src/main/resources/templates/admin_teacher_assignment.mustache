@@ -1,171 +1,356 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Asignación de Docentes</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="max-w-5xl mx-auto my-10 p-8 bg-white rounded-xl shadow-lg">
-        
-        <div class="flex items-center justify-between border-b pb-4 mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                <i class="fa-solid fa-chalkboard-user text-indigo-600"></i>
-                Gestión de Asignaciones (Docentes)
-            </h2>
-            <a href="/dashboard" class="text-sm text-gray-600 hover:text-indigo-600 font-semibold">
-                <i class="fa-solid fa-arrow-left"></i> Volver al Dashboard
-            </a>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    {{>partials/admin_sidebar}}
+
+    <main class="flex-1 p-8">
+
+        <!-- HEADER -->
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                <div>
+
+                    <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
+                        <i class="fa-solid fa-chalkboard-user text-indigo-600"></i>
+                        Gestión de Asignaciones Docentes
+                    </h1>
+
+                    <p class="text-gray-500 mt-2">
+                        Vincula docentes a carreras y materias del sistema.
+                    </p>
+
+                </div>
+
+                <a href="/admin/dashboard"
+                   class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-5 py-3 rounded-lg font-semibold transition text-center">
+
+                    <i class="fa-solid fa-arrow-left mr-2"></i>
+                    Volver al Dashboard
+
+                </a>
+
+            </div>
+
         </div>
 
+        <!-- MENSAJES -->
         {{#successCareer}}
-            <div class="bg-emerald-100 border-l-4 border-emerald-500 text-emerald-700 p-4 mb-6 rounded shadow-sm">
-                <p class="font-bold">✅ Éxito</p>
-                <p class="text-sm">El docente ha sido asignado a la carrera exitosamente.</p>
-            </div>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
+            ✅ El docente ha sido asignado a la carrera exitosamente.
+        </div>
         {{/successCareer}}
 
         {{#successSubject}}
-            <div class="bg-emerald-100 border-l-4 border-emerald-500 text-emerald-700 p-4 mb-6 rounded shadow-sm">
-                <p class="font-bold">✅ Éxito</p>
-                <p class="text-sm">El docente ha sido asignado a la materia exitosamente.</p>
-            </div>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
+            ✅ El docente ha sido asignado a la materia exitosamente.
+        </div>
         {{/successSubject}}
-        
+
         {{#error}}
-            <div class="bg-rose-100 border-l-4 border-rose-500 text-rose-700 p-4 mb-6 rounded shadow-sm">
-                <p class="font-bold">❌ Error</p>
-                <p class="text-sm">{{error}}</p>
-            </div>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+            ❌ {{error}}
+        </div>
         {{/error}}
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            
-            <div class="bg-gray-50 p-6 rounded-lg border">
-                <h3 class="text-xl font-bold text-indigo-700 mb-4 border-b pb-2">1. Vincular a Carrera</h3>
-                <form action="/admin/teacher-assignments/career" method="POST" class="space-y-4">
+        <!-- GRID -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+
+            <!-- CARRERAS -->
+            <div class="bg-white rounded-xl shadow-lg p-8 border-l-4 border-indigo-500">
+
+                <div class="mb-6">
+
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Vincular a Carrera
+                    </h2>
+
+                    <p class="text-gray-500 mt-2">
+                        Registra un docente dentro de una carrera habilitada.
+                    </p>
+
+                </div>
+
+                <form action="/admin/teacher-assignments/career"
+                      method="POST"
+                      class="space-y-6">
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Docente:</label>
-                        <select name="teacher_id" required class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="" disabled selected>-- Elija un Profesor --</option>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Seleccionar Docente
+                        </label>
+
+                        <select name="teacher_id"
+                                required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+
+                            <option value="" disabled selected>
+                                -- Elija un Profesor --
+                            </option>
+
                             {{#teachers}}
-                                <option value="{{id}}">{{name}} (DNI: {{dni}})</option>
+                            <option value="{{id}}">
+                                {{name}} (DNI: {{dni}})
+                            </option>
                             {{/teachers}}
+
                         </select>
+
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Carrera:</label>
-                        <select name="career_id" required class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="" disabled selected>-- Elija una Carrera --</option>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Seleccionar Carrera
+                        </label>
+
+                        <select name="career_id"
+                                required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+
+                            <option value="" disabled selected>
+                                -- Elija una Carrera --
+                            </option>
+
                             {{#careers}}
-                                <option value="{{id}}">{{name}} [{{code}}]</option>
+                            <option value="{{id}}">
+                                {{name}} [{{code}}]
+                            </option>
                             {{/careers}}
+
                         </select>
+
                     </div>
 
-                    <div class="pt-2">
-                        <button type="submit" class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow transition">
-                            <i class="fa-solid fa-link"></i> Asignar a Carrera
-                        </button>
-                    </div>
+                    <button type="submit"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition">
+
+                        <i class="fa-solid fa-link mr-2"></i>
+                        Asignar a Carrera
+
+                    </button>
+
                 </form>
+
             </div>
 
-            <div class="bg-gray-50 p-6 rounded-lg border">
-                <h3 class="text-xl font-bold text-indigo-700 mb-4 border-b pb-2">2. Vincular a Materia</h3>
-                <form action="/admin/teacher-assignments/subject" method="POST" class="space-y-4">
+            <!-- MATERIAS -->
+            <div class="bg-white rounded-xl shadow-lg p-8 border-l-4 border-cyan-500">
+
+                <div class="mb-6">
+
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Vincular a Materia
+                    </h2>
+
+                    <p class="text-gray-500 mt-2">
+                        Asigna docentes a materias con rol y período académico.
+                    </p>
+
+                </div>
+
+                <form action="/admin/teacher-assignments/subject"
+                      method="POST"
+                      class="space-y-6">
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Docente:</label>
-                        <select name="teacher_id" id="select-teacher" required class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="" disabled selected>-- Elija un Profesor --</option>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Seleccionar Docente
+                        </label>
+
+                        <select name="teacher_id"
+                                id="select-teacher"
+                                required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white">
+
+                            <option value="" disabled selected>
+                                -- Elija un Profesor --
+                            </option>
+
                             {{#teachers}}
-                                <option value="{{id}}">{{name}} (DNI: {{dni}})</option>
+                            <option value="{{id}}">
+                                {{name}} (DNI: {{dni}})
+                            </option>
                             {{/teachers}}
+
                         </select>
+
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar Materia:</label>
-                        <select name="subject_id" id="select-subject" required disabled class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 bg-gray-200">
-                            <option value="" disabled selected>-- Seleccione primero un profesor --</option>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Seleccionar Materia
+                        </label>
+
+                        <select name="subject_id"
+                                id="select-subject"
+                                required
+                                disabled
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-200 focus:outline-none">
+
+                            <option value="" disabled selected>
+                                -- Seleccione primero un profesor --
+                            </option>
+
                         </select>
+
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Rol / Carga:</label>
-                            <input type="text" name="role_charge" placeholder="Ej: Titular, JTP" required 
-                                   class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500">
+
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Rol / Carga
+                            </label>
+
+                            <input type="text"
+                                   name="role_charge"
+                                   placeholder="Ej: Titular, JTP"
+                                   required
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+
                         </div>
+
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Año Académico:</label>
-                            <input type="number" name="academic_year" value="2026" min="2020" max="2100" required 
-                                   class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500">
+
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Año Académico
+                            </label>
+
+                            <input type="number"
+                                   name="academic_year"
+                                   value="2026"
+                                   min="2020"
+                                   max="2100"
+                                   required
+                                   class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+
                         </div>
+
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Periodo Académico:</label>
-                        <select name="academic_period" required class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500 bg-white">
-                            <option value="1° Cuatrimestre">1° Cuatrimestre</option>
-                            <option value="2° Cuatrimestre">2° Cuatrimestre</option>
-                            <option value="Anual">Anual</option>
+
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Periodo Académico
+                        </label>
+
+                        <select name="academic_period"
+                                required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white">
+
+                            <option value="1° Cuatrimestre">
+                                1° Cuatrimestre
+                            </option>
+
+                            <option value="2° Cuatrimestre">
+                                2° Cuatrimestre
+                            </option>
+
+                            <option value="Anual">
+                                Anual
+                            </option>
+
                         </select>
+
                     </div>
 
-                    <div class="pt-2">
-                        <button type="submit" class="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow transition">
-                            <i class="fa-solid fa-floppy-disk"></i> Asignar a Materia
-                        </button>
-                    </div>
+                    <button type="submit"
+                            class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 rounded-lg transition">
+
+                        <i class="fa-solid fa-floppy-disk mr-2"></i>
+                        Asignar a Materia
+
+                    </button>
+
                 </form>
+
             </div>
 
         </div>
-    </div>
 
-    <script>
-        document.getElementById('select-teacher').addEventListener('change', function() {
-            const teacherId = this.value;
-            const subjectSelect = document.getElementById('select-subject');
+    </main>
 
-            // Limpiar opciones previas y poner estado de carga
-            subjectSelect.innerHTML = '<option value="" disabled selected>Cargando materias...</option>';
-            subjectSelect.disabled = true;
-            subjectSelect.classList.replace('bg-white', 'bg-gray-200');
+</div>
 
-            if (!teacherId) return;
+<script>
+    document.getElementById('select-teacher').addEventListener('change', function() {
 
-            // Llamada AJAX al nuevo endpoint del controlador
-            fetch(`/admin/teacher-assignments/allowed-subjects?teacher_id=${teacherId}`)
-                .then(response => response.json())
-                .then(subjects => {
-                    subjectSelect.innerHTML = ''; // Vaciar
+        const teacherId = this.value;
+        const subjectSelect = document.getElementById('select-subject');
 
-                    if (subjects.length === 0) {
-                        subjectSelect.innerHTML = '<option value="" disabled selected>⚠ El profesor no pertenece a ninguna carrera o no hay materias libres</option>';
-                    } else {
-                        // Agregar opción por defecto limpia
-                        subjectSelect.innerHTML = '<option value="" disabled selected>-- Elija una Materia --</option>';
-                        // Iterar sobre las materias devueltas por la consulta SQL filtrada
-                        subjects.forEach(subject => {
-                            const option = document.createElement('option');
-                            option.value = subject.id;
-                            option.textContent = `${subject.name} [${subject.code}]`;
-                            subjectSelect.appendChild(option);
-                        });
-                        // Habilitar el select ya con sus datos correctos
-                        subjectSelect.disabled = false;
-                        subjectSelect.classList.replace('bg-gray-200', 'bg-white');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al cargar las materias:', error);
-                    subjectSelect.innerHTML = '<option value="" disabled selected>❌ Error al cargar materias</option>';
-                });
-        });
-    </script>
+        subjectSelect.innerHTML =
+            '<option value="" disabled selected>Cargando materias...</option>';
+
+        subjectSelect.disabled = true;
+
+        subjectSelect.classList.replace('bg-white', 'bg-gray-200');
+
+        if (!teacherId) return;
+
+        fetch(`/admin/teacher-assignments/allowed-subjects?teacher_id=${teacherId}`)
+
+            .then(response => response.json())
+
+            .then(subjects => {
+
+                subjectSelect.innerHTML = '';
+
+                if (subjects.length === 0) {
+
+                    subjectSelect.innerHTML =
+                        '<option value="" disabled selected>⚠ El profesor no pertenece a ninguna carrera o no hay materias libres</option>';
+
+                } else {
+
+                    subjectSelect.innerHTML =
+                        '<option value="" disabled selected>-- Elija una Materia --</option>';
+
+                    subjects.forEach(subject => {
+
+                        const option = document.createElement('option');
+
+                        option.value = subject.id;
+
+                        option.textContent =
+                            `${subject.name} [${subject.code}]`;
+
+                        subjectSelect.appendChild(option);
+                    });
+
+                    subjectSelect.disabled = false;
+                    subjectSelect.classList.replace('bg-gray-200', 'bg-white');
+                }
+            })
+
+            .catch(error => {
+
+                console.error('Error al cargar las materias:', error);
+
+                subjectSelect.innerHTML =
+                    '<option value="" disabled selected>❌ Error al cargar materias</option>';
+            });
+    });
+</script>
+
 </body>
 </html>

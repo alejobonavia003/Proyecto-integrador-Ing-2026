@@ -100,6 +100,8 @@ public class SubjectController {
         }
 
         model.put("subjects", subjectsView);
+        
+        model.put("subjectsActive",true);
 
         // Datos de sesión
         model.put(

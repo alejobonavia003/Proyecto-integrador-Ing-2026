@@ -1,33 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Estructura Curricular</title>
+    <title>Detalle del Plan</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Detalle del Plan de Estudio</h1>
-    
-    <div style="background-color: #f9f9f9; padding: 15px; border: 1px solid #ddd;">
-        <h2>{{plan.name}}</h2>
-        <p><strong>Código de Resolución/Plan:</strong> {{plan.code}}</p>
-    </div>
 
-    <h3>Materias Correspondientes</h3>
-    <ul>
-        {{#plan_courses}}
-        <li style="margin-bottom: 10px;">
-            <strong>{{code}}</strong> - {{name}} 
-            <br>
-            <small>Carga horaria: {{weekly_hours}} hs | <strong>Correlativas:</strong> {{dependencies}}</small>
-        </li>
-        {{/plan_courses}}
-        
-        {{^plan_courses}}
-        <p><em>Este plan de estudio aún no tiene materias asignadas en su currícula.</em></p>
-        {{/plan_courses}}
-    </ul>
+<body class="bg-gray-100">
 
-    <hr>
-    <a href="javascript:history.back()">Volver a la pantalla anterior</a>
+<div class="flex min-h-screen">
+
+    {{>partials/admin_sidebar}}
+
+    <main class="flex-1 p-8">
+
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+
+            <h2 class="text-3xl font-bold text-gray-800">
+                {{plan.name}}
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+                Código:
+                <span class="font-semibold text-cyan-600">
+                    {{plan.code}}
+                </span>
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-6">
+
+            <h3 class="text-xl font-bold mb-6">
+                Materias del Plan
+            </h3>
+
+            <div class="space-y-4">
+
+                {{#plan_courses}}
+
+                <div class="border rounded-xl p-5 hover:shadow transition">
+
+                    <div class="flex justify-between items-center">
+
+                        <div>
+                            <h4 class="text-lg font-bold text-gray-800">
+                                {{code}} - {{name}}
+                            </h4>
+
+                            <p class="text-gray-500 mt-1">
+                                {{weekly_hours}} hs semanales
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-3 text-sm text-gray-600">
+                        <strong>Correlativas:</strong>
+                        {{dependencies}}
+                    </div>
+
+                </div>
+
+                {{/plan_courses}}
+
+                {{^plan_courses}}
+
+                <div class="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-xl p-5">
+                    Este plan aún no tiene materias asignadas.
+                </div>
+
+                {{/plan_courses}}
+
+            </div>
+
+        </div>
+
+        <a href="javascript:history.back()"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+
+    </main>
+
+</div>
+
 </body>
 </html>

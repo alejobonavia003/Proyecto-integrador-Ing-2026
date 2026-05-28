@@ -1,25 +1,92 @@
 <!DOCTYPE html>
-<html>
-<head><title>Nueva Carrera</title></head>
-<body>
-    <h1>Crear Nueva Carrera</h1>
-    
-    {{#errorMessage}}
-        <p style="color:red;">{{errorMessage}}</p>
-    {{/errorMessage}}
+<html lang="es">
 
-    <form action="/admin/careers/new" method="POST">
-        <label>Nombre de la Carrera:</label>
-        <input type="text" name="name" required><br><br>
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Carrera</title>
 
-        <label>Código:</label>
-        <input type="text" name="code" required><br><br>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        <label>Duración (Años):</label>
-        <input type="number" name="duration" required><br><br>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
 
-        <button type="submit">Guardar Carrera</button>
-        <a href="/admin/careers">Cancelar</a>
-    </form>
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    {{>partials/admin_sidebar}}
+
+    <main class="flex-1 p-8">
+
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow p-8">
+
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">
+                Crear Nueva Carrera
+            </h1>
+
+            {{#errorMessage}}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                {{errorMessage}}
+            </div>
+            {{/errorMessage}}
+
+            <form action="/admin/careers/new" method="POST" class="space-y-6">
+
+                <div>
+                    <label class="block mb-2 font-semibold">
+                        Nombre de la Carrera
+                    </label>
+
+                    <input type="text"
+                           name="name"
+                           required
+                           class="w-full border border-gray-300 rounded-lg p-3">
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-semibold">
+                        Código
+                    </label>
+
+                    <input type="text"
+                           name="code"
+                           required
+                           class="w-full border border-gray-300 rounded-lg p-3">
+                </div>
+
+                <div>
+                    <label class="block mb-2 font-semibold">
+                        Duración (Años)
+                    </label>
+
+                    <input type="number"
+                           name="duration"
+                           required
+                           class="w-full border border-gray-300 rounded-lg p-3">
+                </div>
+
+                <div class="flex gap-4">
+
+                    <button type="submit"
+                            class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition">
+                        Guardar Carrera
+                    </button>
+
+                    <a href="/admin/careers"
+                       class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-lg transition">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>

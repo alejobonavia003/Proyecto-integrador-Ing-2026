@@ -1,52 +1,122 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Detalle de Carrera y Planes</title>
+    <title>Detalle de Carrera</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Detalles de la Carrera: {{career_name}}</h1>
-    <p><strong>Código:</strong> {{career_code}}</p>
-    
-    <hr>
 
-    <h2>Planes de Estudio de esta Carrera</h2>
-    <a href="/admin/careers/{{career_id}}/plans/new"><button>+ Crear Nuevo Plan de Estudio</button></a>
-    <br><br>
+<body class="bg-gray-100">
 
-    {{#hasPlans}}
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre del Plan</th>
-                <th>Código</th>
-                <th>Versión</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#plans}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{code}}</td>
-                <td>{{version}}</td>
-                <td>
-                    <a href="/admin/careers/{{career_id}}/plans/{{id}}"><button>Ver Materias del Plan</button></a>
-                    <a href="/admin/careers/{{career_id}}/plans/{{id}}/subjects"><button>Gestionar Materias</button></a>
-                </td>
-            </tr>
-            {{/plans}}
-        </tbody>
-    </table>
-    {{/hasPlans}}
-    
-    {{^hasPlans}}
-        <p><i>No hay planes de estudio registrados para esta carrera actualmente.</i></p>
-    {{/hasPlans}}
+<div class="flex min-h-screen">
 
-    <br><br>
-    <a href="/admin/careers"><button>Volver a la Lista de Carreras</button></a>
+    {{>partials/admin_sidebar}}
+
+    <main class="flex-1 p-8">
+
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        {{career_name}}
+                    </h2>
+
+                    <p class="text-gray-500 mt-2">
+                        Código:
+                        <span class="font-semibold text-cyan-600">
+                            {{career_code}}
+                        </span>
+                    </p>
+                </div>
+
+                <a href="/admin/careers/{{career_id}}/plans/new"
+                   class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-3 rounded-lg transition">
+                    + Nuevo Plan
+                </a>
+            </div>
+        </div>
+
+        {{#hasPlans}}
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+
+            <div class="p-6 border-b">
+                <h3 class="text-xl font-bold text-gray-800">
+                    Planes de Estudio
+                </h3>
+            </div>
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full text-left">
+
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Nombre</th>
+                            <th class="p-4">Código</th>
+                            <th class="p-4">Versión</th>
+                            <th class="p-4">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {{#plans}}
+                        <tr class="border-b hover:bg-gray-50">
+
+                            <td class="p-4">{{id}}</td>
+                            <td class="p-4 font-medium">{{name}}</td>
+                            <td class="p-4">{{code}}</td>
+                            <td class="p-4">{{version}}</td>
+
+                            <td class="p-4">
+                                <div class="flex gap-2">
+
+                                    <a href="/admin/careers/{{career_id}}/plans/{{id}}"
+                                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition">
+                                        Ver Plan
+                                    </a>
+
+                                    <a href="/admin/careers/{{career_id}}/plans/{{id}}/subjects"
+                                       class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm transition">
+                                        Gestionar Materias
+                                    </a>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                        {{/plans}}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        {{/hasPlans}}
+
+        {{^hasPlans}}
+
+        <div class="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-xl p-5">
+            No hay planes de estudio registrados para esta carrera.
+        </div>
+
+        {{/hasPlans}}
+
+
+        <a href="/admin/careers"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    </main>
+
+</div>
+
 </body>
 </html>
