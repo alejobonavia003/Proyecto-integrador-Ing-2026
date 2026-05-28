@@ -1,12 +1,9 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import org.javalite.activejdbc.Model;
+import java.util.List;
 
 import models.CourseClass;
 import models.Subject;
@@ -117,7 +114,7 @@ public class SubjectController {
         // Contador útil para estadísticas simples
         model.put(
                 "subjectCount",
-                Subject.count()
+                subjectService.getTotalSubjectsCount()
         );
 
         return engine.render(

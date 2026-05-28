@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Requeriments.md",
+                "file": "diagramas/diagrama_clases.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Requeriments"
+              "title": "diagrama_clases"
             }
           }
         ]
@@ -185,6 +185,8 @@
   },
   "active": "0b6069926358cac4",
   "lastOpenFiles": [
+    "Documentacion/Rutas de la API.md",
+    "Requeriments.md",
     "diagramas/diagrama_clases.md",
     "casos de uso.md",
     "Documentacion/Sistema de roles.md",
@@ -197,7 +199,6 @@
     "auditorias/Riesgos.md",
     "auditorias/Auditoría de Software 28 03.md",
     "auditorias",
-    "Requeriments.md",
     "diagramas/s.jpg"
   ]
 }
