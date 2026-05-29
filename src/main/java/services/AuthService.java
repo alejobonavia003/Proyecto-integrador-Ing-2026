@@ -1,27 +1,29 @@
 // Archivo: src/main/java/services/AuthService.java
 package services;
 
-import models.User;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.util.Optional;
 
+import org.mindrot.jbcrypt.BCrypt;
+
+import models.User;
+
 // -------------------------------------------------------
-// un detalle del servicio es que podriamos inyectarle el dao 
-// con esto podriamos luego testear pasandole bocetos de dao con datos falsos para 
-// facilitar el teste en produccion 
+// un detalle del servicio es que podriamos inyectarle el dao
+// con esto podriamos luego testear pasandole bocetos de dao con datos falsos para
+// facilitar el teste en produccion
 // -------------------------------------------------------
 
 
 /**
- * Capa de Servicio: Orquestador de la lógica de negocio para Autenticación.
- * Esta capa actúa como mediadora entre los Controladores (Web) y el DAO (Persistencia).
+ * Capa de Servicio: Orquestador de la lógica de negocio para Autenticación. Esta capa actúa como
+ * mediadora entre los Controladores (Web) y el DAO (Persistencia).
  */
 public class AuthService {
 
 
     /**
      * Registra un nuevo usuario aplicando reglas de validación y seguridad.
+     * 
      * @param name Nombre elegido por el usuario.
      * @param password Contraseña en texto plano (será hasheada).
      * @return El objeto User persistido (con ID generado).
@@ -32,9 +34,10 @@ public class AuthService {
         validateNotBlank(password, "Contraseña");
         validateNotBlank(dni, "dni");
         validateNotBlank(email, "email");
-        
 
-        //objeto que es null si no existe y uso el metodo del modelo para buscar la primera coincidencia
+
+        // objeto que es null si no existe y uso el metodo del modelo para buscar la primera
+        // coincidencia
         Optional<User> existing = Optional.ofNullable(User.findFirst("dni = ?", dni));
         if (existing.isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con ese dni.");
@@ -46,8 +49,8 @@ public class AuthService {
         user.setDni(dni);
         user.setEmail(email);
         user.setRoleId(role);
-        
-        // SEGURIDAD: Nunca guardamos la contraseña plana. 
+
+        // SEGURIDAD: Nunca guardamos la contraseña plana.
         // BCrypt aplica un 'salt' aleatorio y genera un hash irreversible.
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 
@@ -59,6 +62,7 @@ public class AuthService {
 
     /**
      * Valida las credenciales de un usuario.
+     * 
      * @param username Nombre de usuario ingresado.
      * @param plainPassword Contraseña ingresada en el formulario.
      * @return Un Optional conteniendo el Usuario si es exitoso, o vacío si falla.
@@ -90,8 +94,8 @@ public class AuthService {
     }
 
     /**
-     * metodo privado para validar que no lleguen en blanco las casillas 
-     * lo hiice metodo aparte para no tener que repetir el codigo en cada lugar que lo use 
+     * metodo privado para validar que no lleguen en blanco las casillas lo hiice metodo aparte para
+     * no tener que repetir el codigo en cada lugar que lo use
      */
     private void validateNotBlank(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {

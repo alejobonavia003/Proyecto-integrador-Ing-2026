@@ -17,26 +17,18 @@ public class DashboardService {
 
         Map<String, Object> data = new HashMap<>();
 
-        long materiasCount = TeacherSubject.count(
-                "teacher_id = ?",
-                teacherId
-        );
+        long materiasCount = TeacherSubject.count("teacher_id = ?", teacherId);
 
         data.put("materiasCount", materiasCount);
 
-        List<TeacherSubject> teacherSubjects = TeacherSubject.where(
-                "teacher_id = ?",
-                teacherId
-        );
+        List<TeacherSubject> teacherSubjects = TeacherSubject.where("teacher_id = ?", teacherId);
 
         long comisionesCount = 0;
 
         for (TeacherSubject teacherSubject : teacherSubjects) {
 
-            comisionesCount += CourseClass.count(
-                    "subject_id = ?",
-                    teacherSubject.get("subject_id")
-            );
+            comisionesCount +=
+                    CourseClass.count("subject_id = ?", teacherSubject.get("subject_id"));
         }
 
         data.put("comisionesCount", comisionesCount);
@@ -70,19 +62,14 @@ public class DashboardService {
 
             data.put("planName", plan.getString("name"));
 
-            Career career = Career.findById(
-                    plan.getLong("career_id")
-            );
+            Career career = Career.findById(plan.getLong("career_id"));
 
             if (career != null) {
                 data.put("careerName", career.getString("name"));
             }
         }
 
-        long enrollmentsCount = Enrollment.count(
-                "student_id = ?",
-                studentId
-        );
+        long enrollmentsCount = Enrollment.count("student_id = ?", studentId);
 
         data.put("enrollmentsCount", enrollmentsCount);
 

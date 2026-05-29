@@ -11,14 +11,10 @@ public class Subject extends Model {
 
     static {
 
-        validatePresenceOf(
-                "name",
-                "code",
-                "weekly_hours"
-        ).message("Todos los campos obligatorios deben estar completos.");
+        validatePresenceOf("name", "code", "weekly_hours")
+                .message("Todos los campos obligatorios deben estar completos.");
 
-        validateNumericalityOf("weekly_hours")
-                .greaterThan(0)
+        validateNumericalityOf("weekly_hours").greaterThan(0)
                 .message("La carga horaria debe ser mayor a 0.");
     }
 

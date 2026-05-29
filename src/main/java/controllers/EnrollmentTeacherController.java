@@ -6,153 +6,87 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import services.EnrollmentService;
-
 import spark.ModelAndView;
-
 import static spark.Spark.get;
 import static spark.Spark.post;
-
 import spark.template.mustache.MustacheTemplateEngine;
 
 public class EnrollmentTeacherController {
 
-    private static final Logger logger =
-            Logger.getLogger(
-                    EnrollmentTeacherController.class.getName()
-            );
+        private static final Logger logger =
+                        Logger.getLogger(EnrollmentTeacherController.class.getName());
 
-    private static final EnrollmentService enrollmentService =
-            new EnrollmentService();
+        private static final EnrollmentService enrollmentService = new EnrollmentService();
 
-    public static void init(MustacheTemplateEngine engine) {
+        public static void init(MustacheTemplateEngine engine) {
 
-        get("/teacher/comisiones", (req, res) -> {
+                get("/teacher/comisiones", (req, res) -> {
 
-            Long teacherId =
-                    Long.valueOf(
-                            req.session()
-                                    .attribute("userId")
-                                    .toString()
-                    );
+                        Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
 
-            Map<String, Object> model = new HashMap<>();
+                        Map<String, Object> model = new HashMap<>();
 
-            model.put(
-                    "username",
-                    req.session().attribute("username")
-            );
+                        model.put("username", req.session().attribute("username"));
 
-            if (req.queryParams("success") != null) {
+                        if (req.queryParams("success") != null) {
 
-                model.put(
-                        "successMessage",
-                        req.queryParams("success")
-                );
-            }
+                                model.put("successMessage", req.queryParams("success"));
+                        }
 
-            if (req.queryParams("error") != null) {
+                        if (req.queryParams("error") != null) {
 
-                model.put(
-                        "errorMessage",
-                        req.queryParams("error")
-                );
-            }
+                                model.put("errorMessage", req.queryParams("error"));
+                        }
 
-            model.putAll(
-                    enrollmentService
-                            .getTeacherCommissionViewData(
-                                    teacherId
-                            )
-            );
+                        model.putAll(enrollmentService.getTeacherCommissionViewData(teacherId));
 
-            model.putAll(
-                    enrollmentService.getFilteredStudents(
-                            req.queryParams("career_id"),
-                            req.queryParams("subject_id"),
-                            req.queryParams("course_class_id")
-                    )
-            );
+                        model.putAll(enrollmentService.getFilteredStudents(
+                                        req.queryParams("career_id"), req.queryParams("subject_id"),
+                                        req.queryParams("course_class_id")));
 
-            return engine.render(
-                    new ModelAndView(
-                            model,
-                            "comisiones_gestion.mustache"
-                    )
-            );
-        });
+                        return engine.render(
+                                        new ModelAndView(model, "comisiones_gestion.mustache"));
+                });
 
-        post("/teacher/comisiones/crear", (req, res) -> {
+                post("/teacher/comisiones/crear", (req, res) -> {
 
-            try {
+                        try {
 
-                Long teacherId =
-                        Long.valueOf(
-                                req.session()
-                                        .attribute("userId")
-                                        .toString()
-                        );
+                                Long teacherId = Long.valueOf(
+                                                req.session().attribute("userId").toString());
 
-                Long subjectId =
-                        Long.parseLong(
-                                req.queryParams("subject_id")
-                        );
+                                Long subjectId = Long.parseLong(req.queryParams("subject_id"));
 
-                String name =
-                        req.queryParams("name");
+                                String name = req.queryParams("name");
 
-                int capacity =
-                        Integer.parseInt(
-                                req.queryParams("quota")
-                        );
+                                int capacity = Integer.parseInt(req.queryParams("quota"));
 
-                if (!enrollmentService.isTeacherTitular(
-                        teacherId,
-                        subjectId
-                )) {
+                                if (!enrollmentService.isTeacherTitular(teacherId, subjectId)) {
 
-                    res.redirect(
-                            "/teacher/comisiones?error="
-                                    + URLEncoder.encode(
-                                    "No puedes crear comisiones en materias donde no eres Titular.",
-                                    "UTF-8"
-                            )
-                    );
+                                        res.redirect("/teacher/comisiones?error=" + URLEncoder
+                                                        .encode("No puedes crear comisiones en materias donde no eres Titular.",
+                                                                        "UTF-8"));
 
-                    return null;
-                }
+                                        return null;
+                                }
 
-                enrollmentService.createCommission(
-                        teacherId,
-                        subjectId,
-                        name,
-                        capacity
-                );
+                                enrollmentService.createCommission(teacherId, subjectId, name,
+                                                capacity);
 
-                res.redirect(
-                        "/teacher/comisiones?success="
-                                + URLEncoder.encode(
-                                "Comisión académica creada exitosamente.",
-                                "UTF-8"
-                        )
-                );
+                                res.redirect("/teacher/comisiones?success=" + URLEncoder.encode(
+                                                "Comisión académica creada exitosamente.",
+                                                "UTF-8"));
 
-            } catch (Exception e) {
+                        } catch (Exception e) {
 
-                logger.severe(
-                        "Error al crear comisión: "
-                                + e.getMessage()
-                );
+                                logger.severe("Error al crear comisión: " + e.getMessage());
 
-                res.redirect(
-                        "/teacher/comisiones?error="
-                                + URLEncoder.encode(
-                                "Error al procesar la creación de la comisión.",
-                                "UTF-8"
-                        )
-                );
-            }
+                                res.redirect("/teacher/comisiones?error=" + URLEncoder.encode(
+                                                "Error al procesar la creación de la comisión.",
+                                                "UTF-8"));
+                        }
 
-            return null;
-        });
-    }
+                        return null;
+                });
+        }
 }

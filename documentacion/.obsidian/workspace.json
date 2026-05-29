@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "diagramas/diagrama_clases.md",
+                "file": "Documentacion/Rutas de la API.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "diagrama_clases"
+              "title": "Rutas de la API"
             }
           }
         ]
@@ -185,9 +185,9 @@
   },
   "active": "0b6069926358cac4",
   "lastOpenFiles": [
+    "diagramas/diagrama_clases.md",
     "Documentacion/Rutas de la API.md",
     "Requeriments.md",
-    "diagramas/diagrama_clases.md",
     "casos de uso.md",
     "Documentacion/Sistema de roles.md",
     "Documentacion/logger.md",

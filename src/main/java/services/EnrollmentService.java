@@ -20,8 +20,8 @@ public class EnrollmentService {
     // --- SECCIÓN ALUMNO ---
 
     /**
-     * Obtiene las materias disponibles filtradas por el plan del alumno,
-     * excluyendo automáticamente las materias que ya aprobó.
+     * Obtiene las materias disponibles filtradas por el plan del alumno, excluyendo automáticamente
+     * las materias que ya aprobó.
      */
     public List<Map<String, Object>> getAvailableSubjectsForStudent(Long studentId) {
         List<Map<String, Object>> disponibles = new ArrayList<>();
@@ -51,11 +51,13 @@ public class EnrollmentService {
                 for (CourseClass c : comisiones) {
                     Map<String, Object> cMap = new HashMap<>();
                     cMap.put("id", c.getId());
-                    cMap.put("name", c.getString("name") != null ? c.getString("name") : "Comisión " + c.getId());
+                    cMap.put("name", c.getString("name") != null ? c.getString("name")
+                            : "Comisión " + c.getId());
 
                     cMap.put("subject_id", subject.getId());
                     // SQA: Calcular y mostrar claramente los cupos restantes
-                    int cupoMaximo = c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
+                    int cupoMaximo =
+                            c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
                     long inscriptos = Enrollment.count("course_class_id = ?", c.getId());
                     long cuposRestantes = cupoMaximo - inscriptos;
 
@@ -77,10 +79,9 @@ public class EnrollmentService {
 
     public Long getLastEnrollmentId(Long studentId, Long courseClassId) {
 
-        List<Enrollment> enrollments = Enrollment.where(
-                "student_id = ? AND course_class_id = ?",
-                studentId,
-                courseClassId).orderBy("id DESC");
+        List<Enrollment> enrollments =
+                Enrollment.where("student_id = ? AND course_class_id = ?", studentId, courseClassId)
+                        .orderBy("id DESC");
 
         if (enrollments.isEmpty()) {
             return null;
@@ -89,11 +90,7 @@ public class EnrollmentService {
         return enrollments.get(0).getLongId();
     }
 
-    public void createCommission(
-            Long teacherId,
-            Long subjectId,
-            String name,
-            int capacity) {
+    public void createCommission(Long teacherId, Long subjectId, String name, int capacity) {
 
         CourseClass cc = new CourseClass();
 
@@ -170,11 +167,8 @@ public class EnrollmentService {
 
             map.put("id", cc.getId());
 
-            map.put(
-                    "name",
-                    cc.getString("name") != null
-                            ? cc.getString("name")
-                            : "Comisión " + cc.getId());
+            map.put("name",
+                    cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
 
             comisionesFiltro.add(map);
         }
@@ -184,9 +178,7 @@ public class EnrollmentService {
         return model;
     }
 
-    public Map<String, Object> getFilteredStudents(
-            String careerIdParam,
-            String subjectIdParam,
+    public Map<String, Object> getFilteredStudents(String careerIdParam, String subjectIdParam,
             String courseClassIdParam) {
 
         Map<String, Object> result = new HashMap<>();
@@ -211,8 +203,7 @@ public class EnrollmentService {
 
             filtroAplicado = "Por Materia";
 
-        } else if (courseClassIdParam != null
-                && !courseClassIdParam.isEmpty()) {
+        } else if (courseClassIdParam != null && !courseClassIdParam.isEmpty()) {
 
             Long courseClassId = Long.parseLong(courseClassIdParam);
 
@@ -304,11 +295,8 @@ public class EnrollmentService {
 
             map.put("id", cc.getId());
 
-            map.put(
-                    "name",
-                    cc.getString("name") != null
-                            ? cc.getString("name")
-                            : "Comisión " + cc.getId());
+            map.put("name",
+                    cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
 
             classesView.add(map);
         }
@@ -316,8 +304,7 @@ public class EnrollmentService {
         return classesView;
     }
 
-    public List<Map<String, Object>> mapStudentsView(
-            List<User> students) {
+    public List<Map<String, Object>> mapStudentsView(List<User> students) {
 
         List<Map<String, Object>> alumnosView = new ArrayList<>();
 
@@ -336,14 +323,14 @@ public class EnrollmentService {
     }
 
     /**
-     * Retorna los IDs de las materias aprobadas por el alumno.
-     * (Asume un estado 'APROBADA' o 'APPROVED' en la tabla de
-     * inscripciones/historial)
+     * Retorna los IDs de las materias aprobadas por el alumno. (Asume un estado 'APROBADA' o
+     * 'APPROVED' en la tabla de inscripciones/historial)
      */
     public List<Long> getApprovedSubjectIds(Long studentId) {
         List<Long> aprobadas = new ArrayList<>();
         // Buscamos registros donde el estado sea aprobada
-        List<Enrollment> registros = Enrollment.where("student_id = ? AND status = 'APROBADA'", studentId);
+        List<Enrollment> registros =
+                Enrollment.where("student_id = ? AND status = 'APROBADA'", studentId);
         for (Enrollment e : registros) {
             CourseClass cc = CourseClass.findById(e.get("course_class_id"));
             if (cc != null) {
@@ -381,8 +368,8 @@ public class EnrollmentService {
             receipt.put("id", e.getId());
             CourseClass cc = CourseClass.findById(e.get("course_class_id"));
             if (cc != null) {
-                receipt.put("comision_name",
-                        cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
+                receipt.put("comision_name", cc.getString("name") != null ? cc.getString("name")
+                        : "Comisión " + cc.getId());
                 Subject s = Subject.findById(cc.get("subject_id"));
                 if (s != null) {
                     receipt.put("materia_name", s.getString("name"));
@@ -404,8 +391,8 @@ public class EnrollmentService {
      */
     public boolean isTeacherTitular(Long teacherId, Long subjectId) {
         // CORREGIDO: Busca por 'teacher_id' y 'role_charge'
-        return TeacherSubject.count("teacher_id = ? AND subject_id = ? AND role_charge = 'TITULAR'", teacherId,
-                subjectId) > 0;
+        return TeacherSubject.count("teacher_id = ? AND subject_id = ? AND role_charge = 'TITULAR'",
+                teacherId, subjectId) > 0;
     }
 
     /**
@@ -413,8 +400,8 @@ public class EnrollmentService {
      */
     public List<Subject> getSubjectsWhereTeacherIsTitular(Long teacherId) {
         // CORREGIDO: Busca por 'teacher_id' y 'role_charge'
-        List<TeacherSubject> asignaciones = TeacherSubject.where("teacher_id = ? AND role_charge = 'TITULAR'",
-                teacherId);
+        List<TeacherSubject> asignaciones =
+                TeacherSubject.where("teacher_id = ? AND role_charge = 'TITULAR'", teacherId);
         List<Subject> materias = new ArrayList<>();
 
         for (TeacherSubject ts : asignaciones) {
@@ -442,8 +429,8 @@ public class EnrollmentService {
     }
 
     /**
-     * Filtro 2: Alumnos anotados en una Materia específica (a través de cualquiera
-     * de sus comisiones).
+     * Filtro 2: Alumnos anotados en una Materia específica (a través de cualquiera de sus
+     * comisiones).
      */
     public List<User> getStudentsBySubject(Long subjectId) {
         List<User> students = new ArrayList<>();
@@ -485,8 +472,8 @@ public class EnrollmentService {
             if (cc != null) {
                 Subject s = Subject.findById(cc.get("subject_id"));
                 map.put("materia_name", s != null ? s.getString("name") : "Desconocida");
-                map.put("comision_name",
-                        cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
+                map.put("comision_name", cc.getString("name") != null ? cc.getString("name")
+                        : "Comisión " + cc.getId());
             }
             list.add(map);
         }

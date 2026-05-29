@@ -11,14 +11,9 @@ public class Career extends Model {
 
     static {
 
-        validatePresenceOf(
-                "name",
-                "code"
-        ).message("Nombre y código son obligatorios.");
+        validatePresenceOf("name", "code").message("Nombre y código son obligatorios.");
 
-        validateNumericalityOf("duration")
-                .greaterThan(0)
-                .allowNull(true)
+        validateNumericalityOf("duration").greaterThan(0).allowNull(true)
                 .message("La duración debe ser mayor a 0.");
     }
 

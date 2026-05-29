@@ -7,6 +7,6 @@ import org.javalite.activejdbc.annotations.Table;
 public class Correlativity extends Model {
     static {
         validatePresenceOf("subject_id", "required_subject_id", "requires_approved")
-            .message("Los identificadores de las materias y la condición son obligatorios.");
+                .message("Los identificadores de las materias y la condición son obligatorios.");
     }
 }
