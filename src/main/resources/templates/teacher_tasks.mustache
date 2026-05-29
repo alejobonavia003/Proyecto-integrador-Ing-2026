@@ -5,6 +5,26 @@
   <p>{{description}}</p>
   {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
   <p><a href="/teacher/tasks/{{id}}/submissions">Ver entregas</a></p>
+  <h2>Mis Tareas</h2>
+{{#tasks}}
+<div style="border:1px solid #ddd;padding:8px;margin-bottom:8px;">
+  <h3>{{title}}</h3>
+  <p>{{description}}</p>
+  {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
+  <p><a href="/teacher/tasks/{{id}}/submissions">Ver entregas</a></p>
+  
+  <hr style="border: 0; border-top: 1px solid #eee;">
+  <div style="display: flex; gap: 10px;">
+      <a href="/teacher/tasks/{{id}}/edit" style="color: blue;">✏️ Editar Tarea</a>
+      
+      <form action="/teacher/tasks/{{id}}/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta tarea? Se perderán las entregas asociadas.');" style="margin: 0;">
+          <button type="submit" style="color: red; border: none; background: none; cursor: pointer; text-decoration: underline; font-size: 16px;">🗑️ Eliminar Tarea</button>
+      </form>
+  </div>
+  </div>
+{{/tasks}}
+<br>
+<a href="/teacher/tasks/new" style="padding: 10px; background-color: #0056b3; color: white; text-decoration: none; border-radius: 4px;">➕ Crear nueva tarea</a>
 </div>
 {{/tasks}}
 <a href="/teacher/tasks/new">Crear nueva tarea</a>

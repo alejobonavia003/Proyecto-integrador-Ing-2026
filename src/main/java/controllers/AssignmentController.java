@@ -41,7 +41,10 @@ public class AssignmentController {
     get("/teacher/tasks/new", (req, res) -> {
       Map<String, Object> model = new HashMap<>();
       Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
-
+      
+      if (req.queryParams("error") != null) {
+          model.put("errorMessage", req.queryParams("error"));
+      }
       // Mostrar solo las materias que dicta el docente
       model.put("subjects", assignmentService.getSubjectsTaughtByTeacher(teacherId));
 
@@ -132,7 +135,11 @@ public class AssignmentController {
       Long courseClassId =
           courseClassIdStr != null && !courseClassIdStr.isEmpty() ? Long.parseLong(courseClassIdStr)
               : null;
-
+      // ---> NUEVA VALIDACIÓN ESTRICTA DE TITULARIDAD <---
+      if (subjectId == null || !assignmentService.isTeacherTitular(teacherId, subjectId)) {
+          res.redirect("/teacher/tasks/new?error=" + java.net.URLEncoder.encode("Acceso denegado: Solo los docentes TITULARES pueden publicar tareas en esta materia.", "UTF-8"));
+          return null;
+      }
       String savedPath = null;
       try {
         Part filePart = req.raw().getPart("file");
@@ -169,6 +176,40 @@ public class AssignmentController {
       }
 
       res.redirect("/teacher/tasks?success=true");
+      return null;
+    });
+
+    // GET: Mostrar formulario de edición
+    get("/teacher/tasks/:id/edit", (req, res) -> {
+      Long taskId = Long.parseLong(req.params(":id"));
+      Map<String, Object> model = new HashMap<>();
+      model.put("username", req.session().attribute("username"));
+      
+      models.Assignment task = assignmentService.getAssignmentById(taskId);
+      if (task != null) {
+        model.put("task_id", task.getId());
+        model.put("title", task.getString("title"));
+        model.put("description", task.getString("description"));
+      }
+      return engine.render(new ModelAndView(model, "teacher_task_edit.mustache"));
+    });
+
+    // POST: Guardar cambios de la tarea
+    post("/teacher/tasks/:id/edit", (req, res) -> {
+      Long taskId = Long.parseLong(req.params(":id"));
+      String title = req.queryParams("title");
+      String description = req.queryParams("description");
+
+      assignmentService.updateAssignment(taskId, title, description);
+      res.redirect("/teacher/tasks?success=updated");
+      return null;
+    });
+
+    // POST: Eliminar tarea
+    post("/teacher/tasks/:id/delete", (req, res) -> {
+      Long taskId = Long.parseLong(req.params(":id"));
+      assignmentService.deleteAssignment(taskId);
+      res.redirect("/teacher/tasks?success=deleted");
       return null;
     });
   }

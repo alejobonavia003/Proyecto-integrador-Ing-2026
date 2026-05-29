@@ -31,21 +31,32 @@ public class AssignmentService {
     return Assignment.where("teacher_id = ?", teacherId);
   }
 
-  public List<Map<String, Object>> getSubjectsTaughtByTeacher(Long teacherId) {
-    List<Map<String, Object>> out = new ArrayList<>();
-    List<models.Subject> subjects = models.Subject.findBySQL(
-        "SELECT DISTINCT s.* FROM subjects s JOIN course_classes cc ON s.id = cc.subject_id WHERE cc.teacher_id = ?",
-        teacherId);
+    /**
+     * Obtiene solo las materias donde el docente es TITULAR.
+     */
+    public List<Map<String, Object>> getSubjectsTaughtByTeacher(Long teacherId) {
+      List<Map<String, Object>> out = new ArrayList<>();
+      // Filtramos cruzando con teacher_subjects exigiendo rol TITULAR
+      List<models.Subject> subjects = models.Subject.findBySQL(
+          "SELECT s.* FROM subjects s INNER JOIN teacher_subjects ts ON s.id = ts.subject_id WHERE ts.teacher_id = ? AND ts.role_charge = 'TITULAR'",
+          teacherId);
 
-    for (models.Subject s : subjects) {
-      Map<String, Object> m = new HashMap<>();
-      m.put("id", s.getId());
-      m.put("name", s.getString("name"));
-      out.add(m);
+      for (models.Subject s : subjects) {
+        Map<String, Object> m = new HashMap<>();
+        m.put("id", s.getId());
+        m.put("name", s.getString("name"));
+        out.add(m);
+      }
+      return out;
     }
-    return out;
-  }
 
+    /**
+     * Valida estrictamente si el profesor es titular de la materia en la base de datos.
+     */
+    public boolean isTeacherTitular(Long teacherId, Long subjectId) {
+        long count = models.TeacherSubject.count("teacher_id = ? AND subject_id = ? AND role_charge = 'TITULAR'", teacherId, subjectId);
+        return count > 0;
+    }
   public List<Map<String, Object>> getCourseClassesForTeacherAndSubject(Long teacherId,
       Long subjectId) {
     List<Map<String, Object>> out = new ArrayList<>();
@@ -96,5 +107,29 @@ public class AssignmentService {
       out.add(m);
     }
     return out;
+  }
+
+  // Obtener una tarea específica por ID
+  public Assignment getAssignmentById(Long id) {
+    return Assignment.findById(id);
+  }
+
+  // Modificar el título y descripción de una tarea
+  public void updateAssignment(Long id, String title, String description) {
+    Assignment a = Assignment.findById(id);
+    if (a != null) {
+      a.set("title", title);
+      a.set("description", description);
+      a.saveIt();
+    }
+  }
+
+  // Eliminar una tarea
+  public void deleteAssignment(Long id) {
+    Assignment a = Assignment.findById(id);
+    if (a != null) {
+      // Opcional: Aquí podrías agregar lógica para borrar el archivo físico del servidor
+      a.delete();
+    }
   }
 }
