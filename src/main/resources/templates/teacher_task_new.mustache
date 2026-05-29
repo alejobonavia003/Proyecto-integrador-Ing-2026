@@ -26,8 +26,12 @@
     <form method="post" action="/teacher/tasks/new" enctype="multipart/form-data">
       <label><b>Título de la Tarea:</b><br> <input type="text" name="title" required style="width: 300px; padding: 5px;"></label><br><br>
       
-      <label><b>Descripción o Consigna:</b><br><textarea name="description" rows="4" cols="50" style="padding: 5px;"></textarea></label><br><br>
-      
+      <label><b>Descripción o Consigna:</b><br>
+        <textarea name="description" rows="4" cols="50" style="padding: 5px;"></textarea>
+      </label><br><br>
+      <label><b>Fecha y Hora Límite (Opcional):</b><br>
+        <input type="datetime-local" name="due_date" style="padding: 5px;">
+      </label><br><br>
       <label><b>Carrera:</b><br>
         <select name="career_id" style="padding: 5px;">
           <option value="">-- Opcional --</option>

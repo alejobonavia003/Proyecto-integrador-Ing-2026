@@ -200,7 +200,8 @@ CREATE TABLE assignments (
     description TEXT NOT NULL,
 
     file_path TEXT,
-
+    due_date DATETIME,
+    
     teacher_id INTEGER NOT NULL,
     career_id INTEGER,
     subject_id INTEGER,

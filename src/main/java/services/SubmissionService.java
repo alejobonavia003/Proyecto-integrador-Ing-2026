@@ -66,4 +66,40 @@ public class SubmissionService {
     s.saveIt();
     return s;
   }
+
+  /**
+     * Obtiene las entregas de una tarea específica y las empaqueta 
+     * junto con los datos del estudiante para la vista del profesor.
+     */
+    public java.util.List<java.util.Map<String, Object>> getSubmissionsForTaskView(Long taskId) {
+        java.util.List<java.util.Map<String, Object>> list = new java.util.ArrayList<>();
+        
+        // Buscar todas las entregas asociadas a esta tarea
+        java.util.List<models.Submission> submissions = models.Submission.where("assignment_id = ?", taskId);
+        
+        for (models.Submission sub : submissions) {
+            java.util.Map<String, Object> map = new java.util.HashMap<>();
+            map.put("id", sub.getId());
+            map.put("submission_path", sub.getString("submission_path"));
+            
+            // Evitar nulos en la nota
+            Object grade = sub.get("grade");
+            map.put("grade", grade != null ? grade.toString() : null);
+            map.put("comment", sub.getString("comment"));
+            
+            // Buscar la información personal del alumno
+            models.User student = models.User.findById(sub.getLong("student_id"));
+            if (student != null) {
+                map.put("student_name", student.getString("name"));
+                map.put("student_dni", student.getString("dni"));
+            } else {
+                map.put("student_name", "Usuario Desconocido");
+                map.put("student_dni", "---");
+            }
+            
+            list.add(map);
+        }
+        
+        return list;
+    }
 }

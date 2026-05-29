@@ -11,34 +11,39 @@ import models.User;
 
 public class AssignmentService {
 
-  public Assignment createAssignment(Long teacherId, String title, String description,
-      String filePath, Long careerId, Long subjectId, Long courseClassId) {
-
-    Assignment a = new Assignment();
-    a.set("title", title);
-    a.set("description", description);
-    a.set("file_path", filePath);
-    a.set("teacher_id", teacherId);
-    a.set("career_id", careerId);
-    a.set("subject_id", subjectId);
-    a.set("course_class_id", courseClassId);
-
-    a.saveIt();
-    return a;
-  }
+  public void createAssignment(Long teacherId, String title, String description, String filePath, Long careerId, Long subjectId, Long courseClassId, String dueDate) {
+        models.Assignment task = new models.Assignment();
+        task.set("teacher_id", teacherId);
+        task.set("title", title);
+        task.set("description", description);
+        task.set("file_path", filePath);
+        
+        if (careerId != null) task.set("career_id", careerId);
+        task.set("subject_id", subjectId);
+        if (courseClassId != null) task.set("course_class_id", courseClassId);
+        
+        // SOLUCIÓN: Limpiar la 'T' de HTML y añadir segundos para que SQL lo acepte
+        if (dueDate != null && !dueDate.isEmpty()) {
+            String cleanDate = dueDate.replace("T", " ");
+            if (cleanDate.length() == 16) {
+                cleanDate += ":00";
+            }
+            task.set("due_date", cleanDate);
+        }
+        
+        task.saveIt();
+    }
 
   public List<Assignment> getAssignmentsByTeacher(Long teacherId) {
     return Assignment.where("teacher_id = ?", teacherId);
   }
 
-    /**
-     * Obtiene solo las materias donde el docente es TITULAR.
-     */
+
+
     public List<Map<String, Object>> getSubjectsTaughtByTeacher(Long teacherId) {
       List<Map<String, Object>> out = new ArrayList<>();
-      // Filtramos cruzando con teacher_subjects exigiendo rol TITULAR
       List<models.Subject> subjects = models.Subject.findBySQL(
-          "SELECT s.* FROM subjects s INNER JOIN teacher_subjects ts ON s.id = ts.subject_id WHERE ts.teacher_id = ? AND ts.role_charge = 'TITULAR'",
+          "SELECT s.* FROM subjects s INNER JOIN teacher_subjects ts ON s.id = ts.subject_id WHERE ts.teacher_id = ? AND TRIM(UPPER(ts.role_charge)) = 'TITULAR'",
           teacherId);
 
       for (models.Subject s : subjects) {
@@ -50,27 +55,33 @@ public class AssignmentService {
       return out;
     }
 
-    /**
-     * Valida estrictamente si el profesor es titular de la materia en la base de datos.
-     */
+
     public boolean isTeacherTitular(Long teacherId, Long subjectId) {
-        long count = models.TeacherSubject.count("teacher_id = ? AND subject_id = ? AND role_charge = 'TITULAR'", teacherId, subjectId);
+        long count = models.TeacherSubject.count("teacher_id = ? AND subject_id = ? AND TRIM(UPPER(role_charge)) = 'TITULAR'", teacherId, subjectId);
         return count > 0;
     }
-  public List<Map<String, Object>> getCourseClassesForTeacherAndSubject(Long teacherId,
-      Long subjectId) {
-    List<Map<String, Object>> out = new ArrayList<>();
-    List<models.CourseClass> classes =
-        models.CourseClass.where("teacher_id = ? AND subject_id = ?", teacherId, subjectId);
-    for (models.CourseClass cc : classes) {
-      Map<String, Object> m = new HashMap<>();
-      m.put("id", cc.getId());
-      m.put("name", cc.getString("name"));
-      m.put("capacity", cc.get("capacity"));
-      out.add(m);
+
+    public List<Map<String, Object>> getCourseClassesForTeacherAndSubject(Long teacherId, Long subjectId) {
+        List<Map<String, Object>> out = new ArrayList<>();
+        
+        List<models.CourseClass> classes;
+        // Si es el profesor Titular, le permitimos ver e impactar sobre TODAS las comisiones
+        if (isTeacherTitular(teacherId, subjectId)) {
+            classes = models.CourseClass.where("subject_id = ?", subjectId);
+        } else {
+            // Si es JTP o auxiliar, solo ve las comisiones donde está asignado
+            classes = models.CourseClass.where("teacher_id = ? AND subject_id = ?", teacherId, subjectId);
+        }
+
+        for (models.CourseClass cc : classes) {
+            Map<String, Object> m = new HashMap<>();
+            m.put("id", cc.getId());
+            m.put("name", cc.getString("name"));
+            m.put("capacity", cc.get("capacity"));
+            out.add(m);
+        }
+        return out;
     }
-    return out;
-  }
 
   public List<Assignment> getAssignmentsForStudent(Long studentId) {
     User student = User.findById(studentId);
