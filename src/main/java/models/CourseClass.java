@@ -8,15 +8,10 @@ public class CourseClass extends Model {
 
     static {
 
-        validatePresenceOf(
-                "name",
-                "subject_id",
-                "teacher_id"
-        ).message("Todos los campos obligatorios deben estar completos.");
+        validatePresenceOf("name", "subject_id", "teacher_id")
+                .message("Todos los campos obligatorios deben estar completos.");
 
-        validateNumericalityOf("capacity")
-                .greaterThan(0)
-                .allowNull(true)
+        validateNumericalityOf("capacity").greaterThan(0).allowNull(true)
                 .message("La capacidad debe ser mayor a 0.");
     }
 }

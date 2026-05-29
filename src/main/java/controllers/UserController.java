@@ -37,19 +37,22 @@ public class UserController {
 
             Map<String, Object> model = new HashMap<>();
             List<Map<String, Object>> usersList = userService.getUsersView(roleFilter);
-            
+
             model.put("users", usersList);
             model.put("username", req.session().attribute("username"));
             model.put("role", req.session().attribute("user_role"));
             model.put("userCount", usersList.size());
-            
-            model.put("usersActive",true);
+
+            model.put("usersActive", true);
 
             // Mantener seleccionada la opción actual en el combobox de la vista
             if (roleFilter != null) {
-                if (roleFilter.equals("2")) model.put("filterProfesor", true);
-                if (roleFilter.equals("3")) model.put("filterAlumno", true);
-                if (roleFilter.equals("ALL")) model.put("filterAll", true);
+                if (roleFilter.equals("2"))
+                    model.put("filterProfesor", true);
+                if (roleFilter.equals("3"))
+                    model.put("filterAlumno", true);
+                if (roleFilter.equals("ALL"))
+                    model.put("filterAll", true);
             } else {
                 model.put("filterAll", true);
             }
@@ -62,17 +65,18 @@ public class UserController {
             return engine.render(new ModelAndView(model, "users.mustache"));
         });
 
-       // UserController.java - Método GET /admin/users/new
+        // UserController.java - Método GET /admin/users/new
         get("/admin/users/new", (req, res) -> {
-        // ... validación de sesión ...
-        Map<String, Object> model = new HashMap<>();
-        
-        if ("true".equals(req.queryParams("error"))) {
-                model.put("errorMessage", "Error al crear el usuario. Verifique los datos ingresados."); 
-        }
+            // ... validación de sesión ...
+            Map<String, Object> model = new HashMap<>();
 
-        // Aseguramos que siempre usa la vista de admin
-        return engine.render(new ModelAndView(model, "admin_user_form.mustache"));
+            if ("true".equals(req.queryParams("error"))) {
+                model.put("errorMessage",
+                        "Error al crear el usuario. Verifique los datos ingresados.");
+            }
+
+            // Aseguramos que siempre usa la vista de admin
+            return engine.render(new ModelAndView(model, "admin_user_form.mustache"));
         });
         post("/admin/users/new", (req, res) -> {
             if (!isLoggedIn(req)) {
@@ -85,18 +89,21 @@ public class UserController {
                 String password = req.queryParams("password");
                 String email = req.queryParams("email");
                 String dni = req.queryParams("dni");
-                
+
                 Long role = Long.parseLong(req.queryParams("role"));
 
                 authService.registerUser(name, dni, email, password, role);
 
-                logger.log(Level.INFO, "Admin registró nuevo usuario: [DNI: {0}, Nombre: {1}, Rol: {2}]", new Object[]{dni, name, role});
-                
+                logger.log(Level.INFO,
+                        "Admin registró nuevo usuario: [DNI: {0}, Nombre: {1}, Rol: {2}]",
+                        new Object[] {dni, name, role});
+
                 // Enviamos solo 'true' para que el navegador no colapse con los espacios
                 res.redirect("/admin/users?success=true");
                 return "";
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Error al crear usuario desde Admin: {0}", e.getMessage());
+                logger.log(Level.WARNING, "Error al crear usuario desde Admin: {0}",
+                        e.getMessage());
                 res.redirect("/admin/users/new?error=true");
                 return "";
             }

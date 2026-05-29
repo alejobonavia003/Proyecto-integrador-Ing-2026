@@ -71,7 +71,8 @@ public class StudyPlanController {
             model.putAll(plan);
 
             if ("true".equals(req.queryParams("error"))) {
-                model.put("errorMessage", "Ocurrió un error al procesar la materia. Verifique los datos o si el código ya existe.");
+                model.put("errorMessage",
+                        "Ocurrió un error al procesar la materia. Verifique los datos o si el código ya existe.");
             }
 
             model.put("allSubjects", subjectService.getAllSubjectsViewForPlan(planId));
@@ -101,19 +102,22 @@ public class StudyPlanController {
                 Integer weeklyHours = Integer.parseInt(req.queryParams("weekly_hours"));
                 String modality = req.queryParams("modality");
 
-                Long newSubjectId = subjectService.createSubjectReturningId(name, code, weeklyHours, modality, planId);
+                Long newSubjectId = subjectService.createSubjectReturningId(name, code, weeklyHours,
+                        modality, planId);
 
                 String reqSubIdStr = req.queryParams("required_subject_id");
                 if (reqSubIdStr != null && !reqSubIdStr.isEmpty()) {
                     Long requiredSubjectId = Long.parseLong(reqSubIdStr);
                     boolean requiresApproved = req.queryParams("requires_approved") != null;
-                    correlativityService.addCorrelativity(newSubjectId, requiredSubjectId, requiresApproved);
+                    correlativityService.addCorrelativity(newSubjectId, requiredSubjectId,
+                            requiresApproved);
                 }
 
                 res.redirect("/admin/careers/" + careerId + "/plans/" + planId + "/subjects");
             } catch (Exception e) {
                 logger.warning("Error al crear la materia desde el plan: " + e.getMessage());
-                res.redirect("/admin/careers/" + careerId + "/plans/" + planId + "/subjects?error=true");
+                res.redirect(
+                        "/admin/careers/" + careerId + "/plans/" + planId + "/subjects?error=true");
             }
             return null;
         });
