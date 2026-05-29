@@ -1,0 +1,100 @@
+package services;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import models.Assignment;
+import models.StudyPlan;
+import models.User;
+
+public class AssignmentService {
+
+  public Assignment createAssignment(Long teacherId, String title, String description,
+      String filePath, Long careerId, Long subjectId, Long courseClassId) {
+
+    Assignment a = new Assignment();
+    a.set("title", title);
+    a.set("description", description);
+    a.set("file_path", filePath);
+    a.set("teacher_id", teacherId);
+    a.set("career_id", careerId);
+    a.set("subject_id", subjectId);
+    a.set("course_class_id", courseClassId);
+
+    a.saveIt();
+    return a;
+  }
+
+  public List<Assignment> getAssignmentsByTeacher(Long teacherId) {
+    return Assignment.where("teacher_id = ?", teacherId);
+  }
+
+  public List<Map<String, Object>> getSubjectsTaughtByTeacher(Long teacherId) {
+    List<Map<String, Object>> out = new ArrayList<>();
+    List<models.Subject> subjects = models.Subject.findBySQL(
+        "SELECT DISTINCT s.* FROM subjects s JOIN course_classes cc ON s.id = cc.subject_id WHERE cc.teacher_id = ?",
+        teacherId);
+
+    for (models.Subject s : subjects) {
+      Map<String, Object> m = new HashMap<>();
+      m.put("id", s.getId());
+      m.put("name", s.getString("name"));
+      out.add(m);
+    }
+    return out;
+  }
+
+  public List<Map<String, Object>> getCourseClassesForTeacherAndSubject(Long teacherId,
+      Long subjectId) {
+    List<Map<String, Object>> out = new ArrayList<>();
+    List<models.CourseClass> classes =
+        models.CourseClass.where("teacher_id = ? AND subject_id = ?", teacherId, subjectId);
+    for (models.CourseClass cc : classes) {
+      Map<String, Object> m = new HashMap<>();
+      m.put("id", cc.getId());
+      m.put("name", cc.getString("name"));
+      m.put("capacity", cc.get("capacity"));
+      out.add(m);
+    }
+    return out;
+  }
+
+  public List<Assignment> getAssignmentsForStudent(Long studentId) {
+    User student = User.findById(studentId);
+    if (student == null || student.get("study_plan_id") == null) {
+      return new ArrayList<>();
+    }
+
+    Long planId = student.getLong("study_plan_id");
+    StudyPlan plan = StudyPlan.findById(planId);
+    Long careerId = plan != null ? plan.getLong("career_id") : null;
+
+    if (careerId == null) {
+      return new ArrayList<>();
+    }
+
+    // Buscar assignments por carrera o por comisión relacionada al plan
+    List<Assignment> assignments = Assignment.findBySQL(
+        "SELECT a.* FROM assignments a WHERE a.career_id = ? OR a.course_class_id IN (SELECT id FROM course_classes WHERE subject_id IN (SELECT id FROM subjects WHERE study_plan_id = ?))",
+        careerId, planId);
+
+    return assignments;
+  }
+
+  public List<Map<String, Object>> mapAssignmentsToView(List<Assignment> list) {
+    List<Map<String, Object>> out = new ArrayList<>();
+    for (Assignment a : list) {
+      Map<String, Object> m = new HashMap<>();
+      m.put("id", a.getId());
+      m.put("title", a.getString("title"));
+      m.put("description", a.getString("description"));
+      m.put("file_path", a.getString("file_path"));
+      m.put("subject_id", a.get("subject_id"));
+      m.put("course_class_id", a.get("course_class_id"));
+      out.add(m);
+    }
+    return out;
+  }
+}

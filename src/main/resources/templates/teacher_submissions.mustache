@@ -1,0 +1,37 @@
+<h2>Entregas de la Tarea</h2>
+<p><a href="/teacher/tasks">⬅ Volver a Mis Tareas</a></p>
+
+{{#submissions}}
+<div style="border:1px solid #ccc; padding:15px; margin-bottom:12px; background-color:#f9f9f9; border-radius:4px;">
+  <p><strong>Alumno:</strong> {{student_name}}</p>
+  <p><strong>Fecha de entrega:</strong> {{submitted_at}}</p>
+  {{#content_reference}}
+    <p><strong>Archivo adjunto:</strong> <a href="/{{content_reference}}" target="_blank">Descargar entrega</a></p>
+  {{/content_reference}}
+  
+  <hr style="border:0; border-top:1px solid #eee;">
+  
+  <form method="POST" action="/teacher/submissions/{{id}}/grade">
+    <input type="hidden" name="assignment_id" value="{{assignment_id}}">
+    
+    <div style="margin-bottom:8px;">
+      <label><strong>Calificación:</strong> 
+        <input type="number" step="0.1" name="grade" value="{{grade}}" min="0" max="10" placeholder="Ej: 8.5">
+      </label>
+    </div>
+    
+    <div style="margin-bottom:8px;">
+      <label style="display:block; margin-bottom:4px;"><strong>Comentario / Devolución:</strong></label>
+      <textarea name="comment" rows="3" style="width:100%; max-width:500px; padding:4px;">{{comment}}</textarea>
+    </div>
+    
+    <button type="submit" style="background-color:#007bff; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">
+      Guardar Nota
+    </button>
+  </form>
+</div>
+{{/submissions}}
+
+{{^submissions}}
+  <p style="color:#666; font-style:italic;">Aún no hay entregas registradas para esta tarea.</p>
+{{/submissions}}
