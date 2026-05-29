@@ -16,9 +16,9 @@ import models.Subject;
 public class CorrelativityService {
 
     /**
-     * ISSUE 2: Gestión de Correlativas.
-     * Asocia una materia con su predecesora.
-     * * @param subjectId ID de la materia principal
+     * ISSUE 2: Gestión de Correlativas. Asocia una materia con su predecesora. * @param subjectId
+     * ID de la materia principal
+     * 
      * @param requiredSubjectId ID de la materia que actúa como requisito
      * @param requiresApproved true si exige final aprobado, false si solo cursada regular
      */
@@ -26,9 +26,10 @@ public class CorrelativityService {
         if (subjectId.equals(requiredSubjectId)) {
             throw new IllegalArgumentException("Una materia no puede ser correlativa de sí misma.");
         }
-        
+
         // Evitar duplicados
-        Correlativity existing = Correlativity.findFirst("subject_id = ? AND required_subject_id = ?", subjectId, requiredSubjectId);
+        Correlativity existing = Correlativity.findFirst(
+                "subject_id = ? AND required_subject_id = ?", subjectId, requiredSubjectId);
         if (existing != null) {
             throw new IllegalArgumentException("Esta relación de correlatividad ya existe.");
         }
@@ -37,9 +38,10 @@ public class CorrelativityService {
         correlativity.set("subject_id", subjectId);
         correlativity.set("required_subject_id", requiredSubjectId);
         correlativity.set("requires_approved", requiresApproved);
-        
+
         if (!correlativity.save()) {
-            throw new RuntimeException("Error al guardar la correlatividad: " + correlativity.errors());
+            throw new RuntimeException(
+                    "Error al guardar la correlatividad: " + correlativity.errors());
         }
     }
 
@@ -60,19 +62,21 @@ public class CorrelativityService {
     /**
      * ISSUE 1: Verificación de requisitos del alumno (Soporta múltiples niveles / recursivo).
      * * @param alumnoId ID del usuario (student_id)
+     * 
      * @param materiaId ID de la materia a la que se quiere inscribir
      * @return Lista de materias faltantes (Si la lista está vacía, cumple con todo).
      */
     public List<Subject> verificarCorrelativas(Long alumnoId, Long materiaId) {
         List<Subject> materiasFaltantes = new ArrayList<>();
         Set<Long> visitados = new HashSet<>(); // Para evitar ciclos infinitos
-        
+
         verificarCorrelativasRecursivo(alumnoId, materiaId, materiasFaltantes, visitados);
-        
+
         return materiasFaltantes;
     }
 
-    private void verificarCorrelativasRecursivo(Long alumnoId, Long currentSubjectId, List<Subject> faltantes, Set<Long> visitados) {
+    private void verificarCorrelativasRecursivo(Long alumnoId, Long currentSubjectId,
+            List<Subject> faltantes, Set<Long> visitados) {
         if (visitados.contains(currentSubjectId)) {
             return;
         }
@@ -86,8 +90,9 @@ public class CorrelativityService {
             boolean requiresApproved = req.getBoolean("requires_approved");
 
             // 1. Verificamos el estado del alumno frente a esta materia requerida
-            boolean cumple = checkStudentStatusForSubject(alumnoId, requiredSubjectId, requiresApproved);
-            
+            boolean cumple =
+                    checkStudentStatusForSubject(alumnoId, requiredSubjectId, requiresApproved);
+
             if (!cumple) {
                 Subject s = Subject.findById(requiredSubjectId);
                 // Evitamos agregarla 2 veces si múltiples ramas fallan en el mismo nodo
@@ -104,14 +109,15 @@ public class CorrelativityService {
     /**
      * Verifica en la base de datos si el alumno cumple con la condición (Regular o Aprobado).
      */
-    private boolean checkStudentStatusForSubject(Long studentId, Long requiredSubjectId, boolean requiresApproved) {
-        // Consultamos el 'status' en la tabla grades relacionando las inscripciones y comisiones
-        String query = "SELECT g.status " +
-                       "FROM grades g " +
-                       "INNER JOIN enrollments e ON g.enrollment_id = e.id " +
-                       "INNER JOIN course_classes cc ON e.course_class_id = cc.id " +
-                       "WHERE e.student_id = ? AND cc.subject_id = ?";
-        
+    private boolean checkStudentStatusForSubject(Long studentId, Long requiredSubjectId,
+            boolean requiresApproved) {
+        // Consultamos el 'status' en la tabla grades relacionando las inscripciones y
+        // comisiones
+        String query = "SELECT g.status " + "FROM grades g "
+                + "INNER JOIN enrollments e ON g.enrollment_id = e.id "
+                + "INNER JOIN course_classes cc ON e.course_class_id = cc.id "
+                + "WHERE e.student_id = ? AND cc.subject_id = ?";
+
         // ActiveJDBC Base nos permite extraer la primera columna de forma fácil
         List<String> statuses = Base.firstColumn(query, studentId, requiredSubjectId);
 

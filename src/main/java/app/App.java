@@ -8,7 +8,8 @@ import config.DBConfigSingleton;
 import controllers.AuthController;
 import controllers.CareerController;
 import controllers.DashboardController;
-import controllers.EnrollmentController;
+import controllers.EnrollmentStudentController;
+import controllers.EnrollmentTeacherController;
 import controllers.ErrorController;
 import controllers.SecurityController;
 import controllers.StudyPlanController;
@@ -21,11 +22,12 @@ import static spark.Spark.halt;
 import static spark.Spark.port;
 import static spark.Spark.staticFiles;
 import spark.template.mustache.MustacheTemplateEngine;
+
 /**
  * Clase principal de la aplicación Spark.
  */
 public class App {
-    
+
 
     private static final Logger logger = Logger.getLogger(App.class.getName());
 
@@ -82,13 +84,15 @@ public class App {
         UserController.init(engine);
         DashboardController.init(engine);
         ErrorController.init(engine);
-        
+
         CareerController.init(engine);
         StudyPlanController.init(engine);
         SubjectController.init(engine);
-        
+
         TeacherAssignmentController.init(engine);
 
-        EnrollmentController.init(engine);
+        // EnrollmentController.init(engine);
+        EnrollmentStudentController.init(engine);
+        EnrollmentTeacherController.init(engine);
     }
 }

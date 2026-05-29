@@ -4,11 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import models.Career;
-
-import java.util.List;
-import java.util.ArrayList;
-
 import services.CareerService;
 import spark.ModelAndView;
 import static spark.Spark.get;
@@ -28,24 +23,17 @@ public class CareerController {
          * =====================================================
          */
         get("/admin/careers", (req, res) -> {
+
             logger.info("Cargando listado de carreras.");
 
             Map<String, Object> model = new HashMap<>();
+
             model.put("careers", careerService.getAllCareersView());
+            model.put("careersActive", true);
 
-            List<Map<String, Object>> careersView = new ArrayList<>();
-            for (Career career : careerService.getAllCareers()) {
-                Map<String, Object> row = new HashMap<>();
-                row.put("id", career.getId());
-                row.put("name", career.getString("name"));
-                row.put("code", career.getString("code"));
-                row.put("duration", career.getInteger("duration"));
-                careersView.add(row);
-            }
-
-            model.put("careers", careersView);
-            model.put("careersActive",true);
-            return engine.render(new ModelAndView(model, "careers_list.mustache"));
+            return engine.render(
+                    new ModelAndView(model, "careers_list.mustache")
+            );
         });
 
         /**

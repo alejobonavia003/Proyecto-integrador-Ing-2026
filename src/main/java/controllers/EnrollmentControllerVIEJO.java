@@ -19,9 +19,9 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 import spark.template.mustache.MustacheTemplateEngine;
 
-public class EnrollmentController {
+public class EnrollmentControllerVIEJO {
 
-    private static final Logger logger = Logger.getLogger(EnrollmentController.class.getName());
+    private static final Logger logger = Logger.getLogger(EnrollmentControllerVIEJO.class.getName());
     private static final CorrelativityService correlativityService = new CorrelativityService();
     private static final EnrollmentService enrollmentService = new EnrollmentService();
 

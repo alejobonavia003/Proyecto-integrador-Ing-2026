@@ -12,17 +12,19 @@ import models.StudyPlan;
 public class CareerService {
 
     public void createCareer(String name, String code, Integer duration) {
-        
+
         // VALIDACIÓN NUEVA: Comprobar si el código ya existe
         if (Career.findFirst("code = ?", code) != null) {
-            throw new IllegalArgumentException("Ese código de carrera ya existe. Por favor, ingresa uno distinto.");
+            throw new IllegalArgumentException(
+                    "Ese código de carrera ya existe. Por favor, ingresa uno distinto.");
         }
 
         Career career = new Career();
         career.set("name", name, "code", code, "duration", duration);
-        
+
         if (!career.save()) {
-            throw new IllegalArgumentException("Error de validación: " + career.errors().toString());
+            throw new IllegalArgumentException(
+                    "Error de validación: " + career.errors().toString());
         }
     }
 
@@ -118,9 +120,10 @@ public class CareerService {
         plan.set("code", code);
         plan.set("version", version);
         plan.set("career_id", careerId);
-        
+
         if (!plan.save()) {
-            throw new IllegalArgumentException("Error al guardar el plan de estudio: " + plan.errors());
+            throw new IllegalArgumentException(
+                    "Error al guardar el plan de estudio: " + plan.errors());
         }
     }
 
@@ -128,6 +131,6 @@ public class CareerService {
      * Obtiene la cantidad total de carreras registradas en el sistema.
      */
     public long getTotalCareersCount() {
-        return models.Career.count(); 
+        return models.Career.count();
     }
 }
