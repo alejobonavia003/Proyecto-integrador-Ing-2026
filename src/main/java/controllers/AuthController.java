@@ -15,8 +15,8 @@ import static spark.Spark.post;
 import spark.template.mustache.MustacheTemplateEngine;
 
 /**
- * Controlador de autenticación + rutas de acceso inicial.
- * Maneja el ciclo de vida del inicio y cierre de sesión de los usuarios.
+ * Controlador de autenticación + rutas de acceso inicial. Maneja el ciclo de vida del inicio y
+ * cierre de sesión de los usuarios.
  */
 public class AuthController {
 
@@ -32,12 +32,12 @@ public class AuthController {
             }
 
             Map<String, Object> model = new HashMap<>();
-            
+
             String error = req.queryParams("error");
             if (error != null) {
-                model.put("errorMessage", error); 
+                model.put("errorMessage", error);
             }
-            
+
             String success = req.queryParams("successMessage");
             if (success != null) {
                 model.put("successMessage", success);
@@ -48,12 +48,12 @@ public class AuthController {
 
         get("/user/create", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            
+
             String error = req.queryParams("error");
             if (error != null) {
-                model.put("errorMessage", error); 
+                model.put("errorMessage", error);
             }
-            
+
             String success = req.queryParams("message");
             if (success != null) {
                 model.put("successMessage", success);
@@ -64,9 +64,10 @@ public class AuthController {
 
         get("/logout", (req, res) -> {
             String username = req.session().attribute("username");
-            logger.log(Level.INFO, "Usuario [{0}] ha cerrado sesión de forma voluntaria.", username);
-            
-            req.session().invalidate(); 
+            logger.log(Level.INFO, "Usuario [{0}] ha cerrado sesión de forma voluntaria.",
+                    username);
+
+            req.session().invalidate();
             res.redirect("/");
             return null;
         });
@@ -77,28 +78,34 @@ public class AuthController {
                 String password = req.queryParams("password");
                 String email = req.queryParams("email");
                 String dni = req.queryParams("dni");
-                
+
                 // FORZAR EL ROL A 1 (ADMINISTRADOR) DESDE EL BACKEND
                 Long role = 1L;
 
                 authService.registerUser(name, dni, email, password, role);
 
-                logger.log(Level.INFO, "Nuevo usuario ADMIN registrado exitosamente: [DNI: {0}, Nombre: {1}]", new Object[]{dni, name});
-                res.redirect("/user/create?message=Cuenta Admin creada exitosamente para " + name + "!");
+                logger.log(Level.INFO,
+                        "Nuevo usuario ADMIN registrado exitosamente: [DNI: {0}, Nombre: {1}]",
+                        new Object[] {dni, name});
+                res.redirect(
+                        "/user/create?message=Cuenta Admin creada exitosamente para " + name + "!");
                 return "";
             } catch (IllegalArgumentException e) {
-                logger.log(Level.WARNING, "Fallo en validación al intentar registrar usuario [{0}]: {1}", new Object[]{name, e.getMessage()});
+                logger.log(Level.WARNING,
+                        "Fallo en validación al intentar registrar usuario [{0}]: {1}",
+                        new Object[] {name, e.getMessage()});
                 res.redirect("/user/create?error=" + e.getMessage());
                 return "";
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error crítico interno en registro de usuario: ", e);
-                res.redirect("/user/create?error=Error interno al crear la cuenta: " + e.getMessage());
+                res.redirect(
+                        "/user/create?error=Error interno al crear la cuenta: " + e.getMessage());
                 return "";
             }
         });
 
         post("/login", (req, res) -> {
-            String usernameInput = req.queryParams("username"); 
+            String usernameInput = req.queryParams("username");
             try {
                 String passwordInput = req.queryParams("password");
 
@@ -111,18 +118,23 @@ public class AuthController {
                     req.session().attribute("userId", user.getId());
                     req.session().attribute("loggedIn", true);
                     req.session().attribute("role_id", user.getRoleId());
-                    
+
                     String assignedRole = user.getRole().getName();
                     req.session().attribute("user_role", assignedRole);
 
-                    logger.log(Level.INFO, "Inicio de sesión exitoso. Usuario: [{0}] con Rol: [{1}]", new Object[]{user.getName(), assignedRole});
-                    
+                    logger.log(Level.INFO,
+                            "Inicio de sesión exitoso. Usuario: [{0}] con Rol: [{1}]",
+                            new Object[] {user.getName(), assignedRole});
+
                     res.redirect("/dashboard");
                     return null;
                 }
 
-                logger.log(Level.WARNING, "Intento de inicio de sesión fallido para las credenciales: [{0}]", usernameInput);
-                res.redirect("/?error=" + java.net.URLEncoder.encode("Usuario o contraseña incorrectos","UTF-8"));
+                logger.log(Level.WARNING,
+                        "Intento de inicio de sesión fallido para las credenciales: [{0}]",
+                        usernameInput);
+                res.redirect("/?error="
+                        + java.net.URLEncoder.encode("Usuario o contraseña incorrectos", "UTF-8"));
                 return null;
 
             } catch (IllegalArgumentException e) {
@@ -131,7 +143,8 @@ public class AuthController {
                 return null;
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Excepción crítica durante el proceso de login: ", e);
-                res.redirect("/error?type=InternalError&message=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
+                res.redirect("/error?type=InternalError&message="
+                        + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
                 return null;
             }
         }, engine);
