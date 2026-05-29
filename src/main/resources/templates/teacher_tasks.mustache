@@ -1,0 +1,10 @@
+<h2>Mis Tareas</h2>
+{{#tasks}}
+<div style="border:1px solid #ddd;padding:8px;margin-bottom:8px;">
+  <h3>{{title}}</h3>
+  <p>{{description}}</p>
+  {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
+  <p><a href="/teacher/tasks/{{id}}/submissions">Ver entregas</a></p>
+</div>
+{{/tasks}}
+<a href="/teacher/tasks/new">Crear nueva tarea</a>

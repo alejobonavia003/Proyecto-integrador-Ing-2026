@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Documentacion/Rutas de la API.md",
+                "file": "Requeriments.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Rutas de la API"
+              "title": "Requeriments"
             }
           }
         ]
@@ -185,8 +185,13 @@
   },
   "active": "0b6069926358cac4",
   "lastOpenFiles": [
-    "diagramas/diagrama_clases.md",
+    "Documentacion/funcionalidades.md",
+    "api_endpoints.md",
+    "Documentacion/analisis.md",
+    "Documentacion/Matriz de Trazabilidad de Funcionalidades (MTF).md",
+    "servicios.md",
     "Documentacion/Rutas de la API.md",
+    "diagramas/diagrama_clases.md",
     "Requeriments.md",
     "casos de uso.md",
     "Documentacion/Sistema de roles.md",

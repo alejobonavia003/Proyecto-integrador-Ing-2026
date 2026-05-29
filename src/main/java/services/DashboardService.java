@@ -13,6 +13,8 @@ import models.User;
 
 public class DashboardService {
 
+    private final AssignmentService assignmentService = new AssignmentService();
+
     public Map<String, Object> getTeacherDashboardData(Long teacherId) {
 
         Map<String, Object> data = new HashMap<>();
@@ -72,6 +74,10 @@ public class DashboardService {
         long enrollmentsCount = Enrollment.count("student_id = ?", studentId);
 
         data.put("enrollmentsCount", enrollmentsCount);
+
+        // Contar tareas disponibles para el alumno
+        long tasksCount = assignmentService.getAssignmentsForStudent(studentId).size();
+        data.put("tasksCount", tasksCount);
 
         return data;
     }

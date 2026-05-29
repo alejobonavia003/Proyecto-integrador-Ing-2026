@@ -83,7 +83,7 @@ Genera información consolidada para la toma de decisiones académicas e institu
 
 - **Plataformas y entornos de ejecución**: el sistema debe ser compatible con cualquier navegador web.
 - **Infraestructura y hardware**: el servidor deberá estar en funcionamiento 24/7.
-- **Lenguaje de programación y frameworks**: Java como lenguaje principal, Mustache como motor de plantillas, Maven como herramienta de gestión y automatización de compilación, MySQL como base de datos y JDBC como ORM.
+- **Lenguaje de programación y frameworks**: Java como lenguaje principal, Mustache como motor de plantillas, Maven como herramienta de gestión y automatización de compilación, sqlite como base de datos y activeJDBC como ORM.
 - **Dispositivos de desarrollo**: notebook personal de cada integrante del equipo.
 
 ---
@@ -102,8 +102,8 @@ Genera información consolidada para la toma de decisiones académicas e institu
 - Lenguaje: Java  
 - Motor de plantillas: Mustache  
 - Gestión y automatización: Maven  
-- Base de datos: postgresql  
-- ORM: JDBC  
+- Base de datos: sqlite  
+- ORM: activeJDBC  
 - frontend: mustache
 ---
 

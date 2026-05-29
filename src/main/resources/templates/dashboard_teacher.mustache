@@ -47,8 +47,8 @@
                 Cargar Notas
             </a>
 
-            <a href="#" onclick="alert('El módulo de tareas está en desarrollo.'); return false;"
-               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-500">
+            <a href="/teacher/tasks"
+               class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
                 <i class="fa-solid fa-book-open"></i>
                 Publicar Tareas
             </a>
@@ -99,9 +99,9 @@
                 <h3 class="text-3xl font-bold mt-2">--</h3>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500 opacity-50">
-                <p class="text-gray-500 text-sm">Tareas Pendientes (Próximamente)</p>
-                <h3 class="text-3xl font-bold mt-2">--</h3>
+            <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
+                <p class="text-gray-500 text-sm">Tareas creadas</p>
+                <h3 class="text-3xl font-bold mt-2">{{#tasksCount}}{{tasksCount}}{{/tasksCount}}{{^tasksCount}}0{{/tasksCount}}</h3>
             </div>
 
         </div>

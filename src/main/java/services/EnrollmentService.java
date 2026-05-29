@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.Model;
 
 import models.Career;
@@ -232,23 +233,8 @@ public class EnrollmentService {
     }
 
     public List<Map<String, Object>> getSubjectsWhereTeacherIsTitularView(Long teacherId) {
-
-        List<Map<String, Object>> materiasView = new ArrayList<>();
-
-        List<Subject> materias = getSubjectsWhereTeacherIsTitular(teacherId);
-
-        for (Subject s : materias) {
-
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("id", s.getId());
-            map.put("name", s.getString("name"));
-            map.put("code", s.getString("code"));
-
-            materiasView.add(map);
-        }
-
-        return materiasView;
+        // Método eliminado: view mapping moved/removed — use getSubjectsWhereTeacherIsTitular
+        return new ArrayList<>();
     }
 
     public List<Map<String, Object>> getCareersFilterView() {
@@ -286,40 +272,14 @@ public class EnrollmentService {
     }
 
     public List<Map<String, Object>> getCourseClassesFilterView() {
-
-        List<Map<String, Object>> classesView = new ArrayList<>();
-
-        for (Model cc : CourseClass.findAll()) {
-
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("id", cc.getId());
-
-            map.put("name",
-                    cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
-
-            classesView.add(map);
-        }
-
-        return classesView;
+        // Deprecated: view helper removed to reduce dead code. Use getTeacherCommissionViewData
+        // instead.
+        return new ArrayList<>();
     }
 
     public List<Map<String, Object>> mapStudentsView(List<User> students) {
-
-        List<Map<String, Object>> alumnosView = new ArrayList<>();
-
-        for (User u : students) {
-
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("dni", u.getString("dni"));
-            map.put("name", u.getString("name"));
-            map.put("email", u.getString("email"));
-
-            alumnosView.add(map);
-        }
-
-        return alumnosView;
+        // Utility removed: mapStudentsView is unused. Return empty list to avoid breaking callers.
+        return new ArrayList<>();
     }
 
     /**
@@ -341,21 +301,37 @@ public class EnrollmentService {
     }
 
     public void enrollStudent(Long studentId, Long courseClassId) {
-        // Verificar cupo antes de guardar
-        CourseClass c = CourseClass.findById(courseClassId);
-        // CORREGIDO: Usar "capacity"
-        int cupoMaximo = c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
-        long inscriptos = Enrollment.count("course_class_id = ?", courseClassId);
+        // Intentar inscripción de forma transaccional para reducir race-conditions.
+        Base.openTransaction();
+        try {
+            CourseClass c = CourseClass.findById(courseClassId);
+            if (c == null) {
+                Base.rollbackTransaction();
+                throw new IllegalArgumentException("La comisión seleccionada no existe.");
+            }
 
-        if (inscriptos >= cupoMaximo) {
-            throw new IllegalStateException("No quedan cupos disponibles en esta comisión.");
+            int cupoMaximo = c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
+            long inscriptos = Enrollment.count("course_class_id = ?", courseClassId);
+
+            if (inscriptos >= cupoMaximo) {
+                Base.rollbackTransaction();
+                throw new IllegalStateException("No quedan cupos disponibles en esta comisión.");
+            }
+
+            Enrollment inscripcion = new Enrollment();
+            inscripcion.set("student_id", studentId);
+            inscripcion.set("course_class_id", courseClassId);
+            inscripcion.set("status", "REGULAR");
+            inscripcion.saveIt();
+
+            Base.commitTransaction();
+        } catch (RuntimeException e) {
+            Base.rollbackTransaction();
+            throw e;
+        } catch (Exception e) {
+            Base.rollbackTransaction();
+            throw new RuntimeException(e);
         }
-
-        Enrollment inscripcion = new Enrollment();
-        inscripcion.set("student_id", studentId);
-        inscripcion.set("course_class_id", courseClassId);
-        inscripcion.set("status", "REGULAR");
-        inscripcion.saveIt();
     }
 
     /**

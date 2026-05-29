@@ -1,5 +1,6 @@
 package app;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.javalite.activejdbc.Base;
@@ -12,6 +13,7 @@ import controllers.EnrollmentStudentController;
 import controllers.EnrollmentTeacherController;
 import controllers.ErrorController;
 import controllers.SecurityController;
+import controllers.StudentTaskController;
 import controllers.StudyPlanController;
 import controllers.SubjectController;
 import controllers.TeacherAssignmentController;
@@ -37,6 +39,8 @@ public class App {
 
         port(8080);
         staticFiles.location("/public");
+        // Servir archivos subidos desde la carpeta uploads (externa)
+        staticFiles.externalLocation("uploads");
 
         DBConfigSingleton dbConfig = DBConfigSingleton.getInstance();
         MustacheTemplateEngine engine = new MustacheTemplateEngine();
@@ -49,7 +53,7 @@ public class App {
                 // SOLUCIÓN AL ERROR: Solo abrimos si NO hay una conexión en este hilo
                 if (!Base.hasConnection()) {
                     dbConfig.openConnection();
-                    logger.info("Conexión abierta -> " + req.url());
+                    logger.log(Level.INFO, "Conexión abierta -> {0}", req.url());
                 }
             } catch (Exception e) {
                 logger.severe("Error al abrir conexión con la base de datos: " + e.getMessage());
@@ -91,8 +95,13 @@ public class App {
 
         TeacherAssignmentController.init(engine);
 
-        // EnrollmentController.init(engine);
+        // Task/Assignment feature
+        controllers.AssignmentController.init(engine);
+        controllers.StudentTaskController.init(engine);
+
+
         EnrollmentStudentController.init(engine);
         EnrollmentTeacherController.init(engine);
+        StudentTaskController.init(engine);
     }
 }

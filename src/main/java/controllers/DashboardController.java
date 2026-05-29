@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import services.AssignmentService;
 import services.CareerService;
 import services.DashboardService;
 import services.SubjectService;
 import services.UserService;
 import spark.ModelAndView;
 import spark.Request;
-
 import static spark.Spark.get;
-
 import spark.template.mustache.MustacheTemplateEngine;
 
 public class DashboardController {
@@ -23,6 +22,7 @@ public class DashboardController {
     private static final CareerService careerService = new CareerService();
     private static final SubjectService subjectService = new SubjectService();
     private static final DashboardService dashboardService = new DashboardService();
+    private static final AssignmentService assignmentService = new AssignmentService();
 
     public static void init(MustacheTemplateEngine engine) {
 
@@ -55,18 +55,18 @@ public class DashboardController {
             model.put("username", req.session().attribute("username"));
             model.put("role", "Administrador");
 
-            model.put("dashboardActive",true);
-            
+            model.put("dashboardActive", true);
+
             // Obtenemos los totales
             long userCount = userService.getTotalUsersCount();
             long careerCount = careerService.getTotalCareersCount();
             long subjectCount = subjectService.getTotalSubjectsCount();
-            
+
             // Los pasamos al modelo
             model.put("userCount", userCount);
             model.put("careerCount", careerCount);
             model.put("subjectCount", subjectCount);
-            
+
             return engine.render(new ModelAndView(model, "dashboard_admin.mustache"));
         });
 
@@ -81,9 +81,11 @@ public class DashboardController {
 
                 Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
 
-                model.putAll(
-                        dashboardService.getTeacherDashboardData(teacherId)
-                );
+                model.putAll(dashboardService.getTeacherDashboardData(teacherId));
+
+                // Tareas creadas por el docente
+                long tasksCount = assignmentService.getAssignmentsByTeacher(teacherId).size();
+                model.put("tasksCount", tasksCount);
 
             } catch (Exception e) {
                 logger.severe("Error dashboard docente: " + e.getMessage());
@@ -107,9 +109,7 @@ public class DashboardController {
 
                 Long studentId = Long.valueOf(req.session().attribute("userId").toString());
 
-                model.putAll(
-                        dashboardService.getStudentDashboardData(studentId)
-                );
+                model.putAll(dashboardService.getStudentDashboardData(studentId));
 
             } catch (Exception e) {
                 logger.severe("Error dashboard alumno: " + e.getMessage());

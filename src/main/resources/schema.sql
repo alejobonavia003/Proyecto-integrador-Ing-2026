@@ -196,12 +196,29 @@ CREATE TABLE grades (
 CREATE TABLE assignments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    course_class_id INTEGER NOT NULL,
-
     title VARCHAR(150) NOT NULL,
     description TEXT NOT NULL,
 
-    due_date TIMESTAMP NOT NULL,
+    file_path TEXT,
+
+    teacher_id INTEGER NOT NULL,
+    career_id INTEGER,
+    subject_id INTEGER,
+    course_class_id INTEGER,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (teacher_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (career_id)
+        REFERENCES careers(id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (subject_id)
+        REFERENCES subjects(id)
+        ON DELETE SET NULL,
 
     FOREIGN KEY (course_class_id)
         REFERENCES course_classes(id)
@@ -222,6 +239,7 @@ CREATE TABLE submissions (
     content_reference TEXT NOT NULL,
 
     grade DECIMAL(4,2),
+    comment TEXT,
 
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

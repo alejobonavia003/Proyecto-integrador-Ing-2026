@@ -6,6 +6,7 @@ target/*
 # Java / Maven
 # =========================
 target/
+uploads/
 *.class
 *.jar
 *.war

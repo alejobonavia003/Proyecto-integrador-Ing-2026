@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.CourseClass;
 import models.Subject;
 import services.CorrelativityService;
 import services.EnrollmentService;
@@ -134,30 +133,8 @@ public class EnrollmentStudentController {
                         return null;
                 });
 
-                post("/student/enroll", (req, res) -> {
-
-                        Long studentId = req.session().attribute("userId");
-
-                        Long courseClassId = Long.parseLong(req.queryParams("course_class_id"));
-
-                        CourseClass comision = CourseClass.findById(courseClassId);
-
-                        Long subjectId = comision.getLong("subject_id");
-
-                        List<Subject> faltantes = correlativityService
-                                        .verificarCorrelativas(studentId, subjectId);
-
-                        if (!faltantes.isEmpty()) {
-
-                                req.session().attribute("errorMateriasFaltantes", faltantes);
-
-                                res.redirect("/student/enroll?error=No cumples con las correlativas");
-
-                                return null;
-                        }
-
-                        return null;
-                });
+                // NOTE: endpoint POST /student/enroll removed (logic consolidated in
+                // POST /student/inscripciones/confirmar). This avoids duplicate/partial flows.
 
                 post("/student/inscripciones/confirmar", (req, res) -> {
 
