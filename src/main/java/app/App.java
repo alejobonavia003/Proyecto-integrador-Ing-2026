@@ -103,5 +103,12 @@ public class App {
         EnrollmentStudentController.init(engine);
         EnrollmentTeacherController.init(engine);
         StudentTaskController.init(engine);
+
+        //ya se que no va a aca pero estoy probando cosas
+        spark.Spark.get("/uploads/*", (req, res) -> {
+            // req.splat()[0] captura todo lo que está después de "/uploads/"
+            res.redirect("/" + req.splat()[0]);
+            return null;
+        });
     }
 }

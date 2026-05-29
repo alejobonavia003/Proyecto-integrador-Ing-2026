@@ -1,55 +1,76 @@
-<h2>Tareas disponibles</h2>
-{{#tasks}}
-<div style="border:1px solid #ddd;padding:8px;margin-bottom:8px;">
-  <h3>{{title}}</h3>
-  <p>{{description}}</p>
-  {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
-
-  {{#submitted}}
-    <p style="color:green;">Entregado ✅ - <a href="/{{submission_path}}">descargar entrega</a></p>
-  {{/submitted}}
-
-  <h2>Tareas disponibles</h2>
-{{#tasks}}
-<div style="border:1px solid #ddd;padding:8px;margin-bottom:8px;">
-  <h3>{{title}}</h3>
-  <p>{{description}}</p>
-  {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
-
-  {{#submitted}}
-    <p style="color:green; font-weight:bold;">Entregado ✅ - <a href="/{{submission_path}}">descargar mi entrega</a></p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Tareas</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px;">
     
-    <div style="margin-top:10px; padding:10px; background-color:#f4fbf7; border-left:4px solid #28a745; border-radius:2px;">
-      {{#grade}}
-        <p style="margin:2px 0;"><strong>Calificación:</strong> <span style="background-color:#28a745; color:white; padding:2px 6px; border-radius:3px; font-weight:bold;">{{grade}}</span></p>
-      {{/grade}}
-      {{^grade}}
-        <p style="margin:2px 0; color:#666; font-style:italic;">Estado: Pendiente de corrección por el docente ⏳</p>
-      {{/grade}}
-      
-      {{#comment}}
-        <p style="margin:8px 0 2px 0;"><strong>Comentario del profesor:</strong></p>
-        <blockquote style="margin:0; padding:8px; background:#fff; border:1px dashed #ccc; font-style:italic; border-radius:4px;">
-          {{comment}}
-        </blockquote>
-      {{/comment}}
+    <h1>Tareas de mis materias</h1>
+    <p>Alumno: {{username}} | <a href="/student/dashboard">Volver al Tablero</a></p>
+    
+    {{#successMessage}}
+    <div style="background-color: #ccffcc; padding: 10px; border: 1px solid green; margin-bottom: 15px; color: green; border-radius: 4px;">
+        <b>Éxito:</b> {{successMessage}}
     </div>
-  {{/submitted}}
+    {{/successMessage}}
+    
+    {{#errorMessage}}
+    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px; color: red; border-radius: 4px;">
+        <b>Error:</b> {{errorMessage}}
+    </div>
+    {{/errorMessage}}
+    
+    <hr>
 
-  {{^submitted}}
-    <form method="post" action="/student/tasks/{{id}}/submit" enctype="multipart/form-data">
-      <label>Adjuntar archivo: <input type="file" name="file" required></label>
-      <button type="submit">Entregar</button>
-    </form>
-  {{/submitted}}
-</div>
-{{/tasks}}
+    <h2>Tareas disponibles y entregas</h2>
+    
+    {{#tasks}}
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; border-radius: 6px;">
+        <h3 style="margin-top: 0; color: #333;">📌 {{title}}</h3>
+        <p style="white-space: pre-wrap;">{{description}}</p>
+        
+        {{#file_path}}
+        <p><b>📄 Documento de la cátedra:</b> <a href="/{{file_path}}" target="_blank" style="color: #0056b3; font-weight: bold;">Descargar Archivo</a></p>
+        {{/file_path}}
+        
+        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
+        
+        {{#submitted}}
+            <p style="color: green; font-weight: bold;">Entregado ✅ - <a href="/{{submission_path}}" target="_blank" style="color: #28a745; text-decoration: underline;">Ver mi archivo entregado</a></p>
+            
+            <div style="margin-top: 10px; padding: 12px; background-color: #f4fbf7; border-left: 4px solid #28a745; border-radius: 4px;">
+              {{#grade}}
+                <p style="margin: 2px 0;"><strong>Calificación Asignada:</strong> <span style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 3px; font-weight: bold;">{{grade}}</span></p>
+              {{/grade}}
+              {{^grade}}
+                <p style="margin: 2px 0; color: #666; font-style: italic;">Estado: Pendiente de corrección por el docente ⏳</p>
+              {{/grade}}
+              
+              {{#comment}}
+                <p style="margin: 10px 0 4px 0;"><strong>Comentario del profesor:</strong></p>
+                <blockquote style="margin: 0; padding: 10px; background: #fff; border: 1px dashed #ccc; font-style: italic; border-radius: 4px; color: #444;">
+                  "{{comment}}"
+                </blockquote>
+              {{/comment}}
+            </div>
+        {{/submitted}}
 
-  {{^submitted}}
-    <form method="post" action="/student/tasks/{{id}}/submit" enctype="multipart/form-data">
-      <label>Adjuntar archivo: <input type="file" name="file" required></label>
-      <button type="submit">Entregar</button>
-    </form>
-  {{/submitted}}
-</div>
-{{/tasks}}
+        {{^submitted}}
+            <form method="post" action="/student/tasks/{{id}}/submit" enctype="multipart/form-data" style="background-color: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+                <label style="font-weight: bold; color: #333;">Subir mi resolución (PDF, DOCX, ZIP):</label><br>
+                <input type="file" name="file" required style="margin-top: 8px; margin-bottom: 12px;"><br>
+                <button type="submit" style="padding: 8px 16px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Confirmar Entrega</button>
+            </form>
+        {{/submitted}}
+    </div>
+    {{/tasks}}
+    
+    {{^tasks}}
+    <div style="padding: 30px; text-align: center; border: 2px dashed #ccc; border-radius: 8px; background-color: #fdfdfd;">
+        <p style="color: #777; font-size: 16px;"><i>No tienes tareas asignadas en tus cursadas actuales.</i></p>
+    </div>
+    {{/tasks}}
+
+</body>
+</html>

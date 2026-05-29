@@ -1,61 +1,98 @@
-<h2>Crear Tarea</h2>
-<form method="post" action="/teacher/tasks/new" enctype="multipart/form-data">
-  <label>Título: <input type="text" name="title" required></label><br>
-  <label>Descripción:<br><textarea name="description"></textarea></label><br>
-  <label>Carrera:
-    <select name="career_id">
-      {{#careers}}
-      <option value="{{id}}">{{name}}</option>
-      {{/careers}}
-    </select>
-  </label><br>
-  <label>Materia:
-    <select name="subject_id" id="subject_select">
-      <option value="">-- Seleccione --</option>
-      {{#subjects}}
-      <option value="{{id}}">{{name}}</option>
-      {{/subjects}}
-    </select>
-  </label><br>
-  <div id="classes_container" style="display:none;">
-    <label>Comisión (opcional):
-      <select name="course_class_id" id="class_select">
-        <option value="">-- Seleccione comisión --</option>
-      </select>
-    </label>
-    <label style="margin-left:1rem;"> <input type="checkbox" name="all_comisions" id="all_comisions"> Todas las comisiones</label>
-  </div>
-  <label>Archivo (opcional): <input type="file" name="file"></label><br>
-  <button type="submit">Crear tarea</button>
-</form>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Publicar Nueva Tarea</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px;">
+    
+    <h2>Crear Nueva Tarea (Solo Profesores Titulares)</h2>
+    <p>Docente: {{username}} | <a href="/teacher/dashboard">Volver al Tablero</a></p>
 
-<script>
-  document.getElementById('subject_select').addEventListener('change', function() {
-    const subjectId = this.value;
-    const container = document.getElementById('classes_container');
-    const classSelect = document.getElementById('class_select');
-    classSelect.innerHTML = '<option value="">-- Seleccione comisión --</option>';
-    document.getElementById('all_comisions').checked = false;
-    if (!subjectId) { container.style.display = 'none'; return; }
-    fetch('/teacher/tasks/classes?subject_id=' + subjectId)
-      .then(r => r.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach(function(cc){
-            const opt = document.createElement('option');
-            opt.value = cc.id; opt.text = cc.name;
-            classSelect.appendChild(opt);
-          });
-          container.style.display = 'block';
-        } else {
-          // no comisiones
-          container.style.display = 'none';
-        }
-      }).catch(err => { console.error(err); container.style.display = 'none'; });
-  });
+    {{#errorMessage}}
+    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px; color: red; border-radius: 4px;">
+        <b>Acceso Denegado:</b> {{errorMessage}}
+    </div>
+    {{/errorMessage}}
 
-  // If 'all_comisions' checked, disable class select
-  document.getElementById('all_comisions').addEventListener('change', function(){
-    document.getElementById('class_select').disabled = this.checked;
-  });
-</script>
+    {{#successMessage}}
+    <div style="background-color: #ccffcc; padding: 10px; border: 1px solid green; margin-bottom: 15px; color: green; border-radius: 4px;">
+        <b>Éxito:</b> {{successMessage}}
+    </div>
+    {{/successMessage}}
+
+    <hr>
+
+    <form method="post" action="/teacher/tasks/new" enctype="multipart/form-data">
+      <label><b>Título de la Tarea:</b><br> <input type="text" name="title" required style="width: 300px; padding: 5px;"></label><br><br>
+      
+      <label><b>Descripción o Consigna:</b><br><textarea name="description" rows="4" cols="50" style="padding: 5px;"></textarea></label><br><br>
+      
+      <label><b>Carrera:</b><br>
+        <select name="career_id" style="padding: 5px;">
+          <option value="">-- Opcional --</option>
+          {{#careers}}
+          <option value="{{id}}">{{name}}</option>
+          {{/careers}}
+        </select>
+      </label><br><br>
+      
+      <label><b>Materia (Obligatoria):</b><br>
+        <select name="subject_id" id="subject_select" required style="padding: 5px;">
+          <option value="">-- Seleccione una materia --</option>
+          {{#subjects}}
+          <option value="{{id}}">{{name}}</option>
+          {{/subjects}}
+        </select>
+      </label><br><br>
+      
+      <div id="classes_container" style="display:none; margin-bottom: 15px; background-color: #f0f0f0; padding: 10px; border-radius: 4px;">
+        <label><b>Comisión (Opcional):</b><br>
+          <select name="course_class_id" id="class_select" style="padding: 5px;">
+            <option value="">-- Seleccione comisión --</option>
+          </select>
+        </label>
+        <label style="margin-left:1rem; cursor: pointer;"> 
+            <input type="checkbox" name="all_comisions" id="all_comisions"> Asignar a <b>todas</b> las comisiones
+        </label>
+      </div>
+      
+      <label><b>Archivo adjunto (Opcional):</b><br> <input type="file" name="file" style="margin-top: 5px;"></label><br><br>
+      
+      <button type="submit" style="padding: 10px 20px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Publicar Tarea</button>
+    </form>
+
+    <script>
+      // Script original conservado para la carga dinámica de comisiones
+      document.getElementById('subject_select').addEventListener('change', function() {
+        const subjectId = this.value;
+        const container = document.getElementById('classes_container');
+        const classSelect = document.getElementById('class_select');
+        classSelect.innerHTML = '<option value="">-- Seleccione comisión --</option>';
+        document.getElementById('all_comisions').checked = false;
+        
+        if (!subjectId) { container.style.display = 'none'; return; }
+        
+        fetch('/teacher/tasks/classes?subject_id=' + subjectId)
+          .then(r => r.json())
+          .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+              data.forEach(function(cc){
+                const opt = document.createElement('option');
+                opt.value = cc.id; opt.text = cc.name;
+                classSelect.appendChild(opt);
+              });
+              container.style.display = 'block';
+            } else {
+              container.style.display = 'none';
+            }
+          }).catch(err => { console.error(err); container.style.display = 'none'; });
+      });
+
+      // Si selecciona "Todas las comisiones", se desactiva el select individual
+      document.getElementById('all_comisions').addEventListener('change', function() {
+          document.getElementById('class_select').disabled = this.checked;
+      });
+    </script>
+</body>
+</html>
