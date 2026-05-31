@@ -110,4 +110,68 @@ public class FinalExamService {
         }
         return result;
     }
+
+
+    // ==========================================
+    // ROL ALUMNO: Obtener mesas disponibles filtradas
+    // ==========================================
+    public List<Map<String, Object>> getAvailableExamsForStudent(Long studentId) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        User student = User.findById(studentId);
+        
+        // Si el alumno no tiene un plan de estudio asignado, no puede ver exámenes
+        if (student == null || student.get("study_plan_id") == null) {
+            return result; 
+        }
+        
+        Long planId = student.getLong("study_plan_id");
+        List<FinalExam> allExams = FinalExam.findAll();
+        
+        for (FinalExam exam : allExams) {
+            Subject subject = Subject.findById(exam.get("subject_id"));
+            
+            // Filtro 1: Solo mostrar materias que pertenezcan al plan de estudio del alumno
+            if (subject == null || subject.getLong("study_plan_id") == null || !subject.getLong("study_plan_id").equals(planId)) {
+                continue;
+            }
+            
+            // Filtro 2: No mostrar la mesa si el alumno ya está inscripto en ella
+            long count = FinalExamEnrollment.count("student_id = ? AND final_exam_id = ?", studentId, exam.getId());
+            if (count > 0) {
+                continue;
+            }
+            
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", exam.getId());
+            map.put("exam_date", exam.getString("exam_date").replace("T", " "));
+            map.put("subject_name", subject.getString("name"));
+            map.put("subject_code", subject.getString("code"));
+            result.add(map);
+        }
+        return result;
+    }
+
+    // ==========================================
+    // ROL ALUMNO: Obtener sus inscripciones actuales
+    // ==========================================
+    public List<Map<String, Object>> getStudentExamEnrollments(Long studentId) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        List<FinalExamEnrollment> enrollments = FinalExamEnrollment.where("student_id = ?", studentId);
+        
+        for (FinalExamEnrollment enrollment : enrollments) {
+            FinalExam exam = FinalExam.findById(enrollment.get("final_exam_id"));
+            if (exam != null) {
+                Subject subject = Subject.findById(exam.get("subject_id"));
+                if (subject != null) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("exam_date", exam.getString("exam_date").replace("T", " "));
+                    map.put("subject_name", subject.getString("name"));
+                    map.put("subject_code", subject.getString("code"));
+                    map.put("enrolled_at", enrollment.getTimestamp("enrolled_at"));
+                    result.add(map);
+                }
+            }
+        }
+        return result;
+    }
 }

@@ -410,3 +410,95 @@ VALUES (
     '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 
     3
 );
+
+
+-- =========================================
+-- DATOS DE PRUEBA: CARRERAS (2 Carreras)
+-- =========================================
+INSERT INTO careers (id, code, name, duration) VALUES 
+(10, 'ISW', 'Ingeniería en Software', 5),
+(11, 'CDA', 'Licenciatura en Ciencia de Datos', 4);
+
+-- =========================================
+-- DATOS DE PRUEBA: PLANES DE ESTUDIO (2 por carrera)
+-- =========================================
+INSERT INTO study_plans (id, code, name, version, career_id) VALUES 
+(10, 'ISW-2020', 'Plan 2020 - Ingeniería en Software (Heredado)', '2020', 10),
+(11, 'ISW-2024', 'Plan 2024 - Ingeniería en Software (Actual)', '2024', 10),
+(12, 'CDA-2021', 'Plan 2021 - Ciencia de Datos (Heredado)', '2021', 11),
+(13, 'CDA-2025', 'Plan 2025 - Ciencia de Datos (Actual)', '2025', 11);
+
+-- =========================================
+-- DATOS DE PRUEBA: MATERIAS (7 materias para armar un buen árbol)
+-- =========================================
+-- Materias del Plan ISW-2024 (ID 11)
+INSERT INTO subjects (id, code, name, weekly_hours, modality, study_plan_id) VALUES 
+(10, 'INT-01', 'Introducción a la Programación', 6, 'PRESENCIAL', 11),
+(11, 'MAT-01', 'Matemática Discreta', 4, 'PRESENCIAL', 11),
+(12, 'EST-02', 'Estructuras de Datos', 6, 'PRESENCIAL', 11),
+(13, 'BDD-03', 'Bases de Datos Avanzadas', 6, 'PRESENCIAL', 11),
+(14, 'ING-03', 'Ingeniería de Software I', 8, 'HIBRIDA', 11);
+
+-- Materias del Plan CDA-2025 (ID 13)
+INSERT INTO subjects (id, code, name, weekly_hours, modality, study_plan_id) VALUES 
+(15, 'ANA-01', 'Análisis Exploratorio de Datos', 6, 'PRESENCIAL', 13),
+(16, 'ML-02', 'Machine Learning', 8, 'VIRTUAL', 13);
+
+-- =========================================
+-- DATOS DE PRUEBA: CORRELATIVIDADES
+-- =========================================
+-- requires_approved = 1 (Necesita Final), requires_approved = 0 (Solo necesita Regularidad)
+INSERT INTO correlativities (subject_id, required_subject_id, requires_approved) VALUES 
+-- Estructuras de Datos requiere Introducción a la Programación (Aprobada)
+(12, 10, 1),
+-- Bases de Datos Avanzadas requiere Estructuras de Datos (Regular)
+(13, 12, 0),
+-- Ingeniería de Software I requiere Estructuras de Datos (Aprobada) y Matemática Discreta (Regular)
+(14, 12, 1),
+(14, 11, 0),
+-- Machine Learning requiere Análisis de Datos (Aprobada)
+(16, 15, 1);
+
+-- =========================================
+-- DATOS DE PRUEBA: PROFESORES (5 Profesores)
+-- =========================================
+INSERT INTO users (id, dni, name, email, password, role_id) VALUES 
+(10, '10000001', 'Alan Turing', 'alan.turing@univ.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 2),
+(11, '10000002', 'Ada Lovelace', 'ada.lovelace@univ.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 2),
+(12, '10000003', 'Grace Hopper', 'grace.hopper@univ.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 2),
+(13, '10000004', 'Edsger Dijkstra', 'edsger.dijkstra@univ.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 2),
+(14, '10000005', 'Linus Torvalds', 'linus.torvalds@univ.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 2);
+
+-- Asignar Profesores a Carreras
+INSERT INTO teacher_careers (teacher_id, career_id) VALUES 
+(10, 10), (11, 10), (12, 10), -- ISW
+(13, 11), (14, 11);           -- CDA
+
+-- Asignar Profesores a Materias (Titulares para que puedan crear comisiones/finales)
+INSERT INTO teacher_subjects (teacher_id, subject_id, role_charge, academic_year, academic_period) VALUES 
+(10, 10, 'TITULAR', 2026, '1° Cuatrimestre'), -- Turing da Intro
+(11, 11, 'TITULAR', 2026, '1° Cuatrimestre'), -- Lovelace da Matemática
+(12, 12, 'TITULAR', 2026, '1° Cuatrimestre'), -- Hopper da Estructuras
+(12, 13, 'TITULAR', 2026, '2° Cuatrimestre'), -- Hopper da Bases de Datos
+(13, 15, 'TITULAR', 2026, '1° Cuatrimestre'), -- Dijkstra da Análisis
+(14, 16, 'TITULAR', 2026, '2° Cuatrimestre'); -- Torvalds da ML
+
+-- =========================================
+-- DATOS DE PRUEBA: ALUMNOS (5 Alumnos)
+-- =========================================
+INSERT INTO users (id, dni, name, email, password, role_id, study_plan_id) VALUES 
+(20, '40000001', 'Juan Pérez', 'juan.perez@alumno.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 3, 11), -- ISW-2024
+(21, '40000002', 'María Gómez', 'maria.gomez@alumno.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 3, 11), -- ISW-2024
+(22, '40000003', 'Carlos López', 'carlos.lopez@alumno.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 3, 11), -- ISW-2024
+(23, '40000004', 'Ana Martínez', 'ana.martinez@alumno.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 3, 13), -- CDA-2025
+(24, '40000005', 'Pedro Rodríguez', 'pedro.rodriguez@alumno.edu', '$2a$10$FXc.mc7s3ATkgZcnPSQBY.Cx6p5pZgGorQy33WqPOH46GB0o/wvmO', 3, 13); -- CDA-2025
+
+-- =========================================
+-- DATOS DE PRUEBA: COMISIONES (Course Classes)
+-- =========================================
+-- Para que los alumnos puedan cursar e intentar aprobar para el testeo
+INSERT INTO course_classes (id, name, capacity, subject_id, teacher_id) VALUES 
+(10, 'Comisión A - Mañana', 40, 10, 10),
+(11, 'Comisión Única', 30, 11, 11),
+(12, 'Comisión B - Tarde', 35, 12, 12),
+(13, 'Comisión Única', 25, 15, 13);

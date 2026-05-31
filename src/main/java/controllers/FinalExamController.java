@@ -59,21 +59,22 @@ public class FinalExamController {
             return engine.render(new ModelAndView(model, "admin_exam_new.mustache"));
         });
 
-
-        // [STUDENT] GET para ver las mesas disponibles para anotarse
+        // [STUDENT] GET para ver las mesas disponibles para anotarse y sus inscripciones
         get("/student/exams", (req, res) -> {
+            Long studentId = req.session().attribute("user_id"); // Capturamos el ID del alumno en sesión
             Map<String, Object> model = new HashMap<>();
             
-            // Capturar posibles errores o éxitos que vengan por la URL
             String error = req.queryParams("error");
             String success = req.queryParams("success");
             if (error != null) model.put("errorMessage", error);
             if (success != null) model.put("successMessage", success);
             
-            model.put("exams", finalExamService.getAllExamsView());
+            // Inyectamos las dos listas (Disponibles e Inscriptas)
+            model.put("availableExams", finalExamService.getAvailableExamsForStudent(studentId));
+            model.put("myExams", finalExamService.getStudentExamEnrollments(studentId));
+            
             return engine.render(new ModelAndView(model, "student_exams.mustache"));
         });
-
         // [TEACHER] GET para ver la lista de mesas de examen y elegir una
         get("/teacher/exams", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
