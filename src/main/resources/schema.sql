@@ -7,7 +7,8 @@ PRAGMA foreign_keys = ON;
 -- =========================================
 -- DROP TABLES
 -- =========================================
-
+DROP TABLE IF EXISTS final_exam_enrollments;
+DROP TABLE IF EXISTS final_exams;
 DROP TABLE IF EXISTS teacher_subjects;
 DROP TABLE IF EXISTS teacher_careers;
 DROP TABLE IF EXISTS submissions;
@@ -284,6 +285,35 @@ CREATE TABLE teacher_subjects (
     FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
+
+
+-- =========================================
+-- TABLE: final_exams (Instancias de Finales)
+-- Creadas por el ADMIN
+-- =========================================
+CREATE TABLE final_exams (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subject_id INTEGER NOT NULL,
+    exam_date TIMESTAMP NOT NULL, -- Fecha en la que se rendirá el examen
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+);
+
+-- =========================================
+-- TABLE: final_exam_enrollments (Inscripción a Finales)
+-- =========================================
+CREATE TABLE final_exam_enrollments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    final_exam_id INTEGER NOT NULL,
+    student_id INTEGER NOT NULL,
+    enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha automática de inscripción
+    grade DECIMAL(4,2), -- Calificación (para cargar luego del examen)
+    UNIQUE(final_exam_id, student_id), -- Evita que un alumno se anote dos veces
+    FOREIGN KEY (final_exam_id) REFERENCES final_exams(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
 -- =========================================
 -- DATOS INICIALES
 -- =========================================

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscripción a Finales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+<div class="flex min-h-screen">
+    <main class="flex-1 p-10 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Mesas de Exámenes Finales</h2>
+            <a href="/student/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow">Volver al Dashboard</a>
+        </div>
+
+        <!-- Muestra el error de correlatividad si el backend lanza la excepción -->
+        {{#errorMessage}}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm">
+            <p class="font-bold"><i class="fa-solid fa-circle-xmark mr-2"></i>Inscripción Rechazada</p>
+            <p>{{errorMessage}}</p>
+        </div>
+        {{/errorMessage}}
+
+        {{#successMessage}}
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm">
+            <p class="font-bold"><i class="fa-solid fa-check-circle mr-2"></i>Éxito!</p>
+            <p>{{successMessage}}</p>
+        </div>
+        {{/successMessage}}
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-800 text-white">
+                    <tr>
+                        <th class="p-4">Materia</th>
+                        <th class="p-4">Fecha del Examen</th>
+                        <th class="p-4">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#exams}}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 font-semibold">{{subject_name}}</td>
+                        <td class="p-4">{{exam_date}}</td>
+                        <td class="p-4">
+                            <form action="/student/exams/enroll" method="POST">
+                                <input type="hidden" name="final_exam_id" value="{{id}}">
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition">
+                                    Anotarme
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/exams}}
+                    {{^exams}}
+                    <tr>
+                        <td colspan="3" class="p-8 text-center text-gray-500">No hay mesas de exámenes habilitadas actualmente.</td>
+                    </tr>
+                    {{/exams}}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

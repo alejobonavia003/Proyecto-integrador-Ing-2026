@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mesas de Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+<div class="flex min-h-screen">
+    <main class="flex-1 p-10 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">Seleccionar Mesa de Examen</h2>
+            <a href="/teacher/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow">Volver al Dashboard</a>
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-800 text-white">
+                    <tr>
+                        <th class="p-4">Código - Materia</th>
+                        <th class="p-4">Fecha del Examen</th>
+                        <th class="p-4">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#exams}}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 font-semibold">{{subject_code}} - {{subject_name}}</td>
+                        <td class="p-4">{{exam_date}}</td>
+                        <td class="p-4">
+                            <a href="/teacher/exams/{{id}}/students" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded text-sm transition">
+                                <i class="fa-solid fa-users mr-1"></i> Ver Inscriptos
+                            </a>
+                        </td>
+                    </tr>
+                    {{/exams}}
+                    {{^exams}}
+                    <tr>
+                        <td colspan="3" class="p-8 text-center text-gray-500">No hay mesas de exámenes creadas por el momento.</td>
+                    </tr>
+                    {{/exams}}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

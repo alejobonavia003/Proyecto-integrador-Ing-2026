@@ -104,6 +104,7 @@ public class App {
         EnrollmentTeacherController.init(engine);
         StudentTaskController.init(engine);
 
+        controllers.FinalExamController.init(engine);
         //ya se que no va a aca pero estoy probando cosas
         spark.Spark.get("/uploads/*", (req, res) -> {
             // req.splat()[0] captura todo lo que está después de "/uploads/"
