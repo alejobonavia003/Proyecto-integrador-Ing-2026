@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Mesa de Examen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+<div class="flex min-h-screen">
+    {{>partials/admin_sidebar}}
+    <main class="flex-1 p-8">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">
+                Crear Mesa de Examen Final
+            </h1>
+            
+            {{#errorMessage}}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                {{errorMessage}}
+            </div>
+            {{/errorMessage}}
+
+            <form action="/admin/exams/create" method="POST" class="space-y-6">
+                <div>
+                    <label class="block mb-2 font-semibold">Materia</label>
+                    <select name="subject_id" required class="w-full border border-gray-300 rounded-lg p-3">
+                        <option value="" disabled selected>-- Seleccione una materia --</option>
+                        {{#subjects}}
+                        <option value="{{id}}">{{code}} - {{name}}</option>
+                        {{/subjects}}
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block mb-2 font-semibold">Fecha y Hora del Examen</label>
+                    <!-- El input datetime-local guarda la fecha automáticamente en formato compatible -->
+                    <input type="datetime-local" name="exam_date" required class="w-full border border-gray-300 rounded-lg p-3">
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition">
+                        Habilitar Inscripción
+                    </button>
+                    <a href="/admin/dashboard" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-lg transition">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

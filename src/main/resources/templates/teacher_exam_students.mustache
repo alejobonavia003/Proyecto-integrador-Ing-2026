@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscriptos al Final</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+<div class="flex min-h-screen">
+    <main class="flex-1 p-10 max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">Alumnos Inscriptos al Examen</h2>
+                <p class="text-gray-500 mt-2">Revisa la lista de alumnos que se anotaron a esta mesa.</p>
+            </div>
+            <a href="/teacher/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow">Volver</a>
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-slate-800 text-white">
+                    <tr>
+                        <th class="p-4">DNI</th>
+                        <th class="p-4">Nombre y Apellido</th>
+                        <th class="p-4">Fecha de Inscripción Automática</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#students}}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 font-medium">{{dni}}</td>
+                        <td class="p-4">{{name}}</td>
+                        <td class="p-4 text-emerald-600 font-semibold">{{enrolled_at}}</td>
+                    </tr>
+                    {{/students}}
+                    {{^students}}
+                    <tr>
+                        <td colspan="3" class="p-8 text-center text-gray-500">Aún no hay alumnos inscriptos en este examen.</td>
+                    </tr>
+                    {{/students}}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
