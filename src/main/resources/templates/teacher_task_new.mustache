@@ -2,18 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SGE - Publicar Tareas</title>
+    <title>SGE - Mis Tareas</title>
 </head>
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; background-color: #f8f9fa;">
 
-    <div style="width: 250px; background-color: #151c2c; min-height: 100vh; color: white; padding: 20px 0; box-sizing: border-box;">
+    <div style="width: 250px; background-color: #151c2c; min-height: 100vh; color: white; padding: 20px 0; box-sizing: border-box; flex-shrink: 0;">
         <h2 style="color: #2ece89; margin: 0 0 30px 20px; font-size: 22px;">SGE <span style="color: white; font-size: 14px; font-weight: normal;">DOCENTE</span></h2>
         <p style="color: #6c757d; font-size: 12px; padding-left: 20px; margin-bottom: 20px;">Panel Académico</p>
         
         <a href="/teacher/dashboard" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">🧭 Dashboard</a>
         <a href="/teacher/commissions" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">👥 Gestión de Comisiones</a>
         <a href="/teacher/grades" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">📝 Cargar Notas</a>
-        <a href="/teacher/tasks/new" style="display: block; padding: 12px 20px; color: white; background-color: #1e293b; text-decoration: none; font-size: 15px; border-left: 4px solid #2ece89; font-weight: bold;">📖 Publicar Tareas</a>
+        <a href="/teacher/tasks" style="display: block; padding: 12px 20px; color: white; background-color: #1e293b; text-decoration: none; font-size: 15px; border-left: 4px solid #2ece89; font-weight: bold;">📖 Publicar Tareas</a>
         <a href="/teacher/finals" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">📋 Ver Inscriptos a Finales</a>
         
         <a href="/logout" style="display: block; margin: 50px 20px 0 20px; padding: 10px; border: 1px solid #dc3545; color: #dc3545; text-decoration: none; text-align: center; border-radius: 4px; font-size: 14px;">Cerrar Sesión</a>
@@ -28,45 +28,52 @@
         <div style="background-color: #ffcccc; padding: 12px; border: 1px solid red; margin-bottom: 20px; color: red; border-radius: 6px;"><b>Error:</b> {{errorMessage}}</div>
         {{/errorMessage}}
 
-        <div style="background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px;">
-            <h1 style="margin: 0; color: #1e293b; font-size: 24px;">📖 Publicar Nueva Tarea Académica</h1>
-            <p style="margin: 5px 0 0 0; color: #6c757d;">Docente: <b>{{username}}</b></p>
+        <div style="background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="margin: 0; color: #1e293b; font-size: 24px;">📖 Planificación y Tareas Publicadas</h1>
+                <p style="margin: 5px 0 0 0; color: #6c757d;">Docente: <b>{{username}}</b></p>
+            </div>
+            <a href="/teacher/tasks/new" style="padding: 12px 20px; background-color: #2ece89; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(46,206,137,0.3);">
+                ➕ Crear nueva tarea
+            </a>
         </div>
 
-        <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); max-width: 800px;">
-            <form method="post" action="/teacher/tasks/create">
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Seleccionar Comisión / Materia donde dicta:</label>
-                    <select name="course_class_id" required style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px;">
-                        <option value="">-- Seleccione una comisión --</option>
-                        {{#myClasses}}
-                        <option value="{{id}}">{{name}} (Materia ID: {{subject_id}})</option>
-                        {{/myClasses}}
-                    </select>
-                </div>
+        <div style="background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background-color: #f1f3f5; color: #495057;">
+                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 25%;">Título</th>
+                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 40%;">Descripción</th>
+                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 15%;">Comisión</th>
+                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 20%; text-align: center;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#list}}
+                    <tr style="border-bottom: 1px solid #dee2e6; color: #333;">
+                        <td style="padding: 15px; font-weight: bold; color: #1e293b;">{{title}}</td>
+                        <td style="padding: 15px; font-size: 14px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px;">{{description}}</td>
+                        <td style="padding: 15px;"><span style="background-color: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: bold;">ID: {{course_class_id}}</span></td>
+                        <td style="padding: 15px; text-align: center; display: flex; gap: 8px; justify-content: center;">
+                            <a href="/teacher/submissions?assignment_id={{id}}" style="padding: 6px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold;">
+                                📥 Ver Entregas
+                            </a>
+                            <a href="/teacher/tasks/edit?id={{id}}" style="padding: 6px 10px; background-color: #ffc107; color: #212529; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold;">
+                                ✏️ Editar
+                            </a>
+                        </td>
+                    </tr>
+                    {{/list}}
+                </tbody>
+            </table>
 
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Título de la Tarea / Trabajo Práctico:</label>
-                    <input type="text" name="title" required placeholder="Ej: Trabajo Práctico N°1: Introducción a POO" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-size: 15px;">
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Descripción y Consignas detalladas:</label>
-                    <textarea name="description" rows="8" required placeholder="Escriba aquí las pautas, requerimientos y rúbrica de entrega..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-family: Arial, sans-serif; resize: vertical; font-size: 15px;"></textarea>
-                </div>
-
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Fecha Límite de Entrega (Due Date):</label>
-                    <input type="datetime-local" name="due_date" required style="padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px; color: #333;">
-                </div>
-
-                <div style="display: flex; gap: 15px;">
-                    <button type="submit" style="padding: 12px 24px; background-color: #2ece89; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 15px;">Publicar Asignación</button>
-                    <a href="/teacher/dashboard" style="padding: 12px 24px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 15px; text-align: center;">Cancelar</a>
-                </div>
-            </form>
+            {{^list}}
+            <div style="padding: 40px; text-align: center; color: #777; font-style: italic;">
+                No has publicado ninguna tarea académica todavía. Haz clic en "Crear nueva tarea" para empezar.
+            </div>
+            {{/list}}
         </div>
+
     </div>
 
 </body>
