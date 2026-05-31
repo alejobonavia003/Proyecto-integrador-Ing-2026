@@ -52,6 +52,11 @@ public class DashboardController {
 
             Map<String, Object> model = new HashMap<>();
 
+            String success = req.queryParams("success");
+            String error = req.queryParams("error");
+            if (success != null) model.put("successMessage", success);
+            if (error != null) model.put("errorMessage", error);
+
             model.put("username", req.session().attribute("username"));
             model.put("role", "Administrador");
 
@@ -73,6 +78,11 @@ public class DashboardController {
         get("/teacher/dashboard", (req, res) -> {
 
             Map<String, Object> model = new HashMap<>();
+
+            String success = req.queryParams("success");
+            String error = req.queryParams("error");
+            if (success != null) model.put("successMessage", success);
+            if (error != null) model.put("errorMessage", error);
 
             model.put("username", req.session().attribute("username"));
             model.put("role", "Docente");
@@ -103,6 +113,9 @@ public class DashboardController {
 
             if (req.queryParams("success") != null) {
                 model.put("successMessage", req.queryParams("success"));
+            }
+            if (req.queryParams("error") != null) {
+                model.put("errorMessage", req.queryParams("error"));
             }
 
             try {

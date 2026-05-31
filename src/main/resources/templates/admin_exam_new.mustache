@@ -32,6 +32,17 @@
                     </select>
                 </div>
                 
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="block mb-2 font-semibold">Inicio de Inscripción</label>
+                        <input type="datetime-local" name="registration_start" required class="w-full border border-gray-300 rounded-lg p-3">
+                    </div>
+                    <div>
+                        <label class="block mb-2 font-semibold">Fin de Inscripción</label>
+                        <input type="datetime-local" name="registration_end" required class="w-full border border-gray-300 rounded-lg p-3">
+                    </div>
+                </div>
+
                 <div>
                     <label class="block mb-2 font-semibold">Fecha y Hora del Examen</label>
                     <!-- El input datetime-local guarda la fecha automáticamente en formato compatible -->
@@ -40,7 +51,7 @@
 
                 <div class="flex gap-4">
                     <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg transition">
-                        Habilitar Inscripción
+                        Crear Mesa de Final
                     </button>
                     <a href="/admin/dashboard" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-lg transition">
                         Cancelar
