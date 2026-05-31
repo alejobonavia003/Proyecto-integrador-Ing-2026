@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calificar Entrega</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px;">
+    
+    <h1>Calificar Entrega de Alumno</h1>
+    <p>Docente: {{username}} | <a href="/teacher/assignments">Volver a Tareas</a></p>
+    
+    {{#successMessage}}
+    <div style="background-color: #ccffcc; padding: 10px; border: 1px solid green; margin-bottom: 15px; color: green; border-radius: 4px;">
+        <b>Éxito:</b> {{successMessage}}
+    </div>
+    {{/successMessage}}
+    
+    {{#errorMessage}}
+    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px; color: red; border-radius: 4px;">
+        <b>Error:</b> {{errorMessage}}
+    </div>
+    {{/errorMessage}}
+    
+    <hr>
+
+    <div style="border: 1px solid #ddd; padding: 20px; background-color: #f9f9f9; border-radius: 6px; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #333;">📋 Detalles del Envío</h3>
+        <p><b>Tarea / Trabajo Práctico:</b> {{assignmentTitle}}</p>
+        <p><b>Alumno:</b> {{studentName}} (Legajo: {{studentLegajo}})</p>
+        <p><b>Fecha de entrega:</b> {{submittedAt}}</p>
+        
+        {{#contentReference}}
+        <p><b>📄 Archivo adjunto por el alumno:</b> 
+            <a href="/{{contentReference}}" target="_blank" style="color: #0056b3; font-weight: bold; text-decoration: underline;">
+                Descargar Solución
+            </a>
+        </p>
+        {{/contentReference}}
+        {{^contentReference}}
+        <p style="color: #777; font-style: italic;">El alumno no adjuntó ningún archivo físico.</p>
+        {{/contentReference}}
+    </div>
+
+    <h2 style="color: #333;">Evaluación de la Cátedra</h2>
+
+    <form method="post" action="/teacher/submissions/{{submissionId}}/grade" style="background-color: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 6px; max-width: 600px;">
+        
+        <div style="margin-bottom: 15px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Nota Numérica (1 al 10):</label>
+            <input type="number" name="grade" step="0.1" min="1" max="10" value="{{currentGrade}}" required style="padding: 8px; width: 120px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Comentarios / Devolución pedagógica:</label>
+            <textarea name="comment" rows="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: Arial, sans-serif; resize: vertical;" placeholder="Escribe aquí las correcciones o aclaraciones para el estudiante...">{{currentComment}}</textarea>
+        </div>
+
+        <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 15px;">
+            Confirmar y Registrar Nota
+        </button>
+    </form>
+
+</body>
+</html>

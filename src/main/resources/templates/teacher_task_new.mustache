@@ -2,97 +2,72 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Publicar Nueva Tarea</title>
+    <title>SGE - Publicar Tareas</title>
 </head>
-<body style="font-family: Arial, sans-serif; padding: 20px;">
-    
-    <h2>Crear Nueva Tarea (Solo Profesores Titulares)</h2>
-    <p>Docente: {{username}} | <a href="/teacher/dashboard">Volver al Tablero</a></p>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; background-color: #f8f9fa;">
 
-    {{#errorMessage}}
-    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px; color: red; border-radius: 4px;">
-        <b>Acceso Denegado:</b> {{errorMessage}}
-    </div>
-    {{/errorMessage}}
-
-    {{#successMessage}}
-    <div style="background-color: #ccffcc; padding: 10px; border: 1px solid green; margin-bottom: 15px; color: green; border-radius: 4px;">
-        <b>Éxito:</b> {{successMessage}}
-    </div>
-    {{/successMessage}}
-
-    <hr>
-
-    <form method="post" action="/teacher/tasks/new" enctype="multipart/form-data">
-      <label><b>Título de la Tarea:</b><br> <input type="text" name="title" required style="width: 300px; padding: 5px;"></label><br><br>
-      
-      <label><b>Descripción o Consigna:</b><br><textarea name="description" rows="4" cols="50" style="padding: 5px;"></textarea></label><br><br>
-      
-      <label><b>Carrera:</b><br>
-        <select name="career_id" style="padding: 5px;">
-          <option value="">-- Opcional --</option>
-          {{#careers}}
-          <option value="{{id}}">{{name}}</option>
-          {{/careers}}
-        </select>
-      </label><br><br>
-      
-      <label><b>Materia (Obligatoria):</b><br>
-        <select name="subject_id" id="subject_select" required style="padding: 5px;">
-          <option value="">-- Seleccione una materia --</option>
-          {{#subjects}}
-          <option value="{{id}}">{{name}}</option>
-          {{/subjects}}
-        </select>
-      </label><br><br>
-      
-      <div id="classes_container" style="display:none; margin-bottom: 15px; background-color: #f0f0f0; padding: 10px; border-radius: 4px;">
-        <label><b>Comisión (Opcional):</b><br>
-          <select name="course_class_id" id="class_select" style="padding: 5px;">
-            <option value="">-- Seleccione comisión --</option>
-          </select>
-        </label>
-        <label style="margin-left:1rem; cursor: pointer;"> 
-            <input type="checkbox" name="all_comisions" id="all_comisions"> Asignar a <b>todas</b> las comisiones
-        </label>
-      </div>
-      
-      <label><b>Archivo adjunto (Opcional):</b><br> <input type="file" name="file" style="margin-top: 5px;"></label><br><br>
-      
-      <button type="submit" style="padding: 10px 20px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Publicar Tarea</button>
-    </form>
-
-    <script>
-      // Script original conservado para la carga dinámica de comisiones
-      document.getElementById('subject_select').addEventListener('change', function() {
-        const subjectId = this.value;
-        const container = document.getElementById('classes_container');
-        const classSelect = document.getElementById('class_select');
-        classSelect.innerHTML = '<option value="">-- Seleccione comisión --</option>';
-        document.getElementById('all_comisions').checked = false;
+    <div style="width: 250px; background-color: #151c2c; min-height: 100vh; color: white; padding: 20px 0; box-sizing: border-box;">
+        <h2 style="color: #2ece89; margin: 0 0 30px 20px; font-size: 22px;">SGE <span style="color: white; font-size: 14px; font-weight: normal;">DOCENTE</span></h2>
+        <p style="color: #6c757d; font-size: 12px; padding-left: 20px; margin-bottom: 20px;">Panel Académico</p>
         
-        if (!subjectId) { container.style.display = 'none'; return; }
+        <a href="/teacher/dashboard" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">🧭 Dashboard</a>
+        <a href="/teacher/commissions" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">👥 Gestión de Comisiones</a>
+        <a href="/teacher/grades" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">📝 Cargar Notas</a>
+        <a href="/teacher/tasks/new" style="display: block; padding: 12px 20px; color: white; background-color: #1e293b; text-decoration: none; font-size: 15px; border-left: 4px solid #2ece89; font-weight: bold;">📖 Publicar Tareas</a>
+        <a href="/teacher/finals" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">📋 Ver Inscriptos a Finales</a>
         
-        fetch('/teacher/tasks/classes?subject_id=' + subjectId)
-          .then(r => r.json())
-          .then(data => {
-            if (Array.isArray(data) && data.length > 0) {
-              data.forEach(function(cc){
-                const opt = document.createElement('option');
-                opt.value = cc.id; opt.text = cc.name;
-                classSelect.appendChild(opt);
-              });
-              container.style.display = 'block';
-            } else {
-              container.style.display = 'none';
-            }
-          }).catch(err => { console.error(err); container.style.display = 'none'; });
-      });
+        <a href="/logout" style="display: block; margin: 50px 20px 0 20px; padding: 10px; border: 1px solid #dc3545; color: #dc3545; text-decoration: none; text-align: center; border-radius: 4px; font-size: 14px;">Cerrar Sesión</a>
+    </div>
 
-      // Si selecciona "Todas las comisiones", se desactiva el select individual
-      document.getElementById('all_comisions').addEventListener('change', function() {
-          document.getElementById('class_select').disabled = this.checked;
-      });
-    </script>
+    <div style="flex: 1; padding: 40px; box-sizing: border-box;">
+        
+        {{#successMessage}}
+        <div style="background-color: #ccffcc; padding: 12px; border: 1px solid green; margin-bottom: 20px; color: green; border-radius: 6px;"><b>Éxito:</b> {{successMessage}}</div>
+        {{/successMessage}}
+        {{#errorMessage}}
+        <div style="background-color: #ffcccc; padding: 12px; border: 1px solid red; margin-bottom: 20px; color: red; border-radius: 6px;"><b>Error:</b> {{errorMessage}}</div>
+        {{/errorMessage}}
+
+        <div style="background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px;">
+            <h1 style="margin: 0; color: #1e293b; font-size: 24px;">📖 Publicar Nueva Tarea Académica</h1>
+            <p style="margin: 5px 0 0 0; color: #6c757d;">Docente: <b>{{username}}</b></p>
+        </div>
+
+        <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); max-width: 800px;">
+            <form method="post" action="/teacher/tasks/create">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Seleccionar Comisión / Materia donde dicta:</label>
+                    <select name="course_class_id" required style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px;">
+                        <option value="">-- Seleccione una comisión --</option>
+                        {{#myClasses}}
+                        <option value="{{id}}">{{name}} (Materia ID: {{subject_id}})</option>
+                        {{/myClasses}}
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Título de la Tarea / Trabajo Práctico:</label>
+                    <input type="text" name="title" required placeholder="Ej: Trabajo Práctico N°1: Introducción a POO" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-size: 15px;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Descripción y Consignas detalladas:</label>
+                    <textarea name="description" rows="8" required placeholder="Escriba aquí las pautas, requerimientos y rúbrica de entrega..." style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-family: Arial, sans-serif; resize: vertical; font-size: 15px;"></textarea>
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #333;">Fecha Límite de Entrega (Due Date):</label>
+                    <input type="datetime-local" name="due_date" required style="padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 15px; color: #333;">
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+                    <button type="submit" style="padding: 12px 24px; background-color: #2ece89; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 15px;">Publicar Asignación</button>
+                    <a href="/teacher/dashboard" style="padding: 12px 24px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 15px; text-align: center;">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
