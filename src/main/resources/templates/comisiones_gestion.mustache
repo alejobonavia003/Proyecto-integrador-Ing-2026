@@ -1,110 +1,217 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Oferta Académica</title>
+    <title>SGE - Gestión de Comisiones</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Módulo del Profesor: Gestión de Comisiones y Alumnos</h1>
-    <p>Bienvenido, {{username}} | <a href="/logout">Cerrar Sesión</a> | <a href="/dashboard">Volver</a></p>
 
-    {{#successMessage}}<p style="color: green;"><b>{{successMessage}}</b></p>{{/successMessage}}
-    {{#errorMessage}}<p style="color: red;"><b>{{errorMessage}}</b></p>{{/errorMessage}}
+<body class="bg-gray-100">
 
-    <hr>
+<div class="flex min-h-screen">
 
-    <h2>Crear Nueva Comisión</h2>
-    <form action="/teacher/comisiones/crear" method="POST">
-        <label>Materia (Solo donde eres Titular):</label><br>
-        <select name="subject_id" required>
-            <option value="" disabled selected>Seleccione una materia...</option>
-            {{#materiasTitular}}
-            <option value="{{id}}">{{name}} (Código: {{code}})</option>
-            {{/materiasTitular}}
-        </select>
-        <br><br>
+    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col justify-between">
+        <div>
+            <div class="mb-10">
+                <h1 class="text-2xl font-bold">
+                    SGE <span class="text-emerald-400">DOCENTE</span>
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">
+                    Panel Académico
+                </p>
+            </div>
 
-        <label>Nombre/Número de la Comisión:</label><br>
-        <input type="text" name="name" placeholder="Ej: Comisión A1" required>
-        <br><br>
+            <nav class="space-y-3">
+                <a href="/teacher/dashboard"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Dashboard
+                </a>
 
-        <label>Cupo de Alumnos (Capacidad Máxima):</label><br>
-        <input type="number" name="quota" value="30" min="1" required>
-        <br><br>
+                <a href="/teacher/comisiones"
+                   class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white font-semibold">
+                    <i class="fa-solid fa-users-rectangle text-emerald-400"></i>
+                    Gestión de Comisiones
+                </a>
 
-        <button type="submit">Habilitar Comisión</button>
-    </form>
+                <a href="#" onclick="alert('El módulo de carga de notas está en desarrollo.'); return false;"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-500">
+                    <i class="fa-solid fa-file-pen"></i>
+                    Cargar Notas
+                </a>
 
-    <hr>
+                <a href="/teacher/tasks"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-book-open"></i>
+                    Publicar Tareas
+                </a>
 
-    <h2>Filtros de Alumnos Inscriptos</h2>
-    <p>Utilice un filtro a la vez para buscar estudiantes de manera independiente.</p>
+                <a href="/teacher/exams"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-list-ol"></i>
+                    Ver Inscriptos a Finales
+                </a>
+            </nav>
+        </div>
 
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>Filtrar por Carrera</th>
-            <th>Filtrar por Materia</th>
-            <th>Filtrar por Comisión</th>
-        </tr>
-        <tr>
-            <td>
-                <form action="/teacher/comisiones" method="GET">
-                    <select name="career_id" onchange="this.form.submit()">
-                        <option value="">Seleccione Carrera...</option>
-                        {{#carrerasFiltro}}
-                        <option value="{{id}}">{{name}}</option>
-                        {{/carrerasFiltro}}
-                    </select>
-                </form>
-            </td>
-            <td>
-                <form action="/teacher/comisiones" method="GET">
-                    <select name="subject_id" onchange="this.form.submit()">
-                        <option value="">Seleccione Materia...</option>
-                        {{#materiasFiltro}}
-                        <option value="{{id}}">{{name}}</option>
-                        {{/materiasFiltro}}
-                    </select>
-                </form>
-            </td>
-            <td>
-                <form action="/teacher/comisiones" method="GET">
-                    <select name="course_class_id" onchange="this.form.submit()">
-                        <option value="">Seleccione Comisión...</option>
-                        {{#comisionesFiltro}}
-                        <option value="{{id}}">{{name}}</option>
-                        {{/comisionesFiltro}}
-                    </select>
-                </form>
-            </td>
-        </tr>
-    </table>
+        <div class="mt-16">
+            <a href="/logout"
+               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
+                Cerrar Sesión
+            </a>
+        </div>
+    </aside>
 
-    <br>
-    <h3>Listado de Estudiantes - Filtro Aplicado: <span style="color: blue;">{{filtroAplicado}}</span></h3>
-    
-    <table border="1" cellpadding="8" width="100%">
-        <thead>
-            <tr style="background-color: #f2f2f2;">
-                <th>DNI</th>
-                <th>Nombre y Apellido</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#alumnos}}
-            <tr>
-                <td>{{dni}}</td>
-                <td>{{name}}</td>
-                <td>{{email}}</td>
-            </tr>
-            {{/alumnos}}
+    <main class="flex-1 p-8 space-y-8">
+
+        <div class="bg-white rounded-xl shadow p-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        👥 Gestión de Comisiones y Alumnos
+                    </h2>
+                    <p class="text-gray-500 mt-2">
+                        Bienvenido, Docente <span class="font-semibold text-slate-700">{{username}}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {{#successMessage}}
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl shadow-sm text-green-700">
+            <span class="font-bold"><i class="fa-solid fa-circle-checkmr-2"></i> Éxito:</span> {{successMessage}}
+        </div>
+        {{/successMessage}}
+        {{#errorMessage}}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl shadow-sm text-red-700">
+            <span class="font-bold"><i class="fa-solid fa-circle-xmark mr-2"></i> Error:</span> {{errorMessage}}
+        </div>
+        {{/errorMessage}}
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <section class="lg:col-span-5 bg-white rounded-xl shadow p-6 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-folder-plus text-emerald-500"></i> Crear Nueva Comisión
+                    </h3>
+                    <form action="/teacher/comisiones/crear" method="POST" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Materia (Solo donde eres Titular):</label>
+                            <select name="subject_id" required class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+                                <option value="" disabled selected>Seleccione una materia...</option>
+                                {{#materiasTitular}}
+                                <option value="{{id}}">{{name}} (Código: {{code}})</option>
+                                {{#materiasTitular}}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Nombre/Número de la Comisión:</label>
+                            <input type="text" name="name" placeholder="Ej: Comisión A1" required class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Cupo de Alumnos (Capacidad Máxima):</label>
+                            <input type="number" name="quota" value="30" min="1" required class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition duration-200 mt-2">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Habilitar Comisión
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="lg:col-span-7 bg-white rounded-xl shadow p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-filter text-blue-500"></i> Filtros de Alumnos Inscriptos
+                </h3>
+                <p class="text-gray-400 text-sm mb-6">Utilice un filtro a la vez para buscar estudiantes de manera independiente.</p>
+                
+                <div class="space-y-5">
+                    <form action="/teacher/comisiones" method="GET" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-sm font-medium text-gray-600 px-1"><i class="fa-solid fa-graduation-cap text-gray-400 w-5"></i> Filtrar por Carrera:</span>
+                        <select name="career_id" onchange="this.form.submit()" class="bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-700 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="">Seleccione Carrera...</option>
+                            {{#carrerasFiltro}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/carrerasFiltro}}
+                        </select>
+                    </form>
+
+                    <form action="/teacher/comisiones" method="GET" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-sm font-medium text-gray-600 px-1"><i class="fa-solid fa-book text-gray-400 w-5"></i> Filtrar por Materia:</span>
+                        <select name="subject_id" onchange="this.form.submit()" class="bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-700 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="">Seleccione Materia...</option>
+                            {{#materiasFiltro}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/materiasFiltro}}
+                        </select>
+                    </form>
+
+                    <form action="/teacher/comisiones" method="GET" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-sm font-medium text-gray-600 px-1"><i class="fa-solid fa-chalkboard-user text-gray-400 w-5"></i> Filtrar por Comisión:</span>
+                        <select name="course_class_id" onchange="this.form.submit()" class="bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-700 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="">Seleccione Comisión...</option>
+                            {{#comisionesFiltro}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/comisionesFiltro}}
+                        </select>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-list text-slate-500"></i> Listado de Estudiantes
+                </h3>
+                {{#filtroAplicado}}
+                <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold border border-blue-100">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                    Filtro: {{filtroAplicado}}
+                </span>
+                {{/filtroAplicado}}
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50/50 text-gray-400 text-xs uppercase tracking-wider border-b border-gray-100">
+                            <th class="p-5 font-semibold w-1/4">DNI</th>
+                            <th class="p-5 font-semibold w-2/5">Nombre y Apellido</th>
+                            <th class="p-5 font-semibold w-7/20">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-700 text-sm">
+                        {{#alumnos}}
+                        <tr class="hover:bg-gray-50/60 transition">
+                            <td class="p-5 font-medium text-gray-900">{{dni}}</td>
+                            <td class="p-5 font-semibold text-slate-800">{{name}}</td>
+                            <td class="p-5 text-gray-500">{{email}}</td>
+                        </tr>
+                        {{/alumnos}}
+                    </tbody>
+                </table>
+            </div>
+
             {{^alumnos}}
-            <tr>
-                <td colspan="3" style="text-align: center; color: gray;">No se encontraron registros para el filtro seleccionado.</td>
-            </tr>
+            <div class="p-16 text-center text-gray-400 italic">
+                <i class="fa-solid fa-users-slash text-4xl mb-3 block text-gray-300"></i>
+                No se encontraron alumnos registrados para el filtro seleccionado.
+            </div>
             {{/alumnos}}
-        </tbody>
-    </table>
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>
