@@ -1,6 +1,9 @@
 target/*
 .class
 .db
+dev.db
+db/dev.db
+
 
 # =========================
 # Java / Maven
