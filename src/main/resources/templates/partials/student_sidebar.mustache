@@ -1,0 +1,74 @@
+<aside class="w-72 bg-slate-900 text-white p-6 flex flex-col shrink-0 min-h-screen">
+
+    <div class="mb-10">
+        <h1 class="text-2xl font-bold">
+            SGE <span class="text-blue-400">ALUMNO</span>
+        </h1>
+        <p class="text-gray-400 text-sm mt-1">
+            Portal Académico
+        </p>
+    </div>
+
+    <nav class="space-y-3 flex-1" id="sidebar-menu">
+
+        <a href="/student/dashboard"
+           class="sidebar-link flex items-center gap-3 p-3 rounded transition hover:bg-white/10 text-gray-300">
+            <i class="fa-solid fa-gauge-high w-5 text-center"></i>
+            Dashboard
+        </a>
+
+        <a href="/student/inscripciones/nueva"
+           class="sidebar-link flex items-center gap-3 p-3 rounded transition hover:bg-white/10 text-gray-300">
+            <i class="fa-solid fa-clipboard-check w-5 text-center"></i>
+            Inscribirse a Materias
+        </a>
+
+        <a href="/student/exams"
+           class="sidebar-link flex items-center gap-3 p-3 rounded transition hover:bg-white/10 text-gray-300">
+            <i class="fa-solid fa-pen-to-square w-5 text-center"></i>
+            Inscribirse a Finales
+        </a>
+
+        <a href="/student/mis-inscripciones"
+           class="sidebar-link flex items-center gap-3 p-3 rounded transition hover:bg-white/10 text-gray-300">
+            <i class="fa-solid fa-list-check w-5 text-center"></i>
+            Mis Inscripciones
+        </a>
+        
+        {{^hasCareer}}
+        <a href="/student/elegir-carrera"
+           class="sidebar-link flex items-center gap-3 p-3 rounded transition hover:bg-white/10 text-yellow-400">
+            <i class="fa-solid fa-graduation-cap w-5 text-center"></i>
+            Elegir Carrera
+        </a>
+        {{/hasCareer}}
+
+    </nav>
+    
+    <div class="mt-auto">
+        <a href="/logout" class="flex items-center gap-3 hover:bg-red-500/20 text-red-400 p-3 rounded transition">
+            <i class="fa-solid fa-right-from-bracket w-5 text-center"></i>
+            Cerrar Sesión
+        </a>
+    </div>
+</aside>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Obtenemos la ruta en la que estamos (ej: "/student/inscripciones/nueva")
+        const currentPath = window.location.pathname;
+        
+        // Buscamos todos los links de nuestro menú
+        const navLinks = document.querySelectorAll("#sidebar-menu .sidebar-link");
+
+        navLinks.forEach(link => {
+            // Si el link coincide con la URL actual...
+            if (link.getAttribute("href") === currentPath) {
+                // Le sacamos el hover gris general
+                link.classList.remove("hover:bg-white/10", "text-gray-300");
+                // Le agregamos el fondo azul, el borde y el texto blanco
+                link.classList.add("bg-blue-500/20", "border-l-4", "border-blue-400", "text-white");
+            }
+        });
+    });
+</script>

@@ -3,76 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <title>Inscripción Académica</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <h1>Inscripción a Materias</h1>
-    <p>Alumno: {{username}} | <a href="/student/dashboard">Regresar al Panel</a></p>
+<body class="bg-gray-100 font-sans">
 
-    {{#errorMessage}}
-    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
-        <p style="margin: 0; color: red;"><b>Error:</b> {{errorMessage}}</p>
-        {{#hasFaltantes}}
-        <p style="margin: 5px 0 0 0;">Correlativas obligatorias adeudadas:</p>
-        <ul>
-            {{#faltantes}}
-            <li>{{name}} (Código: {{code}})</li>
-            {{/faltantes}}
-        </ul>
-        {{/hasFaltantes}}
-    </div>
-    {{/errorMessage}}
+<div class="flex min-h-screen">
 
-    <h2>Materias Habilitadas (Según Avance Académico)</h2>
-    <p><i>Nota: El sistema filtra automáticamente las materias de tu plan que ya tienes aprobadas.</i></p>
+    {{>partials/student_sidebar}}
 
-    <table border="1" cellpadding="10" width="100%">
-        <thead>
-            <tr style="background-color: #e6e6e6;">
-                <th>Código</th>
-                <th>Materia</th>
-                <th>Comisión y Cupos Libres</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#materiasDisponibles}}
-            <tr>
-                <td><b>{{code}}</b></td>
-                <td>{{name}}</td>
-                <td>
-                    {{#hasComisiones}}
-                    <table width="100%" cellpadding="3">
-                        {{#comisiones}}
-                        <tr>
-                            <td>{{name}}</td>
-                            <td>Cupos restantes: <b>{{cupos_restantes}}</b></td>
-                            <td style="text-align: right;">
-                                {{#has_cupo}}
-                                <form action="/student/inscripciones/confirmar" method="POST" style="margin:0;">
-                                    <input type="hidden" name="subject_id" value="{{subject_id}}">
-                                    <input type="hidden" name="course_class_id" value="{{id}}">
-                                    <button type="submit">Inscribirme</button>
-                                </form>
-                                {{/has_cupo}}
-                                {{^has_cupo}}
-                                <span style="color: red; font-style: italic;">Cupo Completo</span>
-                                {{/has_cupo}}
+    <main class="flex-1 p-8">
+
+        <div class="bg-white rounded-xl shadow p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">
+                    Inscripción a Materias 📚
+                </h2>
+                <p class="text-gray-500 mt-2">
+                    Alumno: <span class="font-semibold text-cyan-600">{{username}}</span>
+                </p>
+            </div>
+            <a href="/student/dashboard" class="text-gray-500 hover:text-cyan-600 transition flex items-center gap-2 font-medium bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+                <i class="fa-solid fa-arrow-left"></i> Regresar al Panel
+            </a>
+        </div>
+
+        {{#errorMessage}}
+        <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl shadow-sm mb-8">
+            <div class="flex items-center mb-2">
+                <i class="fa-solid fa-circle-exclamation text-red-500 text-xl mr-3"></i>
+                <p class="text-red-700 font-bold text-lg">Error: {{errorMessage}}</p>
+            </div>
+            
+            {{#hasFaltantes}}
+            <div class="ml-8 mt-3">
+                <p class="text-red-600 font-semibold mb-2">Correlativas obligatorias adeudadas:</p>
+                <ul class="list-disc list-inside text-red-500 space-y-1">
+                    {{#faltantes}}
+                    <li><span class="text-red-700">{{name}}</span> (Código: <span class="font-mono bg-red-100 px-1 rounded">{{code}}</span>)</li>
+                    {{/faltantes}}
+                </ul>
+            </div>
+            {{/hasFaltantes}}
+        </div>
+        {{/errorMessage}}
+
+        <div class="bg-white rounded-xl shadow overflow-hidden mb-8">
+            
+            <div class="p-6 border-b border-gray-100 bg-gray-50">
+                <h3 class="text-xl font-semibold text-gray-800">
+                    Materias Habilitadas
+                </h3>
+                <p class="text-sm text-gray-500 mt-1 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i> El sistema filtra automáticamente las materias de tu plan que ya tienes aprobadas.
+                </p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
+                            <th class="p-4 font-semibold">Código</th>
+                            <th class="p-4 font-semibold">Materia</th>
+                            <th class="p-4 font-semibold min-w-[300px]">Comisión y Cupos Libres</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        
+                        {{#materiasDisponibles}}
+                        <tr class="hover:bg-gray-50 transition duration-150 group">
+                            <td class="p-4 align-top">
+                                <span class="bg-gray-100 text-gray-700 font-mono font-bold px-3 py-1 rounded-md border border-gray-200">
+                                    {{code}}
+                                </span>
+                            </td>
+                            <td class="p-4 align-top text-gray-800 font-medium text-lg">
+                                {{name}}
+                            </td>
+                            <td class="p-4">
+                                {{#hasComisiones}}
+                                <div class="flex flex-col gap-3">
+                                    {{#comisiones}}
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-gray-200 p-4 rounded-lg shadow-sm hover:border-cyan-300 transition gap-4">
+                                        <div>
+                                            <p class="font-bold text-gray-800">{{name}}</p>
+                                            <p class="text-sm text-gray-500 mt-1">
+                                                Cupos restantes: <span class="font-bold {{#has_cupo}}text-green-600{{/has_cupo}}{{^has_cupo}}text-red-500{{/has_cupo}}">{{cupos_restantes}}</span>
+                                            </p>
+                                        </div>
+                                        
+                                        <div>
+                                            {{#has_cupo}}
+                                            <form action="/student/inscripciones/confirmar" method="POST" class="m-0">
+                                                <input type="hidden" name="subject_id" value="{{subject_id}}">
+                                                <input type="hidden" name="course_class_id" value="{{id}}">
+                                                <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-2 rounded-lg text-sm font-bold transition duration-200 shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
+                                                    <i class="fa-solid fa-check"></i> Inscribirme
+                                                </button>
+                                            </form>
+                                            {{/has_cupo}}
+                                            
+                                            {{^has_cupo}}
+                                            <span class="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 rounded-lg text-sm font-bold bg-red-100 text-red-800 border border-red-200">
+                                                <i class="fa-solid fa-lock mr-2"></i> Cupo Completo
+                                            </span>
+                                            {{/has_cupo}}
+                                        </div>
+                                    </div>
+                                    {{/comisiones}}
+                                </div>
+                                {{/hasComisiones}}
+                                
+                                {{^hasComisiones}}
+                                <div class="bg-gray-50 border border-dashed border-gray-300 p-3 rounded-lg text-center">
+                                    <span class="text-sm text-gray-500 italic">
+                                        No hay comisiones dictándose en este momento
+                                    </span>
+                                </div>
+                                {{/hasComisiones}}
                             </td>
                         </tr>
-                        {{/comisiones}}
-                    </table>
-                    {{/hasComisiones}}
-                    {{^hasComisiones}}
-                    <span style="color: gray; font-style: italic;">No hay comisiones dictándose</span>
-                    {{/hasComisiones}}
-                </td>
-            </tr>
-            {{/materiasDisponibles}}
-            {{^materiasDisponibles}}
-            <tr>
-                <td colspan="3" style="text-align: center; color: gray; padding: 20px;">No posees materias disponibles para cursar en tu plan actual.</td>
-            </tr>
-            {{/materiasDisponibles}}
-        </tbody>
-    </table>
+                        {{/materiasDisponibles}}
+                        
+                        {{^materiasDisponibles}}
+                        <tr>
+                            <td colspan="3" class="p-16 text-center">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-solid fa-check-double text-gray-400 text-2xl"></i>
+                                </div>
+                                <h4 class="text-gray-800 font-bold text-lg">Todo al día</h4>
+                                <p class="text-gray-500 mt-1">No posees materias disponibles para cursar en tu plan actual.</p>
+                            </td>
+                        </tr>
+                        {{/materiasDisponibles}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
 </body>
 </html>
