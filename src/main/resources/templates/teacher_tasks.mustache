@@ -1,30 +1,153 @@
-<h2>Mis Tareas</h2>
-{{#tasks}}
-<div style="border:1px solid #ddd;padding:8px;margin-bottom:8px;">
-  <h3>{{title}}</h3>
-  <p>{{description}}</p>
-  {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
-  <p><a href="/teacher/tasks/{{id}}/submissions">Ver entregas</a></p>
-  <h2>Mis Tareas</h2>
-{{#tasks}}
-<div style="border:1px solid #ddd;padding:8px;margin-bottom:8px;">
-  <h3>{{title}}</h3>
-  <p>{{description}}</p>
-  {{#file_path}}<p>Archivo: <a href="/{{file_path}}">descargar</a></p>{{/file_path}}
-  <p><a href="/teacher/tasks/{{id}}/submissions">Ver entregas</a></p>
-  
-  <hr style="border: 0; border-top: 1px solid #eee;">
-  <div style="display: flex; gap: 10px;">
-      <a href="/teacher/tasks/{{id}}/edit" style="color: blue;">✏️ Editar Tarea</a>
-      
-      <form action="/teacher/tasks/{{id}}/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta tarea? Se perderán las entregas asociadas.');" style="margin: 0;">
-          <button type="submit" style="color: red; border: none; background: none; cursor: pointer; text-decoration: underline; font-size: 16px;">🗑️ Eliminar Tarea</button>
-      </form>
-  </div>
-  </div>
-{{/tasks}}
-<br>
-<a href="/teacher/tasks/new" style="padding: 10px; background-color: #0056b3; color: white; text-decoration: none; border-radius: 4px;">➕ Crear nueva tarea</a>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SGE - Publicar Tareas</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col justify-between">
+        <div>
+            <div class="mb-10">
+                <h1 class="text-2xl font-bold">
+                    SGE <span class="text-emerald-400">DOCENTE</span>
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">
+                    Panel Académico
+                </p>
+            </div>
+
+            <nav class="space-y-3">
+                <a href="/teacher/dashboard"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Dashboard
+                </a>
+
+                <a href="/teacher/comisiones"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                    Gestión de Comisiones
+                </a>
+
+                <a href="#" onclick="alert('El módulo de carga de notas está en desarrollo.'); return false;"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-500">
+                    <i class="fa-solid fa-file-pen"></i>
+                    Cargar Notas
+                </a>
+
+                <a href="/teacher/tasks"
+                   class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white font-semibold">
+                    <i class="fa-solid fa-book-open text-emerald-400"></i>
+                    Publicar Tareas
+                </a>
+
+                <a href="/teacher/exams"
+                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-list-ol"></i>
+                    Ver Inscriptos a Finales
+                </a>
+            </nav>
+        </div>
+
+        <div class="mt-16">
+            <a href="/logout"
+               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
+                Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-8">
+
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        📖 Planificación y Tareas Publicadas
+                    </h2>
+                    <p class="text-gray-500 mt-2">
+                        Docente: <span class="font-semibold text-slate-700">{{username}}</span>
+                    </p>
+                </div>
+                
+                <a href="/teacher/tasks/new" 
+                   class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-5 py-3 rounded-xl shadow transition duration-200">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    Crear nueva tarea
+                </a>
+            </div>
+        </div>
+
+        {{#successMessage}}
+        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-xl shadow-sm text-green-700">
+            <span class="font-bold">Éxito:</span> {{successMessage}}
+        </div>
+        {{/successMessage}}
+        {{#errorMessage}}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-xl shadow-sm text-red-700">
+            <span class="font-bold">Error:</span> {{errorMessage}}
+        </div>
+        {{/errorMessage}}
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-500 text-sm border-bottom border-gray-100">
+                            <th class="p-5 font-semibold w-1/4">Título</th>
+                            <th class="p-5 font-semibold w-5/12">Descripción</th>
+                            <th class="p-5 font-semibold w-1/6">Comisión</th>
+                            <th class="p-5 font-semibold w-1/6 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-gray-700">
+                        {{#tasks}}
+                        <tr class="hover:bg-gray-50/70 transition">
+                            <td class="p-5 font-semibold text-gray-900">{{title}}</td>
+                            <td class="p-5 text-gray-500 truncate max-w-xs">{{description}}</td>
+                            <td class="p-5">
+                                <span class="bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1.5 rounded-lg">
+                                    ID: {{course_class_id}}
+                                </span>
+                            </td>
+                            <td class="p-5">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="/teacher/tasks/{{id}}/submissions" 
+                                       class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
+                                        <i class="fa-solid fa-inbox"></i> Entregas
+                                    </a>
+                                    <a href="/teacher/tasks/{{id}}/edit" 
+                                       class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white text-xs font-semibold px-3 py-2 rounded-lg transition">
+                                        <i class="fa-solid fa-pen-to-square"></i> Editar
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/tasks}}
+                    </tbody>
+                </table>
+            </div>
+
+            {{^tasks}}
+            <div class="p-12 text-center text-gray-400 italic">
+                <i class="fa-solid fa-folder-open text-3xl mb-3 block text-gray-300"></i>
+                No has publicado ninguna tarea académica todavía. Haz clic en "Crear nueva tarea" para empezar.
+            </div>
+            {{/tasks}}
+        </div>
+
+    </main>
+
 </div>
-{{/tasks}}
-<a href="/teacher/tasks/new">Crear nueva tarea</a>
+
+</body>
+</html>
