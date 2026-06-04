@@ -35,7 +35,9 @@
                     <tr>
                         <th class="p-4">Materia</th>
                         <th class="p-4">Fecha del Examen</th>
-                        <th class="p-4">Fecha en la que te anotaste</th>
+                        <th class="p-4">Fecha de inscripción</th>
+                        <th class="p-4">Nota</th>
+                        <th class="p-4">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +46,8 @@
                         <td class="p-4 font-semibold">{{subject_code}} - {{subject_name}}</td>
                         <td class="p-4">{{exam_date}}</td>
                         <td class="p-4 text-gray-600">{{enrolled_at}}</td>
+                        <td class="p-4">{{grade}}</td>
+                        <td class="p-4">{{status}}</td>
                     </tr>
                     {{/myExams}}
                     {{^myExams}}

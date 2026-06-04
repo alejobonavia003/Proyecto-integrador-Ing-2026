@@ -87,6 +87,20 @@
             </div>
         </div>
 
+        {{#successMessage}}
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm" role="alert">
+            <p class="font-bold"><i class="fa-solid fa-check-circle mr-2"></i>¡Éxito!</p>
+            <p>{{successMessage}}</p>
+        </div>
+        {{/successMessage}}
+
+        {{#errorMessage}}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
+            <p class="font-bold"><i class="fa-solid fa-circle-xmark mr-2"></i>Error</p>
+            <p>{{errorMessage}}</p>
+        </div>
+        {{/errorMessage}}
+
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
             <div class="bg-white rounded-xl shadow p-5 border-l-4 border-emerald-500">

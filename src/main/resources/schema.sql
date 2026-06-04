@@ -294,9 +294,13 @@ CREATE TABLE teacher_subjects (
 CREATE TABLE final_exams (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     subject_id INTEGER NOT NULL,
+    teacher_id INTEGER NOT NULL,
+    registration_start TIMESTAMP NOT NULL,
+    registration_end TIMESTAMP NOT NULL,
     exam_date TIMESTAMP NOT NULL, -- Fecha en la que se rendirá el examen
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES users(id) ON DELETE RESTRICT
 );
 
 -- =========================================
@@ -308,9 +312,26 @@ CREATE TABLE final_exam_enrollments (
     student_id INTEGER NOT NULL,
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Fecha automática de inscripción
     grade DECIMAL(4,2), -- Calificación (para cargar luego del examen)
+    status VARCHAR(20) NOT NULL DEFAULT 'INSCRIPTO',
     UNIQUE(final_exam_id, student_id), -- Evita que un alumno se anote dos veces
     FOREIGN KEY (final_exam_id) REFERENCES final_exams(id) ON DELETE CASCADE,
     FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =========================================
+-- TABLE: student_subjects (Materias aprobadas definitivamente)
+-- =========================================
+CREATE TABLE student_subjects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    subject_id INTEGER NOT NULL,
+    final_exam_id INTEGER,
+    grade DECIMAL(4,2),
+    approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(student_id, subject_id),
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    FOREIGN KEY (final_exam_id) REFERENCES final_exams(id) ON DELETE SET NULL
 );
 
 

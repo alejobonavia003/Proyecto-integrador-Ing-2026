@@ -1,5 +1,6 @@
 package controllers;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,39 +18,75 @@ public class FinalExamController {
         // [ADMIN] POST para crear el final
         post("/admin/exams/create", (req, res) -> {
             Long subjectId = Long.parseLong(req.queryParams("subject_id"));
-            String examDate = req.queryParams("exam_date"); // Ej: 2026-12-15 10:00:00
-            
-            finalExamService.createExamInstance(subjectId, examDate);
-            res.redirect("/admin/dashboard?success=examen_creado");
+            String registrationStart = req.queryParams("registration_start");
+            String registrationEnd = req.queryParams("registration_end");
+            String examDate = req.queryParams("exam_date"); // Ej: 2026-12-15T10:00
+
+            try {
+                finalExamService.createExamInstance(subjectId, registrationStart, registrationEnd, examDate);
+                res.redirect("/admin/dashboard?success=" + java.net.URLEncoder.encode("Mesa creada correctamente.", "UTF-8"));
+            } catch (Exception e) {
+                String raw = e.getMessage() != null ? e.getMessage() : "";
+                String msg;
+                if (e instanceof IllegalStateException) {
+                    // Errores de negocio (por ejemplo: no existe titular)
+                    msg = raw;
+                } else if (raw.toLowerCase().contains("no such table") || raw.toLowerCase().contains("sqlite")) {
+                    msg = "Error interno: la base de datos no está inicializada correctamente.";
+                } else {
+                    msg = "No se pudo crear la mesa de examen.";
+                }
+                res.redirect("/admin/dashboard?error=" + java.net.URLEncoder.encode(msg, "UTF-8"));
+            }
             return null;
         });
 
         // [STUDENT] POST para inscribirse
         post("/student/exams/enroll", (req, res) -> {
-            Long studentId = req.session().attribute("user_id"); // Asumiendo que el ID está en sesión
+            Long studentId = Long.valueOf(req.session().attribute("userId").toString()); // Asumiendo que el ID está en sesión
             Long finalExamId = Long.parseLong(req.queryParams("final_exam_id"));
             
             try {
                 finalExamService.enrollStudentInFinal(studentId, finalExamId);
                 res.redirect("/student/dashboard?success=inscripto");
             } catch (Exception e) {
-                // Si falla la correlatividad, mandamos el mensaje a la vista
-                res.redirect("/student/dashboard?error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
+                res.redirect("/student/dashboard?error=" + URLEncoder.encode(e.getMessage(), "UTF-8"));
             }
             return null;
         });
 
         // [TEACHER] GET para ver listado
         get("/teacher/exams/:exam_id/students", (req, res) -> {
-            Long teacherId = req.session().attribute("user_id");
+            Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
             Long examId = Long.parseLong(req.params(":exam_id"));
             
             Map<String, Object> model = new HashMap<>();
+            model.put("exam_id", examId);
             model.put("students", finalExamService.getEnrolledStudentsForTeacher(teacherId, examId));
             
             return engine.render(new ModelAndView(model, "teacher_exam_students.mustache"));
         });
 
+        // [TEACHER] POST para cargar el resultado del alumno
+        post("/teacher/exams/:exam_id/students/:enrollment_id/result", (req, res) -> {
+            Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
+            Long examId = Long.parseLong(req.params(":exam_id"));
+            Long enrollmentId = Long.parseLong(req.params(":enrollment_id"));
+            String gradeStr = req.queryParams("grade");
+            String status = req.queryParams("status");
+            Double grade = null;
+            if (gradeStr != null && !gradeStr.trim().isEmpty()) {
+                grade = Double.parseDouble(gradeStr);
+            }
+
+            try {
+                finalExamService.loadFinalResult(teacherId, enrollmentId, grade, status);
+                res.redirect("/teacher/exams/" + examId + "/students?success=resultados_cargados");
+            } catch (Exception e) {
+                res.redirect("/teacher/exams/" + examId + "/students?error=" + URLEncoder.encode(e.getMessage(), "UTF-8"));
+            }
+            return null;
+        });
 
         // [ADMIN] GET para mostrar el formulario de creación de finales
         get("/admin/exams/new", (req, res) -> {
@@ -61,7 +98,7 @@ public class FinalExamController {
 
         // [STUDENT] GET para ver las mesas disponibles para anotarse y sus inscripciones
         get("/student/exams", (req, res) -> {
-            Long studentId = req.session().attribute("user_id"); // Capturamos el ID del alumno en sesión
+            Long studentId = Long.valueOf(req.session().attribute("userId").toString()); // Capturamos el ID del alumno en sesión
             Map<String, Object> model = new HashMap<>();
             
             String error = req.queryParams("error");

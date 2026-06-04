@@ -8,6 +8,7 @@ import java.util.Set;
 import org.javalite.activejdbc.Base;
 
 import models.Correlativity;
+import models.StudentSubject;
 import models.Subject;
 
 /**
@@ -111,21 +112,24 @@ public class CorrelativityService {
      */
     private boolean checkStudentStatusForSubject(Long studentId, Long requiredSubjectId,
             boolean requiresApproved) {
-        // Consultamos el 'status' en la tabla grades relacionando las inscripciones y
-        // comisiones
+        // Primero verificamos si ya existe un registro formal de materia aprobada.
+        if (StudentSubject.count("student_id = ? AND subject_id = ?", studentId, requiredSubjectId) > 0) {
+            return true;
+        }
+
+        // Si no existe registro de aprobación definitiva, consultamos el estado de la cursada
+        // mediante las calificaciones registradas.
         String query = "SELECT g.status " + "FROM grades g "
                 + "INNER JOIN enrollments e ON g.enrollment_id = e.id "
                 + "INNER JOIN course_classes cc ON e.course_class_id = cc.id "
                 + "WHERE e.student_id = ? AND cc.subject_id = ?";
 
-        // ActiveJDBC Base nos permite extraer la primera columna de forma fácil
         List<String> statuses = Base.firstColumn(query, studentId, requiredSubjectId);
 
         boolean hasRegular = false;
         boolean hasAprobado = false;
 
         for (String status : statuses) {
-            // Asumimos nomenclaturas comunes (ajústalas según tu lógica en 'grades.status')
             if ("APROBADO".equalsIgnoreCase(status) || "PROMOCIONADO".equalsIgnoreCase(status)) {
                 hasAprobado = true;
             } else if ("REGULAR".equalsIgnoreCase(status)) {
@@ -134,10 +138,8 @@ public class CorrelativityService {
         }
 
         if (requiresApproved) {
-            // Si la correlativa exige final aprobado, solo importa si hasAprobado es true
             return hasAprobado;
         } else {
-            // Si solo exige tenerla cursada, sirve tanto REGULAR como APROBADA
             return hasAprobado || hasRegular;
         }
     }

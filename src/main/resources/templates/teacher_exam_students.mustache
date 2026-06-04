@@ -23,7 +23,10 @@
                     <tr>
                         <th class="p-4">DNI</th>
                         <th class="p-4">Nombre y Apellido</th>
-                        <th class="p-4">Fecha de Inscripción Automática</th>
+                        <th class="p-4">Fecha de Inscripción</th>
+                        <th class="p-4">Nota</th>
+                        <th class="p-4">Estado</th>
+                        <th class="p-4">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +35,20 @@
                         <td class="p-4 font-medium">{{dni}}</td>
                         <td class="p-4">{{name}}</td>
                         <td class="p-4 text-emerald-600 font-semibold">{{enrolled_at}}</td>
+                        <td class="p-4">{{grade}}</td>
+                        <td class="p-4">{{status}}</td>
+                        <td class="p-4">
+                            <form action="/teacher/exams/{{exam_id}}/students/{{enrollment_id}}/result" method="POST" class="flex flex-col gap-2">
+                                <input type="number" step="0.1" min="0" max="10" name="grade" placeholder="Nota" class="w-full border border-gray-300 rounded-lg p-2">
+                                <select name="status" class="w-full border border-gray-300 rounded-lg p-2">
+                                    <option value="">Auto</option>
+                                    <option value="APROBADO">APROBADO</option>
+                                    <option value="DESAPROBADO">DESAPROBADO</option>
+                                    <option value="AUSENTE">AUSENTE</option>
+                                </select>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">Cargar Resultado</button>
+                            </form>
+                        </td>
                     </tr>
                     {{/students}}
                     {{^students}}
