@@ -10,4 +10,12 @@ class AppTest {
     void exampleTest() {
         assertTrue(true); // Un test simple que siempre pasa
     }
+        @Test
+    void exampleTest1() {
+        assertTrue(true); // Un test simple que siempre pasa
+    }
+        @Test
+    void exampleTest2() {
+        assertTrue(true); // Un test simple que siempre pasa
+    }
 }
