@@ -310,6 +310,15 @@ public class EnrollmentService {
                 throw new IllegalArgumentException("La comisión seleccionada no existe.");
             }
 
+            // --- NUEVA VALIDACIÓN: Verificar si el alumno ya está inscripto a esta comisión ---
+            long inscripcionesPrevias = Enrollment.count("student_id = ? AND course_class_id = ?", studentId, courseClassId);
+            if (inscripcionesPrevias > 0) {
+                Base.rollbackTransaction();
+                // Lanzamos la misma excepción que tu controlador ya sabe cómo manejar en el bloque catch
+                throw new IllegalStateException("Ya te encuentras inscripto en esta comisión.");
+            }
+            // ----------------------------------------------------------------------------------
+
             int cupoMaximo = c.getInteger("capacity") != null ? c.getInteger("capacity") : 30;
             long inscriptos = Enrollment.count("course_class_id = ?", courseClassId);
 
