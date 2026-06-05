@@ -7,6 +7,7 @@ PRAGMA foreign_keys = ON;
 -- =========================================
 -- DROP TABLES
 -- =========================================
+DROP TABLE IF EXISTS student_subjects;
 DROP TABLE IF EXISTS final_exam_enrollments;
 DROP TABLE IF EXISTS final_exams;
 DROP TABLE IF EXISTS teacher_subjects;
@@ -48,7 +49,7 @@ CREATE TABLE users (
 
     FOREIGN KEY (role_id)
         REFERENCES roles(id)
-        ON DELETE RESTRICT
+        ON DELETE RESTRICT,
 
     FOREIGN KEY (study_plan_id)
         REFERENCES study_plans(id)

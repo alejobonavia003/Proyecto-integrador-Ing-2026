@@ -57,14 +57,38 @@ public class FinalExamController {
 
         // [TEACHER] GET para ver listado
         get("/teacher/exams/:exam_id/students", (req, res) -> {
-            Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
-            Long examId = Long.parseLong(req.params(":exam_id"));
-            
-            Map<String, Object> model = new HashMap<>();
-            model.put("exam_id", examId);
-            model.put("students", finalExamService.getEnrolledStudentsForTeacher(teacherId, examId));
-            
-            return engine.render(new ModelAndView(model, "teacher_exam_students.mustache"));
+            try {
+                Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
+                Long examId = Long.parseLong(req.params(":exam_id"));
+                
+                Map<String, Object> model = new HashMap<>();
+                model.put("exam_id", examId);
+                model.put("students", finalExamService.getEnrolledStudentsForTeacher(teacherId, examId));
+                
+                // Procesar mensajes de error/éxito si vienen por parámetro en la URL
+                String error = req.queryParams("error");
+                String success = req.queryParams("success");
+                
+                if (error != null) {
+                    model.put("errorMessage", error);
+                }
+                if (success != null) {
+                    if (success.equals("resultados_cargados")) {
+                        model.put("successMessage", "Resultados cargados correctamente.");
+                    } else {
+                        model.put("successMessage", success);
+                    }
+                }
+                
+                return engine.render(new ModelAndView(model, "teacher_exam_students.mustache"));
+                
+            } catch (Exception e) {
+                // Si el examen no existe, o el profesor no es el titular de esa mesa, se captura el error
+                String errorMsg = e.getMessage() != null ? e.getMessage() : "Error al cargar la mesa de examen.";
+                // Redirigir a la vista general de exámenes mostrando el problema
+                res.redirect("/teacher/exams?error=" + URLEncoder.encode(errorMsg, "UTF-8"));
+                return null;
+            }
         });
 
         // [TEACHER] POST para cargar el resultado del alumno
