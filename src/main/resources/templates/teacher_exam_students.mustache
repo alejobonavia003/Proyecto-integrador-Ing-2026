@@ -17,6 +17,18 @@
             <a href="/teacher/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow">Volver</a>
         </div>
 
+        {{#errorMessage}}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 shadow-sm rounded-r" role="alert">
+            <p class="font-medium">{{errorMessage}}</p>
+        </div>
+        {{/errorMessage}}
+
+        {{#successMessage}}
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 shadow-sm rounded-r" role="alert">
+            <p class="font-medium">{{successMessage}}</p>
+        </div>
+        {{/successMessage}}
+        
         <div class="bg-white rounded-xl shadow overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-slate-800 text-white">
