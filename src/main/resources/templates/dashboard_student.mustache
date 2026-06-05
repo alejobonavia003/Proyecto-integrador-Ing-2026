@@ -8,6 +8,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        @keyframes spin-fun {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .sombrerito-giratorio {
+            display: inline-block;
+            animation: spin-fun 1s ease-in-out;
+        }
+    </style>
+</head>
 </head>
 
 <body class="bg-gray-100">
@@ -78,9 +92,9 @@
                     <i class="fa-solid fa-user-graduate text-2xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800">
-                        Bienvenido, {{username}} 🎓
-                    </h2>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Bienvenido, Alumno <span id="sombrerito-fun">🎓</span>
+                </h1>
 
                     <p class="text-gray-500 mt-2">
                         Rol:
@@ -160,6 +174,33 @@
 
     </main>
 </div>
+    <script>
+        function animarSombrerito() {
+            const sombrero = document.getElementById('sombrerito-fun');
+            
+            if (sombrero) {
+                // Añade la clase que ejecuta la animación CSS
+                sombrero.classList.add('sombrerito-giratorio');
 
+                // Remueve la clase después de 1 segundo (cuando termina el giro)
+                setTimeout(() => {
+                    sombrero.classList.remove('sombrerito-giratorio');
+                    
+                    // Calcula un intervalo aleatorio entre 4 y 12 segundos para la próxima vuelta
+                    const proximoGiro = Math.floor(Math.random() * (12000 - 4000 + 1) + 4000);
+                    
+                    // Programa el siguiente giro
+                    setTimeout(animarSombrerito, proximoGiro);
+                }, 1000);
+            }
+        }
+
+        // Inicia el ciclo 2.5 segundos después de que se cargue la pantalla
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(animarSombrerito, 2500);
+        });
+    </script>
+</body>
+</html>
 </body>
 </html>
