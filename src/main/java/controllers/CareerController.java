@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.logging.Logger;
 
 import services.CareerService;
@@ -88,5 +89,35 @@ public class CareerController {
 
             return engine.render(new ModelAndView(model, "career_detail.mustache"));
         });
+
+
+
+        get("/admin/careers/:id/students", (req, res) -> {
+
+            Long careerId = Long.parseLong(req.params("id"));
+
+            Map<String, Object> career =
+                    careerService.getCareerSummary(careerId);
+
+            if (career == null) {
+                res.redirect("/admin/careers");
+                return null;
+            }
+
+            Map<String, Object> model = new HashMap<>();
+
+            model.putAll(career);
+
+            List<Map<String, Object>> students =
+                    careerService.getStudentsByCareer(careerId);
+
+            model.put("students", students);
+            model.put("hasStudents", !students.isEmpty());
+
+            return engine.render(
+                new ModelAndView(model, "career_students.mustache")
+            );
+        });
     }
+
 }

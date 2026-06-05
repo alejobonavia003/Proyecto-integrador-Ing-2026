@@ -2,7 +2,10 @@ package controllers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.logging.Logger;
+
+import models.Subject;
 
 import services.CareerService;
 import services.CorrelativityService;
@@ -137,6 +140,62 @@ public class StudyPlanController {
             model.put("plan_courses", subjectService.getPlanCoursesView(planId));
 
             return engine.render(new ModelAndView(model, "plan_detalle.mustache"));
+        });
+
+
+        get("/admin/plans/:id/students", (req, res) -> {
+
+            Long planId = Long.parseLong(req.params("id"));
+
+            Map<String, Object> plan =
+                    careerService.getPlanSummary(planId);
+
+            if (plan == null) {
+                res.redirect("/admin/careers");
+                return null;
+            }
+
+            Map<String, Object> model = new HashMap<>();
+
+            model.putAll(plan);
+
+            List<Map<String, Object>> students =
+                    careerService.getStudentsByPlan(planId);
+
+            model.put("students", students);
+            model.put("hasStudents", !students.isEmpty());
+
+            return engine.render(
+                new ModelAndView(model,
+                    "plan_students.mustache")
+            );
+        });
+
+
+        get("/admin/subjects/:id/students", (req, res) -> {
+
+            Long subjectId = Long.parseLong(req.params("id"));
+
+            Subject subject = subjectService.getSubjectById(subjectId);
+
+            if (subject == null) {
+                res.redirect("/admin/careers");
+                return null;
+            }
+
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("subject_name", subject.getString("name"));
+            model.put("subject_code", subject.getString("code"));
+
+            List<Map<String, Object>> students =
+                    subjectService.getStudentsBySubject(subjectId);
+
+            model.put("students", students);
+            model.put("hasStudents", !students.isEmpty());
+
+            return engine.render(
+                    new ModelAndView(model, "subject_students.mustache"));
         });
     }
 }

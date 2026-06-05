@@ -33,11 +33,17 @@
                         </span>
                     </p>
                 </div>
+                <div class="flex gap-3">
+                    <a href="/admin/careers/{{career_id}}/plans/new"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-3 rounded-lg transition">
+                        + Nuevo Plan
+                    </a>
 
-                <a href="/admin/careers/{{career_id}}/plans/new"
-                   class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-3 rounded-lg transition">
-                    + Nuevo Plan
-                </a>
+                    <a href="/admin/careers/{{career_id}}/students"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg transition">
+                        Ver Inscriptos
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -86,6 +92,11 @@
                                     <a href="/admin/careers/{{career_id}}/plans/{{id}}/subjects"
                                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm transition">
                                         Gestionar Materias
+                                    </a>
+
+                                    <a href="/admin/plans/{{id}}/students"
+                                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm transition">
+                                        Ver Inscriptos
                                     </a>
 
                                 </div>

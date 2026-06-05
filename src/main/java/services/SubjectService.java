@@ -9,6 +9,9 @@ import java.util.Optional;
 
 import models.Correlativity;
 import models.Subject;
+import models.User;
+import models.Enrollment;
+import models.CourseClass;
 
 /**
  * Capa de Servicio encargada de la lógica de negocio relacionada con las materias.
@@ -99,6 +102,9 @@ public class SubjectService {
         List<Map<String, Object>> coursesView = new ArrayList<>();
         for (Subject subject : getSubjectsByPlanId(planId)) {
             Map<String, Object> row = new HashMap<>();
+
+            row.put("subject_id", subject.getId());
+
             row.put("code", subject.getString("code"));
             row.put("name", subject.getString("name"));
             row.put("weekly_hours", subject.get("weekly_hours"));
@@ -183,5 +189,40 @@ public class SubjectService {
      */
     public long getTotalSubjectsCount() {
         return models.Subject.count();
+    }
+
+
+    public List<Map<String, Object>> getStudentsBySubject(Long subjectId) {
+
+        List<Map<String, Object>> students = new ArrayList<>();
+
+        List<Enrollment> enrollments = Enrollment.findBySQL(
+            "SELECT e.* " +
+            "FROM enrollments e " +
+            "JOIN course_classes cc ON e.course_class_id = cc.id " +
+            "WHERE cc.subject_id = ?",
+            subjectId
+        );
+
+        for (Enrollment enrollment : enrollments) {
+
+            User user = User.findById(enrollment.getLong("student_id"));
+            CourseClass courseClass =
+                    CourseClass.findById(enrollment.getLong("course_class_id"));
+
+            Map<String, Object> row = new HashMap<>();
+
+            row.put("id", user.getId());
+            row.put("dni", user.getString("dni"));
+            row.put("name", user.getString("name"));
+            row.put("email", user.getString("email"));
+
+            row.put("commission_name",
+                    courseClass.getString("name"));
+
+            students.add(row);
+        }
+
+        return students;
     }
 }

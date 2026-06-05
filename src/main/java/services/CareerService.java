@@ -2,12 +2,14 @@ package services;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.javalite.activejdbc.Model;
 
 import models.Career;
 import models.StudyPlan;
+import models.User;
 
 public class CareerService {
 
@@ -132,5 +134,57 @@ public class CareerService {
      */
     public long getTotalCareersCount() {
         return models.Career.count();
+    }
+
+    public List<Map<String, Object>> getStudentsByCareer(Long careerId) {
+
+    List<Map<String, Object>> studentsView = new java.util.ArrayList<>();
+
+        List<Model> students = User.findBySQL(
+            "SELECT u.* " +
+            "FROM users u " +
+            "INNER JOIN study_plans sp ON u.study_plan_id = sp.id " +
+            "WHERE sp.career_id = ? " +
+            "AND u.role_id = 3",
+            careerId
+        );
+
+        for (Model student : students) {
+            Map<String, Object> row = new HashMap<>();
+
+            row.put("id", student.getId());
+            row.put("dni", student.getString("dni"));
+            row.put("name", student.getString("name"));
+            row.put("email", student.getString("email"));
+
+            studentsView.add(row);
+        }
+
+        return studentsView;
+    }
+
+
+    public List<Map<String, Object>> getStudentsByPlan(Long planId) {
+
+        List<Map<String, Object>> students = new ArrayList<>();
+
+        List<Model> users = User.where(
+            "role_id = 3 AND study_plan_id = ?",
+            planId
+        );
+
+        for (Model user : users) {
+
+            Map<String, Object> row = new HashMap<>();
+
+            row.put("id", user.getId());
+            row.put("dni", user.getString("dni"));
+            row.put("name", user.getString("name"));
+            row.put("email", user.getString("email"));
+
+            students.add(row);
+        }
+
+        return students;
     }
 }
