@@ -5,10 +5,15 @@
 <div style="border:1px solid #ccc; padding:15px; margin-bottom:12px; background-color:#f9f9f9; border-radius:4px;">
   <p><strong>Alumno:</strong> {{student_name}}</p>
   <p><strong>Fecha de entrega:</strong> {{submitted_at}}</p>
-  {{#content_reference}}
-    <p><strong>Archivo adjunto:</strong> <a href="/{{content_reference}}" target="_blank">Descargar entrega</a></p>
+{{#content_reference}}
+    <p>
+        <strong>Archivo adjunto:</strong> 
+        <a href="/teacher/submissions/download/{{id}}" 
+           style="color:#007bff; text-decoration:underline;">
+           <i class="fa-solid fa-download"></i> Descargar documento del alumno
+        </a>
+    </p>
   {{/content_reference}}
-  
   <hr style="border:0; border-top:1px solid #eee;">
   
   <form method="POST" action="/teacher/submissions/{{id}}/grade">
