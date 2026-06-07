@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.javalite.activejdbc.Base;
+
 import models.Career;
 import models.CourseClass;
-import models.Enrollment;
 import models.StudentSubject;
 import models.StudyPlan;
 import models.TeacherSubject;
@@ -39,58 +40,63 @@ public class DashboardService {
 
         return data;
     }
+public Map<String, Object> getStudentDashboardData(Long studentId) {
 
-    public Map<String, Object> getStudentDashboardData(Long studentId) {
+    Map<String, Object> data = new HashMap<>();
 
-        Map<String, Object> data = new HashMap<>();
+    User student = User.findById(studentId);
 
-        User student = User.findById(studentId);
-
-        if (student == null) {
-            data.put("averageGrade", "--");
-            return data;
-        }
-
-        Long planId = student.getLong("study_plan_id");
-
-        if (planId == null) {
-
-            data.put("hasCareer", false);
-            data.put("averageGrade", "--");
-            return data;
-        }
-
-        data.put("hasCareer", true);
-
-        StudyPlan plan = StudyPlan.findById(planId);
-
-        if (plan != null) {
-
-            data.put("planName", plan.getString("name"));
-
-            Career career = Career.findById(plan.getLong("career_id"));
-
-            if (career != null) {
-                data.put("careerName", career.getString("name"));
-            }
-        }
-
-        long enrollmentsCount = Enrollment.count("student_id = ?", studentId);
-
-        data.put("enrollmentsCount", enrollmentsCount);
-        data.put("averageGrade", calculateAverageGrade(studentId));
-
-        //Contadores de tareas
-        Map<String, Long> taskCounters =
-        assignmentService.getAssignmentCounters(studentId);
-
-        data.put("pendingTasks", taskCounters.get("pendingTasks"));
-        data.put("submittedTasks", taskCounters.get("submittedTasks"));
-        data.put("gradedTasks", taskCounters.get("gradedTasks"));
-
+    if (student == null) {
+        data.put("averageGrade", "--");
         return data;
-
     }
+
+    Long planId = student.getLong("study_plan_id");
+
+    if (planId == null) {
+        data.put("hasCareer", false);
+        data.put("averageGrade", "--");
+        return data;
+    }
+
+    data.put("hasCareer", true);
+
+    StudyPlan plan = StudyPlan.findById(planId);
+
+    if (plan != null) {
+        data.put("planName", plan.getString("name"));
+        Career career = Career.findById(plan.getLong("career_id"));
+        if (career != null) {
+            data.put("careerName", career.getString("name"));
+        }
+    }
+
+    // --- CORRECCIÓN: contar materias DISTINTAS usando Base.findAll ---
+    String sql = "SELECT COUNT(DISTINCT s.id) as unique_subjects FROM subjects s " +
+                 "JOIN course_classes cc ON s.id = cc.subject_id " +
+                 "JOIN enrollments e ON cc.id = e.course_class_id " +
+                 "WHERE e.student_id = ?";
+    List<Map> rows = Base.findAll(sql, studentId);
+    Long uniqueSubjectsCount = 0L;
+    if (rows != null && !rows.isEmpty()) {
+        Object countValue = rows.get(0).get("unique_subjects");
+        if (countValue instanceof Number) {
+            uniqueSubjectsCount = ((Number) countValue).longValue();
+        }
+    }
+    data.put("enrollmentsCount", uniqueSubjectsCount);
+    // ----------------------------------------------------------------
+
+    data.put("averageGrade", calculateAverageGrade(studentId));
+
+    // Contadores de tareas
+    Map<String, Long> taskCounters = assignmentService.getAssignmentCounters(studentId);
+    data.put("pendingTasks", taskCounters.get("pendingTasks"));
+    data.put("submittedTasks", taskCounters.get("submittedTasks"));
+    data.put("gradedTasks", taskCounters.get("gradedTasks"));
+
+    return data;
+}
 
     private String calculateAverageGrade(Long studentId) {
         List<StudentSubject> approvedSubjects = StudentSubject.where("student_id = ? AND grade IS NOT NULL", studentId);
