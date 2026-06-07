@@ -23,29 +23,28 @@ public class EnrollmentTeacherController {
                 get("/teacher/comisiones", (req, res) -> {
 
                         Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
-
                         Map<String, Object> model = new HashMap<>();
-
                         model.put("username", req.session().attribute("username"));
 
                         if (req.queryParams("success") != null) {
-
                                 model.put("successMessage", req.queryParams("success"));
                         }
-
                         if (req.queryParams("error") != null) {
-
                                 model.put("errorMessage", req.queryParams("error"));
                         }
 
-                        model.putAll(enrollmentService.getTeacherCommissionViewData(teacherId));
+                        // 1. Extraer los parámetros actuales de la URL
+                        String careerId = req.queryParams("career_id");
+                        String subjectId = req.queryParams("subject_id");
+                        String classId = req.queryParams("course_class_id");
 
-                        model.putAll(enrollmentService.getFilteredStudents(
-                                        req.queryParams("career_id"), req.queryParams("subject_id"),
-                                        req.queryParams("course_class_id")));
+                        // 2. Cargar listas desplegables (ahora se filtran dinámicamente)
+                        model.putAll(enrollmentService.getTeacherCommissionViewData(teacherId, careerId, subjectId, classId));
 
-                        return engine.render(
-                                        new ModelAndView(model, "comisiones_gestion.mustache"));
+                        // 3. Cargar la tabla de alumnos combinando todos los filtros activos
+                        model.putAll(enrollmentService.getFilteredStudents(careerId, subjectId, classId));
+
+                        return engine.render(new ModelAndView(model, "comisiones_gestion.mustache"));
                 });
 
                 post("/teacher/comisiones/crear", (req, res) -> {
