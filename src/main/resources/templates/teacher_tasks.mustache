@@ -14,57 +14,7 @@
 
 <div class="flex min-h-screen">
 
-    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col justify-between">
-        <div>
-            <div class="mb-10">
-                <h1 class="text-2xl font-bold">
-                    SGE <span class="text-emerald-400">DOCENTE</span>
-                </h1>
-                <p class="text-gray-400 text-sm mt-1">
-                    Panel Académico
-                </p>
-            </div>
-
-            <nav class="space-y-3">
-                <a href="/teacher/dashboard"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-gauge-high"></i>
-                    Dashboard
-                </a>
-
-                <a href="/teacher/comisiones"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-users-rectangle"></i>
-                    Gestión de Comisiones
-                </a>
-                
-                <a href="/teacher/grades"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-file-pen"></i>
-                    Cargar Notas
-                </a>
-
-                <a href="/teacher/tasks"
-                   class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white font-semibold">
-                    <i class="fa-solid fa-book-open text-emerald-400"></i>
-                    Publicar Tareas
-                </a>
-
-                <a href="/teacher/exams"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-list-ol"></i>
-                    Ver Inscriptos a Finales
-                </a>
-            </nav>
-        </div>
-
-        <div class="mt-16">
-            <a href="/logout"
-               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
-                Cerrar Sesión
-            </a>
-        </div>
-    </aside>
+    {{>partials/teacher_sidebar}}
 
     <main class="flex-1 p-8">
 

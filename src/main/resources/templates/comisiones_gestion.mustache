@@ -5,10 +5,8 @@
     <meta charset="UTF-8">
     <title>SGE - Gestión de Comisiones</title>
 
-    <!-- Tailwind CSS idéntico a tu Dashboard -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Font Awesome para los iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
@@ -16,64 +14,10 @@
 
 <div class="flex min-h-screen">
 
-    <!-- BARRA LATERAL (Clonada exactamente de tu Dashboard) -->
-    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col justify-between">
-        <div>
-            <div class="mb-10">
-                <h1 class="text-2xl font-bold">
-                    SGE <span class="text-emerald-400">DOCENTE</span>
-                </h1>
-                <p class="text-gray-400 text-sm mt-1">
-                    Panel Académico
-                </p>
-            </div>
+    {{>partials/teacher_sidebar}}
 
-            <nav class="space-y-3">
-                <a href="/teacher/dashboard"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-gauge-high"></i>
-                    Dashboard
-                </a>
-
-                <!-- Pestaña Activa: Gestión de Comisiones -->
-                <a href="/teacher/comisiones"
-                   class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white font-semibold">
-                    <i class="fa-solid fa-users-rectangle text-emerald-400"></i>
-                    Gestión de Comisiones
-                </a>
-
-                <a href="#" onclick="alert('El módulo de carga de notas está en desarrollo.'); return false;"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-500">
-                    <i class="fa-solid fa-file-pen"></i>
-                    Cargar Notas
-                </a>
-
-                <a href="/teacher/tasks"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-book-open"></i>
-                    Publicar Tareas
-                </a>
-
-                <a href="/teacher/exams"
-                   class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
-                    <i class="fa-solid fa-list-ol"></i>
-                    Ver Inscriptos a Finales
-                </a>
-            </nav>
-        </div>
-
-        <div class="mt-16">
-            <a href="/logout"
-               class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
-                Cerrar Sesión
-            </a>
-        </div>
-    </aside>
-
-    <!-- CONTENIDO PRINCIPAL (Derecha) -->
     <main class="flex-1 p-8 space-y-8">
 
-        <!-- Cabecera de la Sección (Estilo tarjeta Dashboard) -->
         <div class="bg-white rounded-xl shadow p-6">
             <div class="flex justify-between items-center">
                 <div>
@@ -87,7 +31,6 @@
             </div>
         </div>
 
-        <!-- Mensajes de Feedback Estilizados -->
         {{#successMessage}}
         <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl shadow-sm text-green-700">
             <span class="font-bold"><i class="fa-solid fa-circle-check mr-2"></i> Éxito:</span> {{successMessage}}
@@ -99,10 +42,8 @@
         </div>
         {{/errorMessage}}
 
-        <!-- Seccion superior de doble columna -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- FORMULARIO CREAR NUEVA COMISIÓN -->
             <section class="lg:col-span-5 bg-white rounded-xl shadow p-6 flex flex-col justify-between">
                 <div>
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -115,7 +56,7 @@
                                 <option value="" disabled selected>Seleccione una materia...</option>
                                 {{#materiasTitular}}
                                 <option value="{{id}}">{{name}} (Código: {{code}})</option>
-                                {{/materiasTitular}} <!-- CORREGIDO AQUÍ -->
+                                {{/materiasTitular}}
                             </select>
                         </div>
 
@@ -136,7 +77,6 @@
                 </div>
             </section>
 
-            <!-- FILTROS DE ALUMNOS -->
             <section class="lg:col-span-7 bg-white rounded-xl shadow p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">
                     <i class="fa-solid fa-filter text-blue-500"></i> Filtros de Alumnos Inscriptos
@@ -184,10 +124,40 @@
                         </a>
                     </div>
                 </form>
+                <div class="space-y-5">
+                    <form action="/teacher/comisiones" method="GET" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-sm font-medium text-gray-600 px-1"><i class="fa-solid fa-graduation-cap text-gray-400 w-5"></i> Filtrar por Carrera:</span>
+                        <select name="career_id" onchange="this.form.submit()" class="bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-700 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="">Seleccione Carrera...</option>
+                            {{#carrerasFiltro}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/carrerasFiltro}}
+                        </select>
+                    </form>
+
+                    <form action="/teacher/comisiones" method="GET" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-sm font-medium text-gray-600 px-1"><i class="fa-solid fa-book text-gray-400 w-5"></i> Filtrar por Materia:</span>
+                        <select name="subject_id" onchange="this.form.submit()" class="bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-700 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="">Seleccione Materia...</option>
+                            {{#materiasFiltro}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/materiasFiltro}}
+                        </select>
+                    </form>
+
+                    <form action="/teacher/comisiones" method="GET" class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <span class="text-sm font-medium text-gray-600 px-1"><i class="fa-solid fa-chalkboard-user text-gray-400 w-5"></i> Filtrar por Comisión:</span>
+                        <select name="course_class_id" onchange="this.form.submit()" class="bg-white border border-gray-200 rounded-lg p-2 text-sm text-gray-700 min-w-[240px] focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            <option value="">Seleccione Comisión...</option>
+                            {{#comisionesFiltro}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/comisionesFiltro}}
+                        </select>
+                    </form>
+                </div>
             </section>
         </div>
 
-        <!-- LISTADO DE ESTUDIANTES -->
         <div class="bg-white rounded-xl shadow overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <h3 class="font-bold text-gray-800 text-lg flex items-center gap-2">
