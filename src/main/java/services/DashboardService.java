@@ -80,9 +80,13 @@ public class DashboardService {
         data.put("enrollmentsCount", enrollmentsCount);
         data.put("averageGrade", calculateAverageGrade(studentId));
 
-        // Contar tareas disponibles para el alumno
-        long tasksCount = assignmentService.getAssignmentsForStudent(studentId).size();
-        data.put("tasksCount", tasksCount);
+        //Contadores de tareas
+        Map<String, Long> taskCounters =
+        assignmentService.getAssignmentCounters(studentId);
+
+        data.put("pendingTasks", taskCounters.get("pendingTasks"));
+        data.put("submittedTasks", taskCounters.get("submittedTasks"));
+        data.put("gradedTasks", taskCounters.get("gradedTasks"));
 
         return data;
 
