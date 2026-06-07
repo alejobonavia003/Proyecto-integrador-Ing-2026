@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SGE - Control de Calificaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col justify-between">
+        <div>
+            <div class="mb-10">
+                <h1 class="text-2xl font-bold">
+                    SGE <span class="text-emerald-400">DOCENTE</span>
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">Panel Académico</p>
+            </div>
+
+            <nav class="space-y-3">
+                <a href="/teacher/dashboard" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-gauge-high"></i> Dashboard
+                </a>
+                <a href="/teacher/comisiones" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-users-rectangle"></i> Gestión de Comisiones
+                </a>
+                <a href="/teacher/grades" class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white font-semibold">
+                    <i class="fa-solid fa-file-pen text-emerald-400"></i> Cargar Notas
+                </a>
+                <a href="/teacher/tasks" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-book-open"></i> Publicar Tareas
+                </a>
+                <a href="/teacher/exams" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-list-ol"></i> Ver Inscriptos a Finales
+                </a>
+            </nav>
+        </div>
+        <div class="mt-16">
+            <a href="/logout" class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">Cerrar Sesión</a>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-8 space-y-6">
+        <div class="bg-white rounded-xl shadow p-6">
+            <h2 class="text-3xl font-bold text-gray-800">✍️ Registro de Entregas y Notas</h2>
+            <p class="text-gray-500 mt-1">Monitoreo en tiempo real de estados de trabajos prácticos de alumnos inscriptos.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-500 text-xs font-semibold uppercase tracking-wider border-b border-gray-100">
+                            <th class="p-5">Estudiante</th>
+                            <th class="p-5">Materia / Comisión</th>
+                            <th class="p-5">Trabajo Académico</th>
+                            <th class="p-5 text-center">Estado actual</th>
+                            <th class="p-5 text-center">Calificación</th>
+                            <th class="p-5 text-center">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                        {{#trackingList}}
+                        <tr class="hover:bg-gray-50/80 transition">
+                            <td class="p-5 font-semibold text-gray-900">{{student_name}}</td>
+                            <td class="p-5">
+                                <span class="block font-medium text-slate-800">{{subject_name}}</span>
+                                <span class="text-xs text-gray-400">{{class_name}}</span>
+                            </td>
+                            <td class="p-5 text-gray-600 font-medium">{{assignment_title}}</td>
+                            <td class="p-5 text-center">
+                                {{#isFaltaEntregar}}
+                                <span class="inline-flex items-center gap-1.5 bg-red-50 text-red-700 px-3 py-1.5 rounded-full text-xs font-bold border border-red-100">
+                                    <span class="w-2 h-2 rounded-full bg-red-500"></span> Falta Entregar
+                                </span>
+                                {{/isFaltaEntregar}}
+                                
+                                {{#isTodaviaNoCorrigio}}
+                                <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-bold border border-amber-100">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> Todavía no corrigió
+                                </span>
+                                {{/isTodaviaNoCorrigio}}
+                                
+                                {{#isYaCorrigio}}
+                                <span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-xs font-bold border border-green-100">
+                                    <span class="w-2 h-2 rounded-full bg-green-500"></span> Ya corrigió
+                                </span>
+                                {{/isYaCorrigio}}
+                            </td>
+                            <td class="p-5 text-center font-bold text-base text-slate-800">
+                                {{#grade}}{{grade}}{{/grade}}
+                                {{^grade}}<span class="text-gray-300">—</span>{{/grade}}
+                            </td>
+                            <td class="p-5 text-center">
+                                {{^isFaltaEntregar}}
+                                <a href="/teacher/tasks/{{assignment_id}}/submissions"
+                                   class="inline-flex items-center bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold text-xs px-3 py-2 rounded-lg transition">
+                                    <i class="fa-solid fa-signature mr-1"></i> Corregir
+                                </a>
+                                {{/isFaltaEntregar}}
+                                {{#isFaltaEntregar}}
+                                <span class="text-xs text-gray-400 italic">No disponible</span>
+                                {{/isFaltaEntregar}}
+                            </td>
+                        </tr>
+                        {{/trackingList}}
+                        {{^trackingList}}
+                        <tr>
+                            <td colspan="6" class="p-12 text-center text-gray-400 italic">
+                                <i class="fa-solid fa-folder-open text-3xl mb-2 block text-gray-300"></i>
+                                No se registran alumnos inscriptos con tareas publicadas en sus comisiones.
+                            </td>
+                        </tr>
+                        {{/trackingList}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</div>
+</body>
+</html>

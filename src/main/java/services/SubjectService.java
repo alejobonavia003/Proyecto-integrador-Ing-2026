@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import models.Correlativity;
+import models.CourseClass;
+import models.Enrollment;
 import models.Subject;
 import models.User;
-import models.Enrollment;
-import models.CourseClass;
 
 /**
  * Capa de Servicio encargada de la lógica de negocio relacionada con las materias.
@@ -222,6 +222,9 @@ public class SubjectService {
 
             students.add(row);
         }
+
+
+        
 
         return students;
     }

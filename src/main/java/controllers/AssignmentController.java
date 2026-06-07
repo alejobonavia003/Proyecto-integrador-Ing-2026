@@ -115,6 +115,32 @@ public class AssignmentController {
       return null;
     });
 
+
+    // GET: Descargar el archivo adjunto de una entrega específica
+    get("/teacher/submissions/download/:id", (req, res) -> {
+      Long submissionId = Long.parseLong(req.params(":id"));
+      models.Submission submission = submissionService.getSubmissionById(submissionId);
+
+      if (submission != null && submission.getString("content_reference") != null) {
+        File file = new File(submission.getString("content_reference"));
+        
+        if (file.exists()) {
+          // Forzar la descarga del archivo con su nombre original
+          res.header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+          res.type("application/octet-stream"); // Tipo genérico para forzar descarga
+
+          try (java.io.InputStream in = new java.io.FileInputStream(file);
+               java.io.OutputStream out = res.raw().getOutputStream()) {
+            in.transferTo(out);
+            out.flush();
+          }
+          return res.raw();
+        }
+      }
+      res.status(404);
+      return "El archivo del alumno no existe o fue eliminado del servidor.";
+    });
+
     post("/teacher/tasks/new", (req, res) -> {
       // Habilitar multipart
       req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("./uploads"));
