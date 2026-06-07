@@ -2,79 +2,151 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SGE - Mis Tareas</title>
+    <title>SGE - Crear Tarea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; background-color: #f8f9fa;">
+<body class="bg-gray-100">
 
-    <div style="width: 250px; background-color: #151c2c; min-height: 100vh; color: white; padding: 20px 0; box-sizing: border-box; flex-shrink: 0;">
-        <h2 style="color: #2ece89; margin: 0 0 30px 20px; font-size: 22px;">SGE <span style="color: white; font-size: 14px; font-weight: normal;">DOCENTE</span></h2>
-        <p style="color: #6c757d; font-size: 12px; padding-left: 20px; margin-bottom: 20px;">Panel Académico</p>
-        
-        <a href="/teacher/dashboard" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">🧭 Dashboard</a>
-        <a href="/teacher/commissions" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">👥 Gestión de Comisiones</a>
-        <a href="/teacher/grades" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">📝 Cargar Notas</a>
-        <a href="/teacher/tasks" style="display: block; padding: 12px 20px; color: white; background-color: #1e293b; text-decoration: none; font-size: 15px; border-left: 4px solid #2ece89; font-weight: bold;">📖 Publicar Tareas</a>
-        <a href="/teacher/finals" style="display: block; padding: 12px 20px; color: #adb5bd; text-decoration: none; font-size: 15px;">📋 Ver Inscriptos a Finales</a>
-        
-        <a href="/logout" style="display: block; margin: 50px 20px 0 20px; padding: 10px; border: 1px solid #dc3545; color: #dc3545; text-decoration: none; text-align: center; border-radius: 4px; font-size: 14px;">Cerrar Sesión</a>
-    </div>
+<div class="flex min-h-screen">
 
-    <div style="flex: 1; padding: 40px; box-sizing: border-box;">
-        
-        {{#successMessage}}
-        <div style="background-color: #ccffcc; padding: 12px; border: 1px solid green; margin-bottom: 20px; color: green; border-radius: 6px;"><b>Éxito:</b> {{successMessage}}</div>
-        {{/successMessage}}
-        {{#errorMessage}}
-        <div style="background-color: #ffcccc; padding: 12px; border: 1px solid red; margin-bottom: 20px; color: red; border-radius: 6px;"><b>Error:</b> {{errorMessage}}</div>
-        {{/errorMessage}}
-
-        <div style="background-color: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h1 style="margin: 0; color: #1e293b; font-size: 24px;">📖 Planificación y Tareas Publicadas</h1>
-                <p style="margin: 5px 0 0 0; color: #6c757d;">Docente: <b>{{username}}</b></p>
+    <aside class="w-72 bg-slate-900 text-white p-6 flex flex-col justify-between">
+        <div>
+            <div class="mb-10">
+                <h1 class="text-2xl font-bold">
+                    SGE <span class="text-emerald-400">DOCENTE</span>
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">Panel Académico</p>
             </div>
-            <a href="/teacher/tasks/new" style="padding: 12px 20px; background-color: #2ece89; color: white; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 4px rgba(46,206,137,0.3);">
-                ➕ Crear nueva tarea
+
+            <nav class="space-y-3">
+                <a href="/teacher/dashboard" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-gauge-high"></i> Dashboard
+                </a>
+                <a href="/teacher/comisiones" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-users-rectangle"></i> Gestión de Comisiones
+                </a>
+                <a href="/teacher/grades" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-file-pen"></i> Cargar Notas
+                </a>
+                <a href="/teacher/tasks" class="flex items-center gap-3 bg-emerald-500/20 border-l-4 border-emerald-400 p-3 rounded text-white font-semibold">
+                    <i class="fa-solid fa-book-open text-emerald-400"></i> Publicar Tareas
+                </a>
+                <a href="/teacher/exams" class="flex items-center gap-3 hover:bg-white/10 p-3 rounded transition text-gray-200">
+                    <i class="fa-solid fa-list-ol"></i> Ver Inscriptos a Finales
+                </a>
+            </nav>
+        </div>
+
+        <div class="mt-16">
+            <a href="/logout" class="block text-center border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition rounded p-3">
+                Cerrar Sesión
             </a>
         </div>
+    </aside>
 
-        <div style="background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background-color: #f1f3f5; color: #495057;">
-                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 25%;">Título</th>
-                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 40%;">Descripción</th>
-                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 15%;">Comisión</th>
-                        <th style="padding: 15px; border-bottom: 2px solid #dee2e6; width: 20%; text-align: center;">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#list}}
-                    <tr style="border-bottom: 1px solid #dee2e6; color: #333;">
-                        <td style="padding: 15px; font-weight: bold; color: #1e293b;">{{title}}</td>
-                        <td style="padding: 15px; font-size: 14px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px;">{{description}}</td>
-                        <td style="padding: 15px;"><span style="background-color: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: bold;">ID: {{course_class_id}}</span></td>
-                        <td style="padding: 15px; text-align: center; display: flex; gap: 8px; justify-content: center;">
-                            <a href="/teacher/submissions?assignment_id={{id}}" style="padding: 6px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold;">
-                                📥 Ver Entregas
-                            </a>
-                            <a href="/teacher/tasks/edit?id={{id}}" style="padding: 6px 10px; background-color: #ffc107; color: #212529; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold;">
-                                ✏️ Editar
-                            </a>
-                        </td>
-                    </tr>
-                    {{/list}}
-                </tbody>
-            </table>
-
-            {{^list}}
-            <div style="padding: 40px; text-align: center; color: #777; font-style: italic;">
-                No has publicado ninguna tarea académica todavía. Haz clic en "Crear nueva tarea" para empezar.
+    <main class="flex-1 p-8 space-y-6">
+        <div class="bg-white rounded-xl shadow p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">📝 Crear Nueva Tarea Académica</h2>
+                    <p class="text-gray-500 mt-1">Asigne consignas y materiales de estudio a sus alumnos.</p>
+                </div>
+                <a href="/teacher/tasks" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fa-solid fa-circle-arrow-left text-3xl"></i>
+                </a>
             </div>
-            {{/list}}
         </div>
 
-    </div>
+        {{#errorMessage}}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl shadow-sm text-red-700">
+            <span class="font-bold">Error:</span> {{errorMessage}}
+        </div>
+        {{/errorMessage}}
 
+        <div class="bg-white rounded-xl shadow p-6">
+            <form action="/teacher/tasks/new" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Título de la Tarea:</label>
+                    <input type="text" name="title" required placeholder="Ej: Trabajo Práctico Integrador N° 1" 
+                           class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Descripción / Consigna Extensa:</label>
+                    <textarea name="description" required rows="5" placeholder="Escriba aquí los criterios básicos, pautas de desarrollo y entrega..."
+                              class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Materia Asociada:</label>
+                        <select name="subject_id" id="subject_id" required class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+                            <option value="" disabled selected>Seleccione una materia...</option>
+                            {{#subjects}}
+                            <option value="{{id}}">{{name}}</option>
+                            {{/subjects}}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Comisión Destinataria:</label>
+                        <select name="course_class_id" id="course_class_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition">
+                            <option value="">Seleccione primero una materia...</option>
+                        </select>
+                        
+                        <div class="mt-3">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="all_comisions" class="form-checkbox h-5 w-5 text-emerald-500 rounded border-gray-300">
+                                <span class="ml-2 text-sm text-gray-600 font-medium">Asignar de forma global a todas las comisiones</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Archivo de Soporte / Enunciado (Opcional):</label>
+                    <input type="file" name="file" class="w-full border border-gray-200 p-2 rounded-xl bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+                </div>
+
+                <div class="flex gap-4 pt-4 border-t border-gray-100">
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition duration-200">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> Publicar Tarea
+                    </button>
+                    <a href="/teacher/tasks" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold px-6 py-3 rounded-xl transition">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    document.getElementById('subject_id').addEventListener('change', function() {
+        const subjectId = this.value;
+        const classSelect = document.getElementById('course_class_id');
+        classSelect.innerHTML = '<option value="">Cargando comisiones asociadas...</option>';
+        
+        if(subjectId) {
+            fetch('/teacher/tasks/classes?subject_id=' + subjectId)
+                .then(response => response.json())
+                .then(data => {
+                    classSelect.innerHTML = '<option value="">Seleccione comisión...</option>';
+                    if(data.length === 0) {
+                        classSelect.innerHTML = '<option value="">No hay comisiones asignadas</option>';
+                    } else {
+                        data.forEach(c => {
+                            classSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                        });
+                    }
+                })
+                .catch(() => {
+                    classSelect.innerHTML = '<option value="">Error al cargar los datos</option>';
+                });
+        }
+    });
+</script>
 </body>
 </html>

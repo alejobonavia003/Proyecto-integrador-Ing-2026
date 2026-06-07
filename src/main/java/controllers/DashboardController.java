@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -102,6 +103,36 @@ public class DashboardController {
             }
 
             return engine.render(new ModelAndView(model, "dashboard_teacher.mustache"));
+        });
+
+        // ==========================================
+        // MÓDULO ACTUALIZADO: CARGAR NOTAS Y SEGUIMIENTO
+        // ==========================================
+        get("/teacher/grades", (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            model.put("username", req.session().attribute("username"));
+            model.put("role", "Docente");
+
+            try {
+                Long teacherId = Long.valueOf(req.session().attribute("userId").toString());
+                services.SubmissionService submissionService = new services.SubmissionService();
+                
+                List<Map<String, Object>> trackingList = submissionService.getStudentsTrackingForTeacher(teacherId);
+                
+                // Formatear condicionales lógicos para las etiquetas dentro de Mustache
+                for (Map<String, Object> entry : trackingList) {
+                    String status = entry.get("status_type").toString();
+                    entry.put("isFaltaEntregar", "FALTA_ENTREGAR".equals(status));
+                    entry.put("isTodaviaNoCorrigio", "TODAVIA_NO_CORRIGIO".equals(status));
+                    entry.put("isYaCorrigio", "YA_CORRIGIO".equals(status));
+                }
+                
+                model.put("trackingList", trackingList);
+            } catch (Exception e) {
+                logger.severe("Error en módulo de seguimiento de notas: " + e.getMessage());
+            }
+
+            return engine.render(new ModelAndView(model, "teacher_grades.mustache"));
         });
 
         get("/student/dashboard", (req, res) -> {
