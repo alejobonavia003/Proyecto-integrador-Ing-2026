@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 import models.Submission;
 import models.User;
@@ -33,8 +35,12 @@ public class SubmissionService {
       User student = User.findById(s.get("student_id"));
       row.put("student_name", student != null ? student.getString("name") : "Alumno desconocido");
 
+      // Formatea la fecha de entrega para mostrarla en formato dd/MM/yyyy
+      Timestamp submittedAt = s.getTimestamp("submitted_at");
+      String formattedSubmittedAt = submittedAt.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
       row.put("content_reference", s.getString("content_reference"));
-      row.put("submitted_at", s.getString("submitted_at"));
+      row.put("submitted_at", formattedSubmittedAt);
       row.put("grade", s.get("grade"));
       row.put("comment", s.getString("comment"));
       submissions.add(row);
