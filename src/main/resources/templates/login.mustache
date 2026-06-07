@@ -9,6 +9,22 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ANIMACIÓN DE GIRO PARA EL CÍRCULO DE APROBADO */
+        .spin-check {
+            animation: spin-circle 0.8s ease-in-out 1;
+        }
+
+        @keyframes spin-circle {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900 min-h-screen py-10 px-6 flex items-center justify-center">
@@ -131,7 +147,7 @@
         <h2 class="text-4xl font-extrabold text-white tracking-widest drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">
             ACCESO CONCEDIDO
         </h2>
-        <p class="text-cyan-200 mt-3 text-lg font-mono tracking-wider">Iniciando sistema SGE...</p>
+        <p class="text-cyan-200 mt-3 text-lg font-mono tracking-wider">Iniciando sistema ...</p>
     </div>
 </div>
 <script>
@@ -183,16 +199,20 @@
                         circle.style.transform = 'scale(250)';
                     }, 100);
 
-                    // 4. Aparece el texto flotante
+                    // 4. Aparece el texto flotante y el círculo con check gira
                     setTimeout(() => {
                         content.classList.remove('opacity-0', 'translate-y-4');
                         content.classList.add('opacity-100', 'translate-y-0');
+
+                        // ★ AÑADIDO: Hacemos girar el círculo de aprobado (el que tiene el borde blanco)
+                        const checkCircle = content.querySelector('.w-24.h-24');
+                        if (checkCircle) checkCircle.classList.add('spin-check');
                     }, 600);
 
                     // 5. Finalmente, redirige al dashboard de forma fluida
                     setTimeout(() => {
                         window.location.href = '/dashboard';
-                    }, 2800); // Espera casi 3 segundos para que el usuario disfrute la animación
+                    }, 2800); 
 
                 }, 400);
             }

@@ -103,131 +103,116 @@ public class EnrollmentService {
         cc.saveIt();
     }
 
-    public Map<String, Object> getTeacherCommissionViewData(Long teacherId) {
-
+   public Map<String, Object> getTeacherCommissionViewData(Long teacherId, String careerIdStr, String subjectIdStr, String courseClassIdStr) {
         Map<String, Object> model = new HashMap<>();
 
-        // Materias titular
-
+        // 1. Materias Titular (para el formulario de creación)
         List<Map<String, Object>> materiasTitularView = new ArrayList<>();
-
         List<Subject> materiasTitulares = getSubjectsWhereTeacherIsTitular(teacherId);
-
         for (Subject s : materiasTitulares) {
-
             Map<String, Object> map = new HashMap<>();
-
             map.put("id", s.getId());
             map.put("name", s.getString("name"));
             map.put("code", s.getString("code"));
-
             materiasTitularView.add(map);
         }
-
         model.put("materiasTitular", materiasTitularView);
 
-        // Carreras
-
+        // 2. Filtro Carreras
         List<Map<String, Object>> carrerasFiltro = new ArrayList<>();
-
-        for (Model c : Career.findAll()) {
-
+        for (org.javalite.activejdbc.Model c : models.Career.findAll()) {
             Map<String, Object> map = new HashMap<>();
-
             map.put("id", c.getId());
             map.put("name", c.getString("name"));
-
+            if (careerIdStr != null && careerIdStr.equals(c.getId().toString())) map.put("selected", true);
             carrerasFiltro.add(map);
         }
-
         model.put("carrerasFiltro", carrerasFiltro);
 
-        // Materias
-
+        // 3. Filtro Materias (Filtradas por la Carrera elegida)
         List<Map<String, Object>> materiasFiltro = new ArrayList<>();
-
-        for (Model s : Subject.findAll()) {
-
+        List<Subject> subjects;
+        if (careerIdStr != null && !careerIdStr.isEmpty()) {
+            subjects = Subject.findBySQL("SELECT s.* FROM subjects s JOIN study_plans sp ON s.study_plan_id = sp.id WHERE sp.career_id = ?", Long.parseLong(careerIdStr));
+        } else {
+            subjects = Subject.findAll();
+        }
+        for (Subject s : subjects) {
             Map<String, Object> map = new HashMap<>();
-
             map.put("id", s.getId());
             map.put("name", s.getString("name"));
-
+            if (subjectIdStr != null && subjectIdStr.equals(s.getId().toString())) map.put("selected", true);
             materiasFiltro.add(map);
         }
-
         model.put("materiasFiltro", materiasFiltro);
 
-        // Comisiones
-
+        // 4. Filtro Comisiones (Filtradas por la Materia elegida)
         List<Map<String, Object>> comisionesFiltro = new ArrayList<>();
-
-        for (Model cc : CourseClass.findAll()) {
-
+        List<CourseClass> classes;
+        if (subjectIdStr != null && !subjectIdStr.isEmpty()) {
+            classes = CourseClass.where("subject_id = ?", Long.parseLong(subjectIdStr));
+        } else {
+            classes = CourseClass.findAll();
+        }
+        for (CourseClass cc : classes) {
             Map<String, Object> map = new HashMap<>();
-
             map.put("id", cc.getId());
-
-            map.put("name",
-                    cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
-
+            map.put("name", cc.getString("name") != null ? cc.getString("name") : "Comisión " + cc.getId());
+            if (courseClassIdStr != null && courseClassIdStr.equals(cc.getId().toString())) map.put("selected", true);
             comisionesFiltro.add(map);
         }
-
         model.put("comisionesFiltro", comisionesFiltro);
 
         return model;
     }
-
-    public Map<String, Object> getFilteredStudents(String careerIdParam, String subjectIdParam,
-            String courseClassIdParam) {
-
+    public Map<String, Object> getFilteredStudents(String careerIdParam, String subjectIdParam, String courseClassIdParam) {
         Map<String, Object> result = new HashMap<>();
-
-        List<User> alumnosResultado = new ArrayList<>();
-
-        String filtroAplicado = "Ninguno (Muestra todos los estudiantes)";
+        List<String> filtrosText = new ArrayList<>();
+        
+        StringBuilder sql = new StringBuilder(
+            "SELECT DISTINCT u.* FROM users u " +
+            "JOIN enrollments e ON u.id = e.student_id " +
+            "JOIN course_classes cc ON e.course_class_id = cc.id " +
+            "JOIN subjects s ON cc.subject_id = s.id " +
+            "JOIN study_plans sp ON s.study_plan_id = sp.id " +
+            "WHERE 1=1 "
+        );
+        List<Object> params = new ArrayList<>();
 
         if (careerIdParam != null && !careerIdParam.isEmpty()) {
+            sql.append("AND sp.career_id = ? ");
+            params.add(Long.parseLong(careerIdParam));
+            filtrosText.add("Carrera");
+        }
+        if (subjectIdParam != null && !subjectIdParam.isEmpty()) {
+            sql.append("AND s.id = ? ");
+            params.add(Long.parseLong(subjectIdParam));
+            filtrosText.add("Materia");
+        }
+        if (courseClassIdParam != null && !courseClassIdParam.isEmpty()) {
+            sql.append("AND cc.id = ? ");
+            params.add(Long.parseLong(courseClassIdParam));
+            filtrosText.add("Comisión");
+        }
 
-            Long careerId = Long.parseLong(careerIdParam);
-
-            alumnosResultado = getStudentsByCareer(careerId);
-
-            filtroAplicado = "Por Carrera";
-
-        } else if (subjectIdParam != null && !subjectIdParam.isEmpty()) {
-
-            Long subjectId = Long.parseLong(subjectIdParam);
-
-            alumnosResultado = getStudentsBySubject(subjectId);
-
-            filtroAplicado = "Por Materia";
-
-        } else if (courseClassIdParam != null && !courseClassIdParam.isEmpty()) {
-
-            Long courseClassId = Long.parseLong(courseClassIdParam);
-
-            alumnosResultado = getStudentsByCommission(courseClassId);
-
-            filtroAplicado = "Por Comisión";
+        List<User> alumnosResultado;
+        if (params.isEmpty()) {
+            alumnosResultado = User.findBySQL("SELECT DISTINCT u.* FROM users u JOIN enrollments e ON u.id = e.student_id");
+        } else {
+            alumnosResultado = User.findBySQL(sql.toString(), params.toArray());
         }
 
         List<Map<String, Object>> alumnosView = new ArrayList<>();
-
         for (User u : alumnosResultado) {
-
             Map<String, Object> map = new HashMap<>();
-
             map.put("dni", u.getString("dni"));
             map.put("name", u.getString("name"));
             map.put("email", u.getString("email"));
-
             alumnosView.add(map);
         }
 
         result.put("alumnos", alumnosView);
-        result.put("filtroAplicado", filtroAplicado);
+        result.put("filtroAplicado", filtrosText.isEmpty() ? "Ninguno (Muestra todos los estudiantes)" : String.join(" + ", filtrosText));
 
         return result;
     }
@@ -505,4 +490,7 @@ public class EnrollmentService {
         return student != null
                 && student.get("study_plan_id") != null;
     }
+
+
+    
 }
