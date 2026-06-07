@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import models.FinalExam;
 import models.FinalExamEnrollment;
@@ -102,11 +105,15 @@ public class FinalExamService {
         for (FinalExamEnrollment enrollment : enrollments) {
             User student = User.findById(enrollment.get("student_id"));
             if (student != null) {
+                // Recupera la fecha en que el alumno se inscribió a la mesa y luego la convierte a un formato legible para la vista
+                Timestamp enrolledAt = enrollment.getTimestamp("enrolled_at");
+                String formattedEnrolledAt = enrolledAt.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
                 Map<String, Object> map = new HashMap<>();
                 map.put("enrollment_id", enrollment.getId());
                 map.put("name", student.getString("name"));
                 map.put("dni", student.getString("dni"));
-                map.put("enrolled_at", enrollment.getTimestamp("enrolled_at"));
+                map.put("enrolled_at", formattedEnrolledAt);
                 map.put("grade", enrollment.get("grade"));
                 map.put("status", enrollment.getString("status"));
                 studentsData.add(map);
@@ -204,9 +211,14 @@ public class FinalExamService {
         List<FinalExam> exams = FinalExam.findAll();
 
         for (FinalExam exam : exams) {
+
+            // Convierte la fecha almacenada en milisegundos a un formato legible para la vista
+            Long millis = (Long) exam.get("exam_date");
+            String formattedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
             Map<String, Object> map = new HashMap<>();
             map.put("id", exam.getId());
-            map.put("exam_date", exam.getString("exam_date").replace("T", " "));
+            map.put("exam_date", formattedDate);
 
             Subject subject = Subject.findById(exam.get("subject_id"));
             if (subject != null) {
@@ -248,9 +260,13 @@ public class FinalExamService {
                 continue;
             }
 
+            // Convierte la fecha almacenada en milisegundos a un formato legible para la vista
+            Long millis = (Long) exam.get("exam_date");
+            String formattedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            
             Map<String, Object> map = new HashMap<>();
             map.put("id", exam.getId());
-            map.put("exam_date", exam.getString("exam_date").replace("T", " "));
+            map.put("exam_date", formattedDate);
             map.put("subject_name", subject.getString("name"));
             map.put("subject_code", subject.getString("code"));
             result.add(map);
@@ -269,12 +285,21 @@ public class FinalExamService {
             FinalExam exam = FinalExam.findById(enrollment.get("final_exam_id"));
             if (exam != null) {
                 Subject subject = Subject.findById(exam.get("subject_id"));
+                
+                // Convierte la fecha almacenada en milisegundos a un formato legible para la vista
+                Long millis = (Long) exam.get("exam_date");
+                String formattedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+                // Recupera la fecha en que el alumno se inscribió a la mesa y luego la convierte a un formato legible para la vista
+                Timestamp enrolledAt = enrollment.getTimestamp("enrolled_at");
+                String formattedEnrolledAt = enrolledAt.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
                 if (subject != null) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("exam_date", exam.getString("exam_date").replace("T", " "));
+                    map.put("exam_date", formattedDate);
                     map.put("subject_name", subject.getString("name"));
                     map.put("subject_code", subject.getString("code"));
-                    map.put("enrolled_at", enrollment.getTimestamp("enrolled_at"));
+                    map.put("enrolled_at", formattedEnrolledAt);
                     map.put("grade", enrollment.get("grade"));
                     map.put("status", enrollment.getString("status"));
                     result.add(map);
