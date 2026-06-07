@@ -29,6 +29,9 @@ public class EnrollmentStudentController {
 
                         model.put("username", req.session().attribute("username"));
 
+                        // Indicamos si el alumno ya está inscripto en una carrera
+                        model.put("hasCareer", enrollmentService.hasCareer(studentId));
+
                         if (req.queryParams("success") != null) {
                                 model.put("successMessage", req.queryParams("success"));
                         }
@@ -50,6 +53,9 @@ public class EnrollmentStudentController {
                         Map<String, Object> model = new HashMap<>();
 
                         model.put("username", req.session().attribute("username"));
+
+                        // Indicamos si el alumno ya está inscripto en una carrera
+                        model.put("hasCareer", enrollmentService.hasCareer(studentId));
 
                         if (req.queryParams("error") != null) {
 
@@ -83,7 +89,13 @@ public class EnrollmentStudentController {
 
                         Map<String, Object> model = new HashMap<>();
 
+                        // Obtenemos el ID del alumno desde la sesión
+                        Long studentId = Long.valueOf(req.session().attribute("userId").toString());
+
                         model.put("username", req.session().attribute("username"));
+
+                        // Indicamos si el alumno ya está inscripto en una carrera
+                        model.put("hasCareer", enrollmentService.hasCareer(studentId));
 
                         Long receiptId = Long.parseLong(req.queryParams("id"));
 

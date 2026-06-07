@@ -495,4 +495,14 @@ public class EnrollmentService {
             return false;
         return subject.getLong("study_plan_id").equals(student.getLong("study_plan_id"));
     }
+
+
+    // Verifica si el alumno ya tiene un plan de estudios asignado
+    public boolean hasCareer(Long studentId) {
+
+        User student = User.findById(studentId);
+
+        return student != null
+                && student.get("study_plan_id") != null;
+    }
 }

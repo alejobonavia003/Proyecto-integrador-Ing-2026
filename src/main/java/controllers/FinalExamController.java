@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import services.EnrollmentService;
 import services.FinalExamService;
 import spark.ModelAndView;
 import static spark.Spark.get;
@@ -14,6 +15,7 @@ public class FinalExamController {
 
     public static void init(MustacheTemplateEngine engine) {
         FinalExamService finalExamService = new FinalExamService();
+        EnrollmentService enrollmentService = new EnrollmentService();
 
         // [ADMIN] POST para crear el final
         post("/admin/exams/create", (req, res) -> {
@@ -129,6 +131,9 @@ public class FinalExamController {
             String success = req.queryParams("success");
             if (error != null) model.put("errorMessage", error);
             if (success != null) model.put("successMessage", success);
+
+            // Indicamos si el alumno ya está inscripto en una carrera
+            model.put("hasCareer", enrollmentService.hasCareer(studentId));
             
             // Inyectamos las dos listas (Disponibles e Inscriptas)
             model.put("availableExams", finalExamService.getAvailableExamsForStudent(studentId));
