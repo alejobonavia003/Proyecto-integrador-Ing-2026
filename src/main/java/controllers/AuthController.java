@@ -79,7 +79,13 @@ public class AuthController {
                 String email = req.queryParams("email");
                 String dni = req.queryParams("dni");
 
-                // FORZAR EL ROL A 1 (ADMINISTRADOR) DESDE EL BACKEND
+                // --- VALIDACIONES DE SEGURIDAD INTERNAS ---
+
+                // 1. Validar que el DNI sea estrictamente numérico
+                if (dni == null || !dni.matches("^\\d+$")) {
+                    throw new IllegalArgumentException("El DNI solo debe contener caracteres numericos.");
+                }
+
                 Long role = 1L;
 
                 authService.registerUser(name, dni, email, password, role);
@@ -87,19 +93,22 @@ public class AuthController {
                 logger.log(Level.INFO,
                         "Nuevo usuario ADMIN registrado exitosamente: [DNI: {0}, Nombre: {1}]",
                         new Object[] {dni, name});
-                res.redirect(
-                        "/user/create?message=Cuenta Admin creada exitosamente para " + name + "!");
+                
+                String successMsg = java.net.URLEncoder.encode("Cuenta Admin creada exitosamente para " + name + "!", "UTF-8");
+                res.redirect("/user/create?message=" + successMsg);
                 return "";
             } catch (IllegalArgumentException e) {
                 logger.log(Level.WARNING,
-                        "Fallo en validación al intentar registrar usuario [{0}]: {1}",
+                        "Fallo en validacion al intentar registrar usuario [{0}]: {1}",
                         new Object[] {name, e.getMessage()});
-                res.redirect("/user/create?error=" + e.getMessage());
+                
+                String errorMsg = java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
+                res.redirect("/user/create?error=" + errorMsg);
                 return "";
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error crítico interno en registro de usuario: ", e);
-                res.redirect(
-                        "/user/create?error=Error interno al crear la cuenta: " + e.getMessage());
+                logger.log(Level.SEVERE, "Error critico interno en registro de usuario: ", e);
+                String critMsg = java.net.URLEncoder.encode("Error interno al crear la cuenta: " + e.getMessage(), "UTF-8");
+                res.redirect("/user/create?error=" + critMsg);
                 return "";
             }
         });
