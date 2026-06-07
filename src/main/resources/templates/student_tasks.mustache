@@ -3,74 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <title>Mis Tareas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body style="font-family: Arial, sans-serif; padding: 20px;">
-    
-    <h1>Tareas de mis materias</h1>
-    <p>Alumno: {{username}} | <a href="/student/dashboard">Volver al Tablero</a></p>
-    
-    {{#successMessage}}
-    <div style="background-color: #ccffcc; padding: 10px; border: 1px solid green; margin-bottom: 15px; color: green; border-radius: 4px;">
-        <b>Éxito:</b> {{successMessage}}
-    </div>
-    {{/successMessage}}
-    
-    {{#errorMessage}}
-    <div style="background-color: #ffcccc; padding: 10px; border: 1px solid red; margin-bottom: 15px; color: red; border-radius: 4px;">
-        <b>Error:</b> {{errorMessage}}
-    </div>
-    {{/errorMessage}}
-    
-    <hr>
+<body class="bg-gray-100 font-sans">
 
-    <h2>Tareas disponibles y entregas</h2>
-    
-    {{#tasks}}
-    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; border-radius: 6px;">
-        <h3 style="margin-top: 0; color: #333;">📌 {{title}}</h3>
-        <p style="white-space: pre-wrap;">{{description}}</p>
+<!-- Contenedor Flex principal -->
+<div class="flex min-h-screen">
+
+    <!-- Inyectamos la barra lateral aquí -->
+    {{>partials/student_sidebar}}
+
+    <!-- Contenido principal -->
+    <main class="flex-1 p-10 max-w-5xl mx-auto">
         
-        {{#file_path}}
-        <p><b>📄 Documento de la cátedra:</b> <a href="/{{file_path}}" target="_blank" style="color: #0056b3; font-weight: bold;">Descargar Archivo</a></p>
-        {{/file_path}}
-        
-        <hr style="border: 0; border-top: 1px dashed #ccc; margin: 15px 0;">
-        
-        {{#submitted}}
-            <p style="color: green; font-weight: bold;">Entregado ✅ - <a href="/{{submission_path}}" target="_blank" style="color: #28a745; text-decoration: underline;">Ver mi archivo entregado</a></p>
-            
-            <div style="margin-top: 10px; padding: 12px; background-color: #f4fbf7; border-left: 4px solid #28a745; border-radius: 4px;">
-              {{#grade}}
-                <p style="margin: 2px 0;"><strong>Calificación Asignada:</strong> <span style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 3px; font-weight: bold;">{{grade}}</span></p>
-              {{/grade}}
-              {{^grade}}
-                <p style="margin: 2px 0; color: #666; font-style: italic;">Estado: Pendiente de corrección por el docente ⏳</p>
-              {{/grade}}
-              
-              {{#comment}}
-                <p style="margin: 10px 0 4px 0;"><strong>Comentario del profesor:</strong></p>
-                <blockquote style="margin: 0; padding: 10px; background: #fff; border: 1px dashed #ccc; font-style: italic; border-radius: 4px; color: #444;">
-                  "{{comment}}"
-                </blockquote>
-              {{/comment}}
+        <!-- Cabecera -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800">Tareas de mis materias 📝</h2>
+                <p class="text-gray-500 mt-2">Alumno: <span class="font-semibold text-blue-600">{{username}}</span></p>
             </div>
-        {{/submitted}}
+            <a href="/student/dashboard" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Panel
+            </a>
+        </div>
 
-        {{^submitted}}
-            <form method="post" action="/student/tasks/{{id}}/submit" enctype="multipart/form-data" style="background-color: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                <label style="font-weight: bold; color: #333;">Subir mi resolución (PDF, DOCX, ZIP):</label><br>
-                <input type="file" name="file" required style="margin-top: 8px; margin-bottom: 12px;"><br>
-                <button type="submit" style="padding: 8px 16px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Confirmar Entrega</button>
-            </form>
-        {{/submitted}}
-    </div>
-    {{/tasks}}
-    
-    {{^tasks}}
-    <div style="padding: 30px; text-align: center; border: 2px dashed #ccc; border-radius: 8px; background-color: #fdfdfd;">
-        <p style="color: #777; font-size: 16px;"><i>No tienes tareas asignadas en tus cursadas actuales.</i></p>
-    </div>
-    {{/tasks}}
+        <!-- Alertas -->
+        {{#successMessage}}
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded shadow-sm">
+            <p class="font-bold"><i class="fa-solid fa-check-circle mr-2"></i>¡Éxito!</p>
+            <p>{{successMessage}}</p>
+        </div>
+        {{/successMessage}}
+        
+        {{#errorMessage}}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm">
+            <p class="font-bold"><i class="fa-solid fa-circle-xmark mr-2"></i>Error</p>
+            <p>{{errorMessage}}</p>
+        </div>
+        {{/errorMessage}}
+
+        <h3 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Tareas disponibles y entregas</h3>
+        
+        <div class="space-y-6">
+            {{#tasks}}
+            <!-- Tarjeta de Tarea individual -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
+                <div class="flex items-start justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-thumbtack text-blue-500"></i> {{title}}
+                    </h3>
+                </div>
+                
+                <p class="text-gray-600 whitespace-pre-wrap mb-4 bg-gray-50 p-4 rounded-lg border border-gray-100">{{description}}</p>
+                
+                {{#file_path}}
+                <div class="mb-5">
+                    <a href="/{{file_path}}" target="_blank" class="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium px-4 py-2 rounded-lg transition border border-blue-200">
+                        <i class="fa-solid fa-file-pdf"></i> Descargar Documento de la cátedra
+                    </a>
+                </div>
+                {{/file_path}}
+                
+                <hr class="border-gray-200 mb-5">
+                
+                <!-- Sección de Entrega -->
+                {{#submitted}}
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-green-100 text-green-800 font-bold px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                            <i class="fa-solid fa-check"></i> Entregado
+                        </span>
+                        <a href="/{{submission_path}}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+                            <i class="fa-solid fa-eye"></i> Ver mi archivo entregado
+                        </a>
+                    </div>
+                    
+                    <!-- Cuadro de Calificación -->
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                        {{#grade}}
+                        <p class="text-gray-700 mb-2">
+                            <strong>Calificación Asignada:</strong> 
+                            <span class="bg-green-500 text-white px-3 py-1 rounded-md font-bold shadow-sm ml-2">{{grade}}</span>
+                        </p>
+                        {{/grade}}
+                        
+                        {{^grade}}
+                        <p class="text-gray-600 italic flex items-center gap-2">
+                            <i class="fa-solid fa-hourglass-half text-yellow-500"></i> Estado: Pendiente de corrección por el docente
+                        </p>
+                        {{/grade}}
+                        
+                        {{#comment}}
+                        <div class="mt-4">
+                            <p class="text-sm font-bold text-gray-700 mb-1">Comentario del profesor:</p>
+                            <blockquote class="bg-white border border-gray-200 italic text-gray-600 p-3 rounded-lg shadow-sm">
+                                "{{comment}}"
+                            </blockquote>
+                        </div>
+                        {{/comment}}
+                    </div>
+                {{/submitted}}
+
+                {{^submitted}}
+                    <form method="post" action="/student/tasks/{{id}}/submit" enctype="multipart/form-data" class="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                        <label class="block font-bold text-gray-700 mb-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-indigo-500 mr-2"></i>Subir mi resolución (PDF, DOCX, ZIP):
+                        </label>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-3">
+                            <input type="file" name="file" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-sm transition whitespace-nowrap">
+                                Confirmar Entrega
+                            </button>
+                        </div>
+                    </form>
+                {{/submitted}}
+            </div>
+            {{/tasks}}
+            
+            <!-- Estado vacío -->
+            {{^tasks}}
+            <div class="bg-white p-12 text-center border-2 border-dashed border-gray-300 rounded-xl">
+                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-mug-hot text-gray-400 text-2xl"></i>
+                </div>
+                <h4 class="text-gray-800 font-bold text-lg">Todo tranquilo por aquí</h4>
+                <p class="text-gray-500 mt-1 italic">No tienes tareas asignadas en tus cursadas actuales.</p>
+            </div>
+            {{/tasks}}
+        </div>
+
+    </main>
+</div>
 
 </body>
 </html>
