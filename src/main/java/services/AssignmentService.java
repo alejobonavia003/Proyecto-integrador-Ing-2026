@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Submission;
 import models.Assignment;
 import models.StudyPlan;
 import models.User;
@@ -86,10 +87,19 @@ public class AssignmentService {
       return new ArrayList<>();
     }
 
-    // Buscar assignments por carrera o por comisión relacionada al plan
-    List<Assignment> assignments = Assignment.findBySQL(
-        "SELECT a.* FROM assignments a WHERE a.career_id = ? OR a.course_class_id IN (SELECT id FROM course_classes WHERE subject_id IN (SELECT id FROM subjects WHERE study_plan_id = ?))",
-        careerId, planId);
+  // Buscar tareas asignadas a la carrera del alumno o a sus comisiones inscriptas    
+  List<Assignment> assignments = Assignment.findBySQL(
+    "SELECT a.* " +
+    "FROM assignments a " +
+    "WHERE a.career_id = ? " +
+    "OR a.course_class_id IN (" +
+    "   SELECT e.course_class_id " +
+    "   FROM enrollments e " +
+    "   WHERE e.student_id = ?" +
+    ")",
+    careerId,
+    studentId
+);
 
     return assignments;
   }
@@ -131,5 +141,48 @@ public class AssignmentService {
       // Opcional: Aquí podrías agregar lógica para borrar el archivo físico del servidor
       a.delete();
     }
+  }
+
+
+  /**
+ * Calcula la cantidad de tareas pendientes, entregadas y corregidas
+ * correspondientes al alumno.
+ */
+  public Map<String, Long> getAssignmentCounters(Long studentId) {
+
+    Map<String, Long> counters = new HashMap<>();
+
+    long pendientes = 0;
+    long entregadas = 0;
+    long corregidas = 0;
+
+    List<Assignment> assignments = getAssignmentsForStudent(studentId);
+
+    for (Assignment assignment : assignments) {
+
+        Submission submission = Submission.findFirst(
+                "assignment_id = ? AND student_id = ?",
+                assignment.getId(),
+                studentId);
+
+        if (submission == null) {
+
+            pendientes++;
+
+        } else if (submission.get("grade") == null) {
+
+            entregadas++;
+
+        } else {
+
+            corregidas++;
+        }
+    }
+
+    counters.put("pendingTasks", pendientes);
+    counters.put("submittedTasks", entregadas);
+    counters.put("gradedTasks", corregidas);
+
+    return counters;
   }
 }
