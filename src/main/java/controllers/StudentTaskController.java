@@ -31,6 +31,11 @@ public class StudentTaskController {
       Map<String, Object> model = new HashMap<>();
       model.put("username", req.session().attribute("username"));
 
+      // Verificamos si el alumno tiene carrera y lo pasamos al modelo
+      models.User alumno = models.User.findById(studentId);
+      boolean tieneCarrera = (alumno != null && alumno.get("study_plan_id") != null);
+      model.put("hasCareer", tieneCarrera);
+
       List<Map<String, Object>> tasks = assignmentService
           .mapAssignmentsToView(assignmentService.getAssignmentsForStudent(studentId));
 
@@ -44,7 +49,6 @@ public class StudentTaskController {
           copy.put("submitted", true);
           copy.put("submission_path", s.getString("content_reference"));
           copy.put("submission_id", s.getId());
-          // AGREGAR ESTO:
           copy.put("grade", s.get("grade"));
           copy.put("comment", s.getString("comment"));
         } else {
