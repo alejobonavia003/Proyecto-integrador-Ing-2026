@@ -34,7 +34,7 @@ public class EnrollmentService {
 
             // Obtener IDs de materias ya aprobadas por el alumno
             List<Long> aprobadasIds = getApprovedSubjectIds(studentId);
-
+            List<Long> inscriptasIds = getEnrolledSubjectIds(studentId);
             for (Subject subject : materiasPlan) {
                 // SQA: Filtrar automáticamente las materias aprobadas
                 if (aprobadasIds.contains(subject.getLongId())) {
@@ -285,7 +285,7 @@ public class EnrollmentService {
         return aprobadas;
     }
 
-    public void enrollStudent(Long studentId, Long courseClassId) {
+public void enrollStudent(Long studentId, Long courseClassId) {
         // Intentar inscripción de forma transaccional para reducir race-conditions.
         Base.openTransaction();
         try {
@@ -295,12 +295,23 @@ public class EnrollmentService {
                 throw new IllegalArgumentException("La comisión seleccionada no existe.");
             }
 
-            // --- NUEVA VALIDACIÓN: Verificar si el alumno ya está inscripto a esta comisión ---
-            long inscripcionesPrevias = Enrollment.count("student_id = ? AND course_class_id = ?", studentId, courseClassId);
-            if (inscripcionesPrevias > 0) {
-                Base.rollbackTransaction();
-                // Lanzamos la misma excepción que tu controlador ya sabe cómo manejar en el bloque catch
-                throw new IllegalStateException("Ya te encuentras inscripto en esta comisión.");
+            // --- NUEVA VALIDACIÓN CORREGIDA: Verificar si el alumno ya está inscripto a esta MATERIA ---
+            Long subjectId = c.getLong("subject_id");
+            
+            // Buscamos todas las comisiones de la materia que eligió
+            List<CourseClass> comisionesMateria = CourseClass.where("subject_id = ?", subjectId);
+            
+            for (CourseClass comision : comisionesMateria) {
+                // Chequeamos si el alumno tiene estado REGULAR en alguna de estas comisiones
+                long inscripcionesMismaMateria = Enrollment.count(
+                    "student_id = ? AND course_class_id = ? AND status = 'REGULAR'", 
+                    studentId, comision.getId()
+                );
+                
+                if (inscripcionesMismaMateria > 0) {
+                    Base.rollbackTransaction();
+                    throw new IllegalStateException("Ya te encuentras inscripto en una comisión de esta materia.");
+                }
             }
             // ----------------------------------------------------------------------------------
 
@@ -462,6 +473,21 @@ public class EnrollmentService {
             list.add(m);
         }
         return list;
+    }
+
+    /**
+     * Retorna los IDs de las materias que el alumno está cursando actualmente.
+     */
+    public List<Long> getEnrolledSubjectIds(Long studentId) {
+        List<Long> enCurso = new ArrayList<>();
+        List<Enrollment> registros = Enrollment.where("student_id = ? AND status = 'REGULAR'", studentId);
+        for (Enrollment e : registros) {
+            CourseClass cc = CourseClass.findById(e.get("course_class_id"));
+            if (cc != null) {
+                enCurso.add(cc.getLong("subject_id"));
+            }
+        }
+        return enCurso;
     }
 
     public void assignPlanToStudent(Long studentId, Long planId) {

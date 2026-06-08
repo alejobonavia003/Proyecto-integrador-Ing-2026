@@ -61,8 +61,7 @@ public class AssignmentService {
   public List<Map<String, Object>> getCourseClassesForTeacherAndSubject(Long teacherId,
       Long subjectId) {
     List<Map<String, Object>> out = new ArrayList<>();
-    List<models.CourseClass> classes =
-        models.CourseClass.where("teacher_id = ? AND subject_id = ?", teacherId, subjectId);
+List<models.CourseClass> classes = models.CourseClass.where("subject_id = ?", subjectId);
     for (models.CourseClass cc : classes) {
       Map<String, Object> m = new HashMap<>();
       m.put("id", cc.getId());
