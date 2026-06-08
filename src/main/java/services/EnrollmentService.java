@@ -453,6 +453,7 @@ public void enrollStudent(Long studentId, Long courseClassId) {
             if (cc != null) {
                 Subject s = Subject.findById(cc.get("subject_id"));
                 map.put("materia_name", s != null ? s.getString("name") : "Desconocida");
+                map.put("comision_id", cc.getId());
                 map.put("comision_name", cc.getString("name") != null ? cc.getString("name")
                         : "Comisión " + cc.getId());
             }
